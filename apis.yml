@@ -1,0 +1,74 @@
+name: Bancomat API
+description: APIs for Bancomat payment and ATM services in Italy
+image: https://www.bancomat.it/images/logo.png
+url: https://www.bancomat.it
+created: '2024-01-15'
+modified: '2024-01-15'
+apis:
+- name: Bancomat Pay API
+  description: API for mobile payment services using Bancomat Pay
+  image: https://www.bancomat.it/images/bancomat-pay-logo.png
+  humanURL: https://www.bancomat.it/it/bancomat-pay
+  baseURL: https://api.bancomat.it/v1
+  tags:
+  - payments
+  - mobile payments
+  - P2P
+  - QR codes
+  properties:
+  - type: Documentation
+    url: https://developer.bancomat.it/bancomat-pay/docs
+  - type: OpenAPI
+    url: https://api.bancomat.it/openapi/bancomat-pay.json
+  - type: Authentication
+    url: https://developer.bancomat.it/authentication
+  contact:
+  - type: Support
+    url: https://www.bancomat.it/contatti
+  - type: Email
+    url: mailto:api-support@bancomat.it
+- name: ATM Locator API
+  description: API for locating Bancomat ATMs across Italy
+  humanURL: https://www.bancomat.it/it/cerca-atm
+  baseURL: https://api.bancomat.it/v1/atm
+  tags:
+  - ATM
+  - location
+  - branch locator
+  properties:
+  - type: Documentation
+    url: https://developer.bancomat.it/atm-locator/docs
+  - type: OpenAPI
+    url: https://api.bancomat.it/openapi/atm-locator.json
+  contact:
+  - type: Support
+    url: https://www.bancomat.it/contatti
+- name: Transaction Status API
+  description: API for checking transaction status and history
+  humanURL: https://developer.bancomat.it/transactions
+  baseURL: https://api.bancomat.it/v1/transactions
+  tags:
+  - transactions
+  - payment status
+  - history
+  properties:
+  - type: Documentation
+    url: https://developer.bancomat.it/transactions/docs
+  - type: OpenAPI
+    url: https://api.bancomat.it/openapi/transactions.json
+  - type: Rate Limits
+    url: https://developer.bancomat.it/rate-limits
+  contact:
+  - type: Technical Support
+    url: mailto:tech-support@bancomat.it
+maintainers:
+- name: Bancomat S.p.A.
+  email: info@bancomat.it
+  url: https://www.bancomat.it
+tags:
+- payments
+- banking
+- ATM
+- mobile payments
+- Italy
+- financial services
