@@ -1,0 +1,48 @@
+vocabulary:
+  name: BANCOMAT Vocabulary
+  description: Unified taxonomy for BANCOMAT S.p.A. payment services covering ATM, debit card, and mobile payment domains in Italy.
+  version: '1.0'
+  provider: bancomat
+
+resources:
+  - name: Payment
+    description: A payment transaction initiated via BANCOMAT Pay or PagoBancomat debit.
+    aliases: [transaction, transfer]
+  - name: Merchant
+    description: A business accepting BANCOMAT Pay or PagoBancomat debit payments.
+    aliases: [store, vendor, retailer]
+  - name: BankAccount
+    description: Italian bank account linked to BANCOMAT Pay via phone number and IBAN.
+    aliases: [account, wallet]
+  - name: QRCode
+    description: QR code generated for BANCOMAT Pay checkout at a merchant.
+    aliases: [qr, code]
+  - name: ATM
+    description: Automated teller machine accepting BANCOMAT debit cards for cash withdrawals.
+    aliases: [cash-machine, bancomat-machine]
+
+actions:
+  - name: initiate
+    description: Start a BANCOMAT Pay payment transaction.
+  - name: confirm
+    description: Authorize a payment via mobile app.
+  - name: refund
+    description: Return funds from a completed BANCOMAT Pay transaction.
+  - name: generate
+    description: Generate a QR code for merchant checkout.
+  - name: verify
+    description: Verify payment status or transaction completion.
+
+workflows:
+  - name: Online Checkout
+    description: Merchant-initiated BANCOMAT Pay payment for e-commerce via QR code.
+  - name: P2P Transfer
+    description: Consumer-to-consumer bank transfer via BANCOMAT Pay mobile app.
+
+personas:
+  - name: Italian Consumer
+    description: End user making payments via BANCOMAT debit card or BANCOMAT Pay app.
+  - name: Merchant
+    description: Italian or international online merchant accepting BANCOMAT Pay.
+  - name: PSP Developer
+    description: Payment service provider integrating BANCOMAT Pay into their gateway.

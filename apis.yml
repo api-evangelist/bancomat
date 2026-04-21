@@ -18,7 +18,7 @@ tags:
   - Debit Cards
 url: https://raw.githubusercontent.com/api-evangelist/bancomat/refs/heads/main/apis.yml
 created: '2024-01-15'
-modified: '2026-04-19'
+modified: '2026-04-21'
 specificationVersion: '0.19'
 apis:
   - aid: bancomat:bancomat-pay
@@ -47,6 +47,14 @@ common:
   - type: Website
     url: https://bancomat.it/en/the-company
     name: About BANCOMAT S.p.A.
+  - type: SpectralRules
+    url: rules/bancomat-spectral-rules.yml
+  - type: Vocabulary
+    url: vocabulary/bancomat-vocabulary.yaml
+  - type: NaftikoCapability
+    url: capabilities/bancomat-payment-capability.yaml
+  - type: JSON-LD
+    url: json-ld/bancomat-context.jsonld
   - name: Features
     type: Features
     data:
@@ -60,7 +68,9 @@ common:
         description: QR code-based checkout integration for online and in-store merchants.
       - name: Bank Integration
         description: Deep integration with Italian banks enabling account-linked payment authorization.
-  - name: Use Cases
+      - name: P2P Transfers
+        description: Person-to-person money transfers between Italian bank accounts via mobile app.
+  - name: UseCases
     type: UseCases
     data:
       - name: ATM Cash Withdrawals
@@ -77,12 +87,19 @@ common:
     type: Integrations
     data:
       - name: Nexi
+        description: Integration via Nexi XPay Global payment gateway for merchant acceptance.
       - name: Axerve (Fabrick)
+        description: Integration via Axerve/Fabrick for Italian e-commerce BANCOMAT Pay acceptance.
       - name: PPRO
+        description: Integration via PPRO for international PSP access to BANCOMAT Pay.
       - name: HiPay
+        description: Integration via HiPay payment platform.
       - name: Viva.com
+        description: Integration via Viva.com payment services.
       - name: PayPal Braintree
+        description: Integration via PayPal Braintree payment gateway.
       - name: Nuvei
+        description: Integration via Nuvei payment technology platform.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

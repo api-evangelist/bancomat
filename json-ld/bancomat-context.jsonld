@@ -1,0 +1,72 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "schema": "https://schema.org/",
+    "bancomat": "https://bancomat.it/vocab/",
+
+    "Payment": {
+      "@id": "bancomat:Payment",
+      "@type": "@id"
+    },
+    "paymentId": {
+      "@id": "bancomat:paymentId",
+      "@type": "xsd:string"
+    },
+    "amount": {
+      "@id": "bancomat:amount",
+      "@type": "xsd:decimal"
+    },
+    "currency": {
+      "@id": "bancomat:currency",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "bancomat:status",
+      "@type": "xsd:string"
+    },
+    "createdAt": {
+      "@id": "bancomat:createdAt",
+      "@type": "xsd:dateTime"
+    },
+
+    "Merchant": {
+      "@id": "bancomat:Merchant",
+      "@type": "@id"
+    },
+    "merchantId": {
+      "@id": "bancomat:merchantId",
+      "@type": "xsd:string"
+    },
+    "merchantName": {
+      "@id": "bancomat:merchantName",
+      "@type": "xsd:string"
+    },
+
+    "QRCode": {
+      "@id": "bancomat:QRCode",
+      "@type": "@id"
+    },
+    "qrContent": {
+      "@id": "bancomat:qrContent",
+      "@type": "xsd:string"
+    },
+    "expiresAt": {
+      "@id": "bancomat:expiresAt",
+      "@type": "xsd:dateTime"
+    },
+
+    "BankAccount": {
+      "@id": "bancomat:BankAccount",
+      "@type": "@id"
+    },
+    "iban": {
+      "@id": "bancomat:iban",
+      "@type": "xsd:string"
+    },
+    "phoneNumber": {
+      "@id": "bancomat:phoneNumber",
+      "@type": "xsd:string"
+    }
+  }
+}

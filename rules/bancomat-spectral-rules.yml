@@ -1,0 +1,90 @@
+rules:
+  bancomat-info-title-required:
+    description: API title must be present.
+    message: "API info must include a title."
+    severity: error
+    given: "$.info"
+    then:
+      field: title
+      function: truthy
+
+  bancomat-info-description-required:
+    description: API description must be present.
+    message: "API info must include a description."
+    severity: warn
+    given: "$.info"
+    then:
+      field: description
+      function: truthy
+
+  bancomat-info-version-required:
+    description: API version must be present.
+    message: "API info must include a version."
+    severity: error
+    given: "$.info"
+    then:
+      field: version
+      function: truthy
+
+  bancomat-operation-id-required:
+    description: All operations must have an operationId.
+    message: "Operation must have an operationId."
+    severity: error
+    given: "$.paths[*][get,post,put,patch,delete]"
+    then:
+      field: operationId
+      function: truthy
+
+  bancomat-operation-summary-required:
+    description: All operations must have a summary.
+    message: "Operation must have a summary."
+    severity: warn
+    given: "$.paths[*][get,post,put,patch,delete]"
+    then:
+      field: summary
+      function: truthy
+
+  bancomat-payment-status-response:
+    description: Payment endpoints must return a status field.
+    message: "Payment response schemas should include a status field."
+    severity: warn
+    given: "$.components.schemas.Payment.properties"
+    then:
+      field: status
+      function: truthy
+
+  bancomat-security-required:
+    description: All BANCOMAT APIs must define security schemes.
+    message: "API must define security requirements."
+    severity: error
+    given: "$"
+    then:
+      field: security
+      function: truthy
+
+  bancomat-response-200-required:
+    description: GET operations must define a 200 response.
+    message: "GET operations must define a 200 success response."
+    severity: error
+    given: "$.paths[*].get.responses"
+    then:
+      field: "200"
+      function: truthy
+
+  bancomat-error-response-schema:
+    description: Error responses must include a schema.
+    message: "4xx responses should include an error schema."
+    severity: warn
+    given: "$.paths[*][*].responses[4XX].content[*]"
+    then:
+      field: schema
+      function: truthy
+
+  bancomat-schema-description-required:
+    description: All named schemas must have a description.
+    message: "Schema components must have a description."
+    severity: warn
+    given: "$.components.schemas[*]"
+    then:
+      field: description
+      function: truthy

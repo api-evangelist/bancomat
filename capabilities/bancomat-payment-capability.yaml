@@ -1,0 +1,33 @@
+name: BANCOMAT Payment Capability
+description: >-
+  Naftiko capability for BANCOMAT Pay payment acceptance covering online checkout via QR code
+  and P2P transfers for Italian consumers and merchants.
+version: '1.0'
+provider: bancomat
+
+workflows:
+  - name: Online Payment Acceptance
+    description: Merchant-initiated BANCOMAT Pay payment via QR code for e-commerce.
+    apis:
+      - bancomat:bancomat-pay
+    tools:
+      - name: CreatePayment
+        description: Initiate a BANCOMAT Pay payment transaction for a merchant.
+      - name: GenerateQRCode
+        description: Generate a QR code for customer to scan and pay.
+      - name: GetPaymentStatus
+        description: Check the current status of a payment transaction.
+      - name: RefundPayment
+        description: Process a refund for a completed BANCOMAT Pay transaction.
+    persona: PSP Developer
+
+  - name: P2P Transfer
+    description: Consumer-to-consumer bank account transfer via BANCOMAT Pay app.
+    apis:
+      - bancomat:bancomat-pay
+    tools:
+      - name: InitiateTransfer
+        description: Start a P2P transfer to another BANCOMAT Pay user.
+      - name: ConfirmTransfer
+        description: Authorize the transfer via mobile app authentication.
+    persona: Italian Consumer
