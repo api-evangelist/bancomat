@@ -53,7 +53,7 @@ common:
     url: vocabulary/bancomat-vocabulary.yaml
   - type: NaftikoCapability
     url: capabilities/bancomat-payment-capability.yaml
-  - type: JSON-LD
+  - type: JSONLD
     url: json-ld/bancomat-context.jsonld
   - name: Features
     type: Features
