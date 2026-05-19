@@ -41,6 +41,8 @@ apis:
         url: https://developer.nexigroup.com/xpayglobal/en-EU/docs/bancomat-pay/
         name: Nexi Integration Guide
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/bancomat-spa
   - type: Website
     url: https://bancomat.it/en
     name: BANCOMAT S.p.A.
