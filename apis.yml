@@ -7,7 +7,7 @@ description: >-
   underpins Italian electronic payment infrastructure. BANCOMAT Pay, introduced in 2019, enables
   mobile e-commerce and P2P payments linked to bank accounts via phone number and IBAN.
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - ATM
   - Banking
