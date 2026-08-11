@@ -67,8 +67,6 @@ common:
     url: rules/bancomat-spectral-rules.yml
   - type: Vocabulary
     url: vocabulary/bancomat-vocabulary.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/bancomat-payment-capability.yaml
   - type: JSONLD
     url: json-ld/bancomat-context.jsonld
   - name: Features
