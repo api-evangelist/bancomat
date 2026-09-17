@@ -1,0 +1,121 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  "Webhooks", "Eventi WebHook", "Funzionamento di un WebHook", "Signature", "Chiavi" and "Eventi in
+  dettaglio" chapters of the FlowPay v1 contract rendered at https://docs.flowpay.it/ (saved verbatim
+  as openapi/_original/bancomat-flowpay-api-v1-openapi.json); v1 paths /webhooks, /webhooks/types,
+  /{tenantID}/webhooks; the `webhooks:` object of openapi/bancomat-flowpay-api-v2-openapi.yml
+kind: webhook-catalog
+asyncapi: null
+note: >-
+  FlowPay (a BANCOMAT company) publishes no AsyncAPI document; this catalog is transcribed from the
+  provider's own webhook chapter and is not an AsyncAPI. The v1 webhook surface is flagged by the
+  provider as experimental and subject to breaking changes. The BANCOMAT scheme publishes no event
+  surface.
+provider: FlowPay S.r.l. (BANCOMAT S.p.A. subsidiary)
+status: experimental ("In fase sperimentale e soggetta a breaking changes")
+management_api:
+  list_available_events: GET /webhooks/types (v1) — returns eventName, eventDescription, necessaryAuthorizationCodeScope, necessaryClientCredentialScope, needsAccounts
+  subscribe: POST /{tenantID}/webhooks (v1) — https URLs only in production
+  list: GET /webhooks, GET /{tenantID}/webhooks
+  get: GET /webhooks/{id}, GET /{tenantID}/webhooks/{id}
+  update: PUT /{tenantID}/webhooks/{id}
+  renew: PUT /webhooks/{id}/renew
+  unsubscribe: DELETE /webhooks/{id}, DELETE /{tenantID}/webhooks/{id}
+  v2: no subscription endpoints; the v2 contract declares one OpenAPI `webhooks` entry (AIS consent status)
+subscription_lifecycle:
+  interest_period: at most 1 month per subscription, renewable
+  auto_expiry: subscriptions past expiresAt are no longer called
+  renewal_ping: >-
+    for every webhook expiring within 1 day FlowPay sends a signed GET (signature over "<timestamp>.")
+    to the webhook URL; answering 201 with {"expiresAt": "<ISO 8601, max +1 month>"} renews it, any
+    other response leaves it to expire
+  token_revocation: revoking the creating token deletes its webhooks and sends a final DELETE callback with {event, tenantID, webhookID}
+delivery:
+  method: POST
+  content_type: application/json
+  success: HTTP 200 within 10 seconds
+  retry: automatic, up to a maximum number of attempts, randomised intervals with exponential backoff
+  tls: server certificate verified in production (self-signed certificates rejected)
+  headers:
+    - X-FlowPay-Timestamp   # seconds since epoch
+    - X-FlowPay-Raw-Signature   # base64(ECDSA P-256 raw r||s) over "<timestamp>.<body>", SHA-256
+    - X-FlowPay-Der-Signature   # same signature, DER-encoded
+signature:
+  algorithm: ECDSA (P-256) with SHA-256
+  signed_string: '<X-FlowPay-Timestamp>.<raw request body>'
+  public_keys: sandbox and production public keys published in the "Chiavi" chapter of the v1 contract (docs.flowpay.it)
+envelope:
+  fields:
+    - event            # event identifier
+    - tenantID         # company the event concerns
+    - eventID          # idempotency identifier for the delivery
+    - payload          # event-specific body (below)
+    - expiresAt        # ISO 8601 expiry of the subscription (renewal reminder)
+    - eventCreatedAt   # ISO 8601 event creation time
+events:
+  - name: token_revoked
+    description: any token obtained by the client was revoked
+    required_scopes: any valid client-credentials token
+    payload: [tenantID, tokenID, revokedAt]
+  - name: invoice_payment_authorized
+    description: a payment term of an invoice was authorised
+    required_scopes: 'authorization code: invoice:read & payment:read'
+    payload: [identifier, fingerprint, termID, creditor, debtor, amount, status, createdAt]
+  - name: invoice_payment_status_changed
+    description: a payment on an invoice changed state
+    required_scopes: 'authorization code: invoice:read payment:read'
+    payload: [identifier, fingerprint, termID, creditor, debtor, amount, status, createdAt, previousState, currentState]
+  - name: bill_payment_authorized
+    description: a payment term of a bill (ricevuta, B2C) was authorised
+    required_scopes: 'authorization code: bill:write & payment:read; client credentials: bill'
+    payload: [identifier, fingerprint, termID, creditor, debtor, amount, status, createdAt]
+  - name: bill_payment_status_changed
+    description: a payment on a bill changed state
+    required_scopes: 'authorization code: bill:write payment:read; client credentials: bill'
+    payload: [identifier, fingerprint, termID, creditor, debtor, amount, status, createdAt, previousState, currentState]
+  - name: checkout_payment_authorized
+    description: a checkout created by the client was paid
+    required_scopes: 'client credentials: payment:read'
+    payload: [type, identifier, tenantID, fingerprint, termID, creditor, debtor, status, createdAt]
+  - name: checkout_payment_status_changed
+    description: a payment on a client-created checkout changed state
+    required_scopes: 'client credentials: payment:read'
+    payload: [type, identifier, tenantID, fingerprint, termID, creditor, debtor, createdAt, previousState, currentState]
+  - name: consent_expiring
+    description: a bank consent is about to expire (sent ~7 days before normal expiry)
+    required_scopes: 'authorization code: none, but the token must come from the account-access flow; client credentials: account:read'
+    payload: [bankID, expiresAt]
+  - name: consent_expired
+    description: a bank consent expired (90 days after creation for recurring consents) or was revoked by the user at the bank
+    required_scopes: 'authorization code: none (account-access flow token); client credentials: account:read'
+    payload: [bankID, expiresAt]
+  - name: checkout_opened
+    description: a checkout link created by the application was opened
+    required_scopes: 'client credentials: invoice:read bill'
+    payload: [code, fingerprint, type, createdAt, previous]
+  - name: checkout_closed
+    description: the checkout window was abandoned
+    required_scopes: 'client credentials: invoice:read bill'
+    payload: [code, fingerprint, type, createdAt, previous]
+  - name: checkout_sca_opened
+    description: the checkout was redirected to external (bank) strong customer authentication
+    required_scopes: 'client credentials: invoice:read bill'
+    payload: [code, fingerprint, type, createdAt, previous]
+  - name: checkout_ok
+    description: external authorisation succeeded
+    required_scopes: 'client credentials: invoice:read bill'
+    payload: [code, fingerprint, type, createdAt, previous]
+  - name: checkout_ko
+    description: external authorisation failed
+    required_scopes: 'client credentials: invoice:read bill'
+    payload: [code, fingerprint, type, createdAt, previous]
+  - name: AIS consent status (v2)
+    description: 'v2 OpenAPI webhooks entry operationId AISConsentStatus — "Notify the status of the account information service (AIS)": status ACTIVATED | REVOKED | EXPIRED with the BankAccount and an optional rejectionReason'
+    required_scopes: null
+    payload: [account, status, rejectionReason]
+    source: openapi/bancomat-flowpay-api-v2-openapi.yml#/webhooks
+checkout_event_lifecycle:
+  - checkout_opened -> checkout_closed (user abandons)
+  - checkout_opened -> checkout_sca_opened (redirect to bank SCA) -> checkout_ok | checkout_ko
+event_count: 15

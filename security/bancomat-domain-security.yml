@@ -1,14 +1,30 @@
-generated: '2026-07-11'
+generated: '2026-09-17'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
+- host: flowpay.it
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 27 07:23:57 2026 GMT
+  hsts: false
 - host: bancomat.it
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 18 19:28:22 2026 GMT
+  cert_expires: Nov 16 22:22:09 2026 GMT
   hsts: true
   hsts_max_age: 31536000
+- host: docs.flowpay.it
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 27 07:23:57 2026 GMT
+  hsts: false
 domains:
+- domain: flowpay.it
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: quarantine
 - domain: bancomat.it
   dnssec: false
   caa: []

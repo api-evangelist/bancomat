@@ -1,0 +1,820 @@
+generated: '2026-09-17'
+method: derived
+status: candidate
+source: openapi/bancomat-flowpay-api-v2-openapi.yml (every operation, by operationId); searched github.com/FlowPay, npm, developer.flowpay.it
+  and docs.flowpay.it for an MCP server — none exists
+note: Neither BANCOMAT S.p.A. nor its FlowPay subsidiary ships an MCP server, hosted or local. This is a DERIVED candidate
+  tool list mapped 1:1 from the v2 OpenAPI operationIds so an agent framework could generate one; nothing here is callable
+  as MCP today. The v1 contract has no operationIds and is not mapped.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: oauth
+  verified: derived
+  note: mode none = candidate only; auth reflects what a generated server would need (OAuth 2.0 client_credentials / authorization_code
+    against https://core.flowpay.it/api/oauth/token)
+server:
+  name: flowpay-api-v2 (candidate)
+  base_url: https://api.flowpay.it/v2
+  auth: oauth2 bearer
+  rate_limits: 100 req/min per source IP, 10 req/s burst (rate-limits/bancomat-rate-limits.yml)
+tool_count: 59
+read_only_count: 35
+tools:
+- name: GetAccessToken
+  description: Get an access token or refresh an existing one
+  method: POST
+  path: /oauth/token
+  tags:
+  - Authentication
+  parameters: []
+  request_body: inline object
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: GetTokenInfo
+  description: Get information about the token
+  method: POST
+  path: /oauth/token/info
+  tags:
+  - Authentication
+  parameters: []
+  request_body: inline object
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getAccounts
+  description: Get the list of accounts
+  method: GET
+  path: /accounts
+  tags:
+  - Accounts
+  parameters:
+  - page
+  - tenantID
+  - bank
+  - consent
+  request_body: null
+  scopes:
+  - accounts:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createAisConsentSession
+  description: Create account consent session
+  method: POST
+  path: /accounts
+  tags:
+  - Accounts
+  parameters: []
+  request_body: inline object
+  scopes:
+  - accounts:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getAccount
+  description: Get account details
+  method: GET
+  path: /accounts/{accountID}
+  tags:
+  - Accounts
+  parameters:
+  - accountID
+  request_body: null
+  scopes:
+  - accounts:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getBanks
+  description: Get banks
+  method: GET
+  path: /banks
+  tags:
+  - Banks
+  parameters:
+  - country
+  - recurring
+  - recurringFrequency
+  - sctType
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getBank
+  description: Get bank details
+  method: GET
+  path: /banks/{id}
+  tags:
+  - Banks
+  parameters:
+  - id
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createBulkPayment
+  description: Create bulk document
+  method: POST
+  path: /bulk
+  tags:
+  - Bulk
+  parameters: []
+  request_body: inline object
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: listBulkPayments
+  description: List bulk documents
+  method: GET
+  path: /bulk
+  tags:
+  - Bulk
+  parameters:
+  - page
+  - pageSize
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getBulkPayment
+  description: Get document details
+  method: GET
+  path: /bulk/{fingerprint}
+  tags:
+  - Bulk
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: deleteBulkPayment
+  description: Delete bulk payment
+  method: DELETE
+  path: /bulk/{fingerprint}
+  tags:
+  - Bulk
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createChainPayment
+  description: Create chain document
+  method: POST
+  path: /chain
+  tags:
+  - Chain
+  parameters: []
+  request_body: inline object
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: listChainPayments
+  description: List chain documents
+  method: GET
+  path: /chain
+  tags:
+  - Chain
+  parameters:
+  - page
+  - pageSize
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getChainPayment
+  description: Get document details
+  method: GET
+  path: /chain/{fingerprint}
+  tags:
+  - Chain
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createCheckout
+  description: Create checkout
+  method: POST
+  path: /checkout
+  tags:
+  - Checkout
+  parameters: []
+  request_body: inline object
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getCheckout
+  description: Get checkout details
+  method: GET
+  path: /checkout/{code}
+  tags:
+  - Checkout
+  parameters:
+  - code
+  request_body: null
+  scopes:
+  - checkout:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: deleteCheckout
+  description: Delete checkout
+  method: DELETE
+  path: /checkout/{code}
+  tags:
+  - Checkout
+  parameters:
+  - code
+  request_body: null
+  scopes: []
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createCreditNote
+  description: Create credit note
+  method: POST
+  path: /creditNotes
+  tags:
+  - Invoices
+  - Documents
+  parameters: []
+  request_body: inline object
+  scopes:
+  - invoice:read
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getCreditNotes
+  description: List credit notes
+  method: GET
+  path: /creditNotes
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - page
+  - limit
+  - sort
+  - filter
+  request_body: null
+  scopes:
+  - invoice:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getCreditNote
+  description: Get credit note details
+  method: GET
+  path: /creditNotes/{fingerprint}
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - invoice:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: deleteCreditNote
+  description: Delete credit note
+  method: DELETE
+  path: /creditNotes/{fingerprint}
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - invoice:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: addSiteWorker
+  description: Add worker to site
+  method: POST
+  path: /constructions/contracts
+  tags:
+  - Construction
+  parameters: []
+  request_body: inline object
+  scopes:
+  - construction:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getWorkers
+  description: List workers
+  method: GET
+  path: /constructions/contracts
+  tags:
+  - Construction
+  parameters:
+  - page
+  - limit
+  request_body: null
+  scopes:
+  - construction:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: acceptSiteAssignment
+  description: Accept assignment
+  method: PATCH
+  path: /constructions/contracts/{identifier}
+  tags:
+  - Construction
+  parameters:
+  - identifier
+  request_body: inline object
+  scopes:
+  - construction:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: withdrawFromSite
+  description: Contract withdrawal
+  method: DELETE
+  path: /constructions/contracts/{identifier}
+  tags:
+  - Construction
+  parameters:
+  - identifier
+  request_body: null
+  scopes:
+  - construction:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createConstructionSite
+  description: Open a new site
+  method: POST
+  path: /constructions/sites
+  tags:
+  - Construction
+  parameters: []
+  request_body: inline object
+  scopes:
+  - authorization_code
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getConstructionSites
+  description: List sites
+  method: GET
+  path: /constructions/sites
+  tags:
+  - Construction
+  parameters:
+  - page
+  - limit
+  request_body: null
+  scopes:
+  - construction:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getConstructionSite
+  description: Get site details
+  method: GET
+  path: /constructions/sites/{identifier}
+  tags:
+  - Construction
+  parameters:
+  - identifier
+  request_body: null
+  scopes:
+  - construction:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: cashout
+  description: Cashout
+  method: POST
+  path: /constructions/sites/{identifier}/cashout
+  tags: []
+  parameters:
+  - identifier
+  request_body: inline object
+  scopes:
+  - construction:write
+  - wallet:construction
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createQuote
+  description: Create quote
+  method: POST
+  path: /constructions/sites/{identifier}/quote
+  tags:
+  - Construction
+  parameters:
+  - identifier
+  request_body: inline object
+  scopes:
+  - construction:write
+  - wallet:construction
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getQuotes
+  description: List quotes
+  method: GET
+  path: /constructions/sites/{identifier}/quote
+  tags:
+  - Construction
+  parameters:
+  - identifier
+  - page
+  - limit
+  request_body: null
+  scopes:
+  - construction:read
+  - wallet:construction
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: registerWorkProgress
+  description: Register work progress
+  method: POST
+  path: /constructions/progress
+  tags:
+  - Construction
+  parameters: []
+  request_body: inline object
+  scopes:
+  - construction:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getWorkProgress
+  description: List work progress
+  method: GET
+  path: /constructions/progress
+  tags:
+  - Construction
+  parameters:
+  - page
+  - limit
+  request_body: null
+  scopes:
+  - construction:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getWorkProgressDetails
+  description: Get work progress details
+  method: GET
+  path: /constructions/progress/{identifier}
+  tags:
+  - Construction
+  parameters:
+  - identifier
+  request_body: null
+  scopes:
+  - construction:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getFees
+  description: List fees
+  method: GET
+  path: /fee
+  tags:
+  - Fee
+  parameters:
+  - page
+  - size
+  request_body: null
+  scopes:
+  - fees:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: list_fee_rules
+  description: List fee rules
+  method: GET
+  path: /fee/rules
+  tags:
+  - Fee
+  parameters:
+  - types
+  - methods
+  - lowerBound
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getFeeRules
+  description: Retrieve fee rules for a document
+  method: GET
+  path: /fee/rules/{kind}/{fingerprint}
+  tags:
+  - Fee
+  parameters:
+  - kind
+  - fingerprint
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getFeeRuleForPayer
+  description: Retrieve fee rule for a specific payer
+  method: GET
+  path: /fee/rules/{kind}/{fingerprint}/{payer}
+  tags:
+  - Fee
+  parameters:
+  - kind
+  - fingerprint
+  - payer
+  request_body: null
+  scopes: []
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createInvoice
+  description: Create invoice
+  method: POST
+  path: /invoices
+  tags:
+  - Invoices
+  - Documents
+  parameters: []
+  request_body: inline object
+  scopes:
+  - invoices:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getInvoices
+  description: List invoices
+  method: GET
+  path: /invoices
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - from
+  - to
+  - status
+  - page
+  - size
+  request_body: null
+  scopes:
+  - invoices:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getInvoice
+  description: Get invoice details
+  method: GET
+  path: /invoices/{fingerprint}
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - invoices:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: startKyc
+  description: Start KYC
+  method: POST
+  path: /kyc
+  tags:
+  - KYC
+  parameters: []
+  request_body: inline object
+  scopes:
+  - kyc
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getKycStatus
+  description: Get KYC data
+  method: GET
+  path: /kyc/{identifier}
+  tags:
+  - KYC
+  parameters:
+  - identifier
+  request_body: null
+  scopes:
+  - kyc
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: pagopaPayment
+  description: pagoPA payment
+  method: POST
+  path: /pagopa
+  tags:
+  - pagoPA
+  - Documents
+  parameters: []
+  request_body: inline object
+  scopes:
+  - pagopa:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getPagopaList
+  description: pagoPA list
+  method: GET
+  path: /pagopa
+  tags:
+  - pagoPA
+  - Documents
+  parameters:
+  - from
+  - to
+  - status
+  - page
+  - pageSize
+  request_body: null
+  scopes:
+  - pagopa:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getPagopaDetails
+  description: Get pagoPA details
+  method: GET
+  path: /pagopa/{fingerprint}
+  tags:
+  - pagoPA
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - pagopa:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getPagopaReceipt
+  description: Get pagoPA receipt
+  method: GET
+  path: /pagopa/{fingerprint}/receipt
+  tags:
+  - pagoPA
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - pagopa:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getPayments
+  description: Get payments
+  method: GET
+  path: /payments
+  tags:
+  - Payments
+  parameters:
+  - accountID
+  - from
+  - to
+  request_body: null
+  scopes:
+  - payments:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getPayment
+  description: Get payment details
+  method: GET
+  path: /payments/{paymentID}
+  tags:
+  - Payments
+  parameters:
+  - paymentID
+  request_body: null
+  scopes:
+  - payments:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createProformaInvoice
+  description: Create proforma invoice
+  method: POST
+  path: /proforma
+  tags:
+  - Invoices
+  - Documents
+  parameters: []
+  request_body: inline object
+  scopes:
+  - invoice:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getProformaInvoices
+  description: List proforma invoices
+  method: GET
+  path: /proforma
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - from
+  - to
+  request_body: null
+  scopes:
+  - invoice:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getProformaInvoice
+  description: Get proforma details
+  method: GET
+  path: /proforma/{fingerprint}
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - invoice:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: deleteProformaInvoice
+  description: Delete proforma invoice
+  method: DELETE
+  path: /proforma/{fingerprint}
+  tags:
+  - Invoices
+  - Documents
+  parameters:
+  - fingerprint
+  request_body: null
+  scopes:
+  - invoice:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getTransactions
+  description: Get transactions
+  method: GET
+  path: /transactions
+  tags:
+  - Transactions
+  parameters:
+  - IBAN
+  - currency
+  - from
+  - to
+  - page
+  - size
+  request_body: null
+  scopes:
+  - transactions:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getTransaction
+  description: Get transaction details
+  method: GET
+  path: /transactions/{transactionID}
+  tags:
+  - Transactions
+  parameters:
+  - transactionID
+  request_body: null
+  scopes:
+  - transactions:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getTransfers
+  description: Get transfers
+  method: GET
+  path: /transfers
+  tags:
+  - Transfers
+  parameters:
+  - from
+  - to
+  - page
+  - size
+  request_body: null
+  scopes:
+  - transfers:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: createTransfer
+  description: Create transfer
+  method: POST
+  path: /transfers
+  tags:
+  - Transfers
+  - Documents
+  parameters: []
+  request_body: inline object
+  scopes:
+  - transfers:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: getTransfer
+  description: Get transfer details
+  method: GET
+  path: /transfers/{transferID}
+  tags:
+  - Transfers
+  parameters:
+  - transferID
+  request_body: null
+  scopes:
+  - transfers:read
+  read_only: true
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml
+- name: deleteTransfer
+  description: Delete transfer
+  method: DELETE
+  path: /transfers/{transferID}
+  tags:
+  - Transfers
+  parameters:
+  - transferID
+  request_body: null
+  scopes:
+  - transfers:write
+  read_only: false
+  openapi: openapi/bancomat-flowpay-api-v2-openapi.yml

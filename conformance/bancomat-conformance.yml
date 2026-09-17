@@ -1,0 +1,107 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  openapi/bancomat-flowpay-api-v1-openapi.yml and openapi/bancomat-flowpay-api-v2-openapi.yml
+  (securitySchemes, paths, description chapters); live OpenID Provider metadata at
+  https://core.flowpay.it/api/openid/.well-known/openid-configuration; https://flowpay.it/ footer
+  ("Istituto di pagamento, cod. Banca d'Italia Ref. 36925"); https://github.com/FlowPay/client-openapi/blob/main/docs/general.md;
+  https://bancomat.it/en/payment-security and https://bancomat.it/en/adhere-to-the-circuits
+scope: >-
+  FlowPay open-banking API (FlowPay S.r.l., a BANCOMAT company since 2025-07-22) plus the
+  BANCOMAT scheme's published compliance posture. Reward-only: absences below are recorded
+  honestly and are not penalties.
+conformance:
+  - id: oauth2
+    conforms: true
+    evidence: 'securitySchemes ThirdPartyAuthorizationCode / ThirdPartyClientCredential (v1) and oAuth2 (v2): authorizationCode + clientCredentials flows, token endpoint https://core.flowpay.it/api/oauth/token; grant_type_supported [authorization_code, client_credentials, refresh_token] in the live OIDC metadata'
+  - id: oidc
+    conforms: true
+    evidence: 'OpenID Provider metadata served at https://core.flowpay.it/api/openid/.well-known/openid-configuration (200): issuer https://core.flowpay.it/api, scopes openid/profile/email, response_type_supported [code, id_token, code id_token], id_token_signing_alg ES256, claims_supported incl. sub/email/tenant_id — saved as well-known/bancomat-flowpay-openid-configuration.json'
+  - id: pkce
+    conforms: true
+    evidence: 'v1 contract "Flusso di autenticazione" documents code_challenge / code_challenge_method S256 with a worked JavaScript example and says PKCE is usable in sandbox and decided by client type in production'
+  - id: oauth-par
+    conforms: true
+    evidence: 'pushed_authorization_request_endpoint https://core.flowpay.it/api/oauth/par in the live OIDC metadata; v1 chapter "Push Authorization Request" (RFC 9126) — single-use, time-limited request_uri; marked in development / sandbox-usable'
+    note: partial — documented as in development
+  - id: oauth-jar
+    conforms: true
+    evidence: 'request_object_signing_alg_supported [ES256, PS256] and request_uri_paramenter_supported in the OIDC metadata; v1 chapter "Generazione del campo request" defines a signed JWT request object (iss = client_id, aud = issuer) carrying the consent block'
+  - id: fapi
+    conforms: false
+    evidence: no FAPI 1.0 / FAPI 2.0 profile is claimed anywhere; building blocks (PAR, JAR, PKCE, ES256/PS256) are present but no mTLS/DPoP sender-constraint or FAPI conformance statement is published
+  - id: psd2
+    conforms: true
+    evidence: 'FlowPay is a Bank of Italy-authorised payment institution ("Istituto di pagamento, cod. Banca d''Italia Ref. 36925", flowpay.it footer) acting as AISP and PISP; docs/general.md: "All PSD2 consents are collected directly by FlowPay"; v1 endpoints POST /ais, GET /{tenantID}/consents, POST /{tenantID}/consents; 90-day recurring AIS consent expiry (consent_expired webhook)'
+    note: regulatory authorisation and consent model, not a NextGenPSD2 / Berlin Group API surface — FlowPay aggregates banks and exposes its own contract
+  - id: berlin-group-nextgenpsd2
+    conforms: false
+    evidence: neither contract exposes Berlin Group XS2A paths or headers (no /v1/consents, PSU-* headers, X-Request-ID); FlowPay consumes bank XS2A APIs and re-exposes its own model
+  - id: psd2-sca
+    conforms: true
+    evidence: 'Strong Customer Authentication is delegated to the user''s bank during PIS/AIS authorisation: GetSCAResponse schema, checkout_sca_opened / checkout_ok / checkout_ko webhook events, "single Strong Customer Authentication (SCA) to pay multiple payment requests" (bulk_lifecycle.md); scope authentication_level:sca in scopes_supported'
+  - id: sepa-sct
+    conforms: true
+    evidence: 'docs/general.md: "user can initiate a SEPA Credit Transfer (SCT) payment from one of its bank accounts"; v2 getTransfers query sctType; IBAN-addressed transfers (creditorIban / senderIban / recipientIban fields)'
+  - id: iban-iso-13616
+    conforms: true
+    evidence: 'v1 GET /ais/check-iban/{iban}/{vatCode}; IBAN fields on Account, Invoice, Transfer schemas (examples IT43M0300203280178858532758)'
+  - id: iso-20022
+    conforms: false
+    evidence: no pain.001 / camt.05x message types or ISO 20022 identifiers appear in either contract; transfers use FlowPay''s own JSON document model
+  - id: pci-dss
+    conforms: false
+    evidence: 'no PCI-DSS attestation is published by FlowPay; card acceptance appears only as a fee-rule payment method (pis, sdd, card). BANCOMAT S.p.A. publishes a Politecnico di Torino security assessment of the BANCOMAT chip card (https://bancomat.it/en/payment-security) but no PCI-DSS AOC'
+  - id: rfc9457
+    conforms: false
+    evidence: errors are custom JSON envelopes (ErrorDTO in v1; {statusCode, requestID, message, additionalInfo} in v2), never application/problem+json
+  - id: json:api
+    conforms: false
+    evidence: plain JSON arrays and objects; no data/attributes/relationships envelope
+  - id: pagination
+    conforms: true
+    evidence: 'v2 list operations take page + size/pageSize/limit query parameters (getInvoices, getTransactions, getPayments, getTransfers, listBulkPayments, listChainPayments, getConstructionSites ...); v1 lists are unpaginated'
+    note: partial — page-number style, no total or next-cursor fields documented, v1 unpaginated
+  - id: idempotency
+    conforms: false
+    evidence: no Idempotency-Key header on any write in either contract (see conventions/bancomat-conventions.yml idempotency.coverage none)
+  - id: webhook-signing
+    conforms: true
+    evidence: 'v1 "Signature" chapter: ECDSA P-256 / SHA-256 over "<timestamp>.<body>", delivered in X-FlowPay-Raw-Signature and X-FlowPay-Der-Signature with X-FlowPay-Timestamp; public keys for sandbox and production published in the contract'
+  - id: scim
+    conforms: false
+    evidence: not applicable — no user-provisioning surface
+  - id: odata
+    conforms: false
+    evidence: not applicable
+domain_standards:
+  - id: pagopa
+    label: pagoPA (Italian public-administration payment platform, AgID / PagoPA S.p.A.)
+    conforms: true
+    evidence: 'v2 POST /pagopa (operationId pagopaPayment) and GET /pagopa take the pagoPA notice identifiers — query parameters paVatCode (creditor PA VAT code) and noticeNumber (18-digit Numero Avviso) on v1 GET /pagopa; docs/pagopa_status.md mirrors the pagoPA notice states ready / activated / locked / paid / paidOnAnotherProvider ("An activated payment notice cannot be paid by another payment provider"); scopes pagopa:read / pagopa:write; docs/types/xmlpa.txt carries the PA XML shape'
+    location:
+      - openapi/bancomat-flowpay-api-v2-openapi.yml#/paths/~1pagopa
+      - openapi/bancomat-flowpay-api-v1-openapi.yml#/paths/~1pagopa
+    market: Italy — public-administration collections
+  - id: fatturapa-sdi
+    label: Italian electronic invoicing (FatturaPA / Sistema di Interscambio)
+    conforms: false
+    evidence: 'the FlowPay GitHub org publishes FatturaElettronica-Swift (an XML helper for Italian e-invoices) but neither API contract accepts or emits FatturaPA XML; invoices are FlowPay JSON documents. Scope "ade" ("Allow to interact with Agenzia delle Entrate services") is declared in v2 with no operation behind it'
+    note: adjacent, not a contract-declared conformance — recorded so the next pass does not re-litigate it
+compliance_program:
+  regulatory_status:
+    - entity: FlowPay S.r.l.
+      authority: Banca d'Italia
+      status: Istituto di pagamento (payment institution), register ref. 36925
+      services: AISP, PISP (docs/general.md "regulated by the Bank of Italy")
+      evidence: https://flowpay.it/
+    - entity: BANCOMAT S.p.A.
+      status: domestic card scheme operator (PagoBancomat, BANCOMAT Pay); scheme membership, certification and homologation for issuers/acquirers/certified operators
+      evidence: https://bancomat.it/en/adhere-to-the-circuits
+  published_certifications: []
+  note: >-
+    No SOC 2 / ISO 27001 / PCI-DSS certificate or trust center is published by either entity;
+    BANCOMAT's public security material is a card-security technical report by Politecnico di
+    Torino plus fraud-prevention guidance (https://bancomat.it/en/payment-security,
+    https://bancomat.it/en/fraud-prevention). BANCOMAT also publishes a Model 231 organisational
+    model, code of ethics and whistleblowing procedure (https://bancomat.it/en/ethics-and-regulatory-compliance).

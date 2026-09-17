@@ -1,0 +1,44 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  openapi/bancomat-flowpay-api-v1-openapi.yml and openapi/bancomat-flowpay-api-v2-openapi.yml
+  (info.version, servers[], deprecated flags); https://github.com/FlowPay/client-openapi commits;
+  https://blog.flowpay.it/feed/; probes of https://status.flowpay.it (404) and bancomat.it sitemap
+  (no status, changelog, versioning or deprecation page)
+versioning:
+  scheme: URL path (v1 at https://app.flowpay.it/api — unversioned path, Italian contract; v2 at https://api.flowpay.it/v2)
+  current_versions:
+    - api: FlowPay API (v1)
+      version: unversioned (OpenAPI 3.0.3 contract rendered on docs.flowpay.it)
+      status: production — live (GET https://app.flowpay.it/api/banks returned 200 on 2026-09-17)
+    - api: FlowPay API (v2)
+      version: 2.0.0-alpha.4 (info.version)
+      status: alpha per the contract, yet the production server answers (GET https://api.flowpay.it/v2/banks returned 200 on 2026-09-17) while servers[] still labels it "Production server (Not implementend)"
+  policy: none published
+deprecation:
+  policy: none published
+  headers: none documented (no Deprecation / Sunset / Link rel=sunset)
+  deprecated_operations: []
+  note: neither contract flags any operation deprecated; the v1 Webhooks chapter is marked "In fase sperimentale e soggetta a breaking changes" (experimental, breaking changes possible).
+experimental_surfaces:
+  - v1 Webhooks (subject to breaking changes)
+  - v1 Push Authorization Request endpoint ("in fase di sviluppo")
+  - v2 as a whole (2.0.0-alpha.4)
+status_page:
+  url: null
+  note: none published; https://status.flowpay.it returned 404 and bancomat.it lists no status page.
+sla:
+  published: false
+  note: none published; FlowPay is a Bank of Italy-authorised payment institution (ref. 36925) but publishes no API SLA.
+changelog:
+  url: null
+  note: no dated API changelog; the client-openapi repository's commit history (last spec commit 2025-04-03 "Adds fee specification", repo pushed 2026-09-15) is the only change record; blog.flowpay.it is a marketing blog.
+support:
+  url: https://youtrack.flowpay.it/
+  email: api-support@flowpay.it
+  note: v2 info.contact names API Support (api-support@flowpay.it, https://developer.flowpay.it); v1 info.contact names an individual engineer at flowpay.it — not reproduced.
+bancomat_scheme:
+  note: >-
+    BANCOMAT S.p.A. publishes no API lifecycle, status page or deprecation policy for the
+    PagoBancomat / BANCOMAT Pay scheme; certification and product lifecycle notices reach
+    members through BANCOMAT Insight (https://insight.bancomat.it, OTP login).

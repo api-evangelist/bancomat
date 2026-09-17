@@ -4,91 +4,66 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Bancomat
 providerId: bancomat
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-17'
+generated: '2026-09-17'
+method: searched
+source: https://github.com/FlowPay/client-openapi/blob/main/docs/general.md ("Rate limits" section, commit 2025-04-03)
+sources:
+  - https://github.com/FlowPay/client-openapi/blob/main/docs/general.md
+  - https://docs.flowpay.it/
 tags:
-  - ATM
-  - Banking
-  - Financial Services
-  - Italy
-  - Mobile Payments
+  - Open Banking
   - Payments
-  - Debit Cards
+  - Italy
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Bancomat API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
+description: >-
+  Published rate limits for the FlowPay open-banking API (FlowPay S.r.l., a BANCOMAT company).
+  The v2 documentation states exactly two limits — 100 requests per minute per source IP and a
+  burst ceiling of 10 requests per second — and the status code on exhaustion (429). No
+  rate-limit response headers are documented in either contract, and the v1 contract on
+  docs.flowpay.it documents no limits at all. The BANCOMAT scheme publishes no public API and
+  therefore no limits. This file REPLACES a 2026-05-04 scaffold whose tiers and numbers were
+  placeholders, not provider-published values.
+limit_count: 2
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  limit: null
+  remaining: null
+  reset: null
+  retryAfter: null
+  policy: null
+  note: no RateLimit-* / X-RateLimit-* / Retry-After headers are documented; agents must count locally and back off on 429.
 responseCodes:
   throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
+  quotaExceeded: null
+  serviceUnavailable: null
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - BANCOMAT Pay
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - BANCOMAT Pay
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
+  - name: Per-IP steady-state limit
+    scope: source-ip
     metric: requests_per_minute
     limit: 100
-    burst: 200
     timeFrame: minute
+    window: 1 minute
+    burst: null
     applies:
-      - BANCOMAT Pay
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
+      - FlowPay API (v2)
+    evidence: '"Requests are limited to 100 requests per minute per source IP, if you exceed this limit you will receive a 429 error." — docs/general.md'
+  - name: Per-IP burst limit
+    scope: source-ip
+    metric: requests_per_second
+    limit: 10
+    timeFrame: second
+    window: 1 second
+    burst: 10
     applies:
-      - BANCOMAT Pay
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - BANCOMAT Pay
+      - FlowPay API (v2)
+    evidence: '"There is also a burst limit of 10 requests per second." — docs/general.md'
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  - name: Backoff on 429
+    description: The documentation names the 429 status but no Retry-After header; clients should apply exponential backoff with jitter and stay under 100 req/min per source IP.
+  - name: Webhook receiver timeout
+    description: Inbound webhook deliveries must be answered within 10 seconds or they count as failed and are retried with randomised exponential backoff (v1 contract, Webhooks chapter).
+  - name: v1 undocumented
+    description: The v1 contract (app.flowpay.it/api) documents no request limits; the 429 code does not appear in its responses.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

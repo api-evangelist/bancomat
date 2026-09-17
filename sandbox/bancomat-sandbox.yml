@@ -1,0 +1,55 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  v1 contract description on https://docs.flowpay.it/ (Autenticazione, Push Authorization Request,
+  Chiavi chapters) and https://github.com/FlowPay/client-openapi/blob/main/docs/general.md
+  ("Sandbox environment", "Limitations of the public sandbox environment", "Request a dedicated
+  sandbox environment"); servers[] of openapi/bancomat-flowpay-api-v2-openapi.yml
+provider_scope: FlowPay open-banking API (a BANCOMAT company). The BANCOMAT scheme offers no public sandbox; certification testing is member-only via BANCOMAT Insight.
+environments:
+  - name: v1 shared sandbox
+    issuer: https://core.sandbox-new.flowpay.it/api/openid
+    authorization_endpoint: https://core.sandbox-new.flowpay.it/api/openid/authenticate
+    token_endpoint: https://core.sandbox-new.flowpay.it/api/oauth/token
+    par_endpoint: https://core.sandbox-new.flowpay.it/api/oauth/par
+    api_base: null
+    note: the v1 contract documents only the sandbox OAuth host; it names no separate sandbox API base URL.
+  - name: v2 mock server
+    api_base: https://mock.flowpay.it/v2
+    status_observed: 502 Bad Gateway on 2026-09-17 (nginx), i.e. listed in servers[] but not answering
+  - name: v2 customer sandbox
+    api_base: https://sandbox.{customerID}.flowpay.it/v2
+    note: '"Customer-assigned sandbox server" — customerID is a "unique customer identifier assigned after contract signature" (servers[] variable)'
+  - name: production
+    api_base_v1: https://app.flowpay.it/api
+    api_base_v2: https://api.flowpay.it/v2
+    issuer: https://core.flowpay.it/api
+access:
+  self_serve: true
+  how: Register a company account on https://developer.flowpay.it (verify a bank account you own + identity check), create an application; "Once the application has been created, it is already enabled for the sandbox environment".
+  dedicated: '"If you need to test the full functionality of the APIs, you can request a dedicated sandbox environment" — on request, not self-serve'
+key_modes:
+  separation: separate OAuth issuer per environment (core.sandbox-new.flowpay.it vs core.flowpay.it); no key-prefix convention is documented
+  client_types_in_sandbox: only confidential clients are issued in sandbox, but PKCE can still be exercised; in production the client type decides the flow
+test_fixtures:
+  fake_businesses: '"two fake businesses, each with a fake bank account and fake account data, so you can test AIS and PIS flows"'
+  fake_ais_data: provided on the fake bank accounts (real banks return no AIS data in sandbox)
+  test_cards: null
+  test_bank_accounts: null
+  note: the docs describe the fixtures but publish no literal test IBANs, credentials or card numbers — none are recorded here.
+time_simulation: none documented
+relaxed_checks:
+  - JWT request-object signatures are NOT verified in sandbox ("in sandbox non viene verificata la firma del jwt") but are required in production
+  - Push Authorization Request endpoint is "in development, already usable in sandbox"
+limitations:
+  - payment-status webhooks are not triggered and payment status is not updated (sandbox open-banking APIs cannot monitor payments)
+  - AIS balance/transaction data from real banks is not returned (fake accounts carry fake data instead)
+  - bulk payment service unavailable (requires the FlowPay technical account)
+  - payment chain service unavailable (requires a real executed payment)
+  - user onboarding not allowed in sandbox
+webhook_signing_keys:
+  note: >-
+    FlowPay publishes the ECDSA P-256 public keys used to sign webhook deliveries for both
+    environments in the v1 contract ("Chiavi" chapter) — a sandbox key and a production key.
+    Fetch them from https://docs.flowpay.it/ (they are also present verbatim in
+    openapi/_original/bancomat-flowpay-api-v1-openapi.json); they are not repeated here.

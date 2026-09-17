@@ -1,0 +1,52 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://github.com/FlowPay (org: "FlowPay — a Bancomat company"); package.json of
+  FlowPay/checkout-generator and FlowPay/checkout-generator-cli; registry.npmjs.org search for
+  "bancomat" and "flowpay"; pypi.org/pypi/{bancomat,bancomat-pay,flowpay,flowpay-sdk}/json (404);
+  api.github.com/orgs/{bancomat,bancomat-spa,bancomatpay} (404)
+note: >-
+  BANCOMAT S.p.A. publishes no SDKs or packages and has no GitHub organisation. Its FlowPay
+  subsidiary publishes one first-party client library on GitHub Packages (not the public npm
+  registry — installing it needs an npm.pkg.github.com registry entry and a GitHub token) and a
+  companion CLI installed from source. The @flowpay-io/* packages on npmjs.com belong to
+  flowpay.io (a different company, catalogued separately as flowpayio) and the npm package
+  flowpay-sdk belongs to OthobaPay — neither is recorded here. No Python, Java, .NET, Go, Ruby,
+  PHP or Rust client exists.
+package_count: 2
+official_count: 2
+packages:
+  - name: '@flowpay/checkout-generator'
+    language: TypeScript
+    registry: github-packages
+    registry_url: https://npm.pkg.github.com
+    repository: https://github.com/FlowPay/checkout-generator
+    install: npm install --save @flowpay/checkout-generator
+    official: true
+    version: 1.1.20
+    version_source: package.json on main (GitHub Packages metadata is not readable without authentication)
+    published: null
+    published_note: registry publish date not readable anonymously; last commit on main 2023-03-01
+    license: Apache-2.0
+    description: Library that creates FlowPay checkouts (v1 API) from transfer inputs or a CSV — wraps the OAuth client-credentials token and POST /{tenantID}/checkout
+    apis:
+      - FlowPay API (v1)
+  - name: '@flowpay/checkout-generator-index'
+    binary: fpy-generator
+    language: JavaScript (Node.js)
+    registry: none
+    repository: https://github.com/FlowPay/checkout-generator-cli
+    install: git clone https://github.com/FlowPay/checkout-generator.git && cd checkout-generator && npm install -g
+    official: true
+    version: 1.0.0
+    version_source: package.json on main
+    published: null
+    published_note: not published to any registry; installed from source; last commit 2023-02-28
+    license: ISC
+    description: CLI (fpy-generator) that reads a CSV of invoices/transfers and generates FlowPay checkout links in bulk, with column mapping and per-row .mjs scripting
+    apis:
+      - FlowPay API (v1)
+    cli: cli/bancomat-cli.yml
+abandonment_signal: >-
+  Both packages were last committed in early 2023 and wrap the v1 API; the v2 contract
+  (2.0.0-alpha.4, 2025) has no client library at all.

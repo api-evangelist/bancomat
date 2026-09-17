@@ -1,0 +1,59 @@
+generated: '2026-09-17'
+method: searched
+source: https://github.com/FlowPay/checkout-generator-cli (README.md, package.json, map.json)
+name: fpy-generator (FlowPay Checkout Generator CLI)
+provider: FlowPay S.r.l. (a BANCOMAT company)
+official: true
+package: packages/bancomat-packages.yml (@flowpay/checkout-generator-index)
+repository: https://github.com/FlowPay/checkout-generator-cli
+version: 1.0.0
+last_commit: '2023-02-28'
+language: Node.js
+license: ISC
+install:
+  - method: source
+    commands:
+      - git clone https://github.com/FlowPay/checkout-generator.git
+      - cd checkout-generator
+      - npm install -g
+    note: the README clones the library repo and installs globally; the CLI package itself is not on any registry
+auth:
+  env:
+    - CLIENT_ID
+    - CLIENT_SECRET
+  flags: [-i/--clientId, -s/--clientSecret]
+  flow: OAuth 2.0 client_credentials against the FlowPay v1 API (client generated on https://developer.flowpay.it)
+scope: single-purpose — bulk checkout generation; it does not cover the rest of the API surface
+commands:
+  - name: fpy-generator
+    description: Read a CSV of documents (VAT code, amount, due date, creditor IBAN, remittance, recurrences) and create one FlowPay checkout per row, writing the generated checkout code and URL back to an output CSV
+    api_operations:
+      - POST /{tenantID}/checkout (FlowPay API v1)
+    flags:
+      - {flag: -p/--path, env: CSV_PATH, description: input CSV path}
+      - {flag: -o/--pathOutput, description: output CSV path (defaults next to the input)}
+      - {flag: -j/--pathMap, env: MAP_PATH, description: map.json mapping custom column titles}
+      - {flag: -y/--pathScript, env: SCRIPT_PATH, description: .mjs script executed per CSV row (overrides mapping)}
+      - {flag: -k/--creditorIBAN, description: default creditor IBAN for every checkout}
+      - {flag: -r/--okRedirect, description: success redirect URL}
+      - {flag: -n/--nokRedirect, description: failure redirect URL}
+      - {flag: -i/--clientId, env: CLIENT_ID}
+      - {flag: -s/--clientSecret, env: CLIENT_SECRET}
+    column_mapping_flags: [-v/--vatCode, -c/--creditorIban, -a/--amount, -e/--expireDate, -r/--remittance, -d/--codeInvoice, -u/--urlCheckout, -ri/--recurringInfo, -f/--fingerprint]
+    default_map:
+      vat_code: Partita Iva
+      amount: Importo
+      expire_date: Data di scadenza
+      creditor_iban: Creditore IBAN
+      remittance: Causale
+      code_invoice: Riferimento checkout
+      url_checkout: Link riferimento checkout
+      recurring_info: Ricorrenze
+key_flows:
+  - name: Bulk checkout links from an invoice export
+    steps:
+      - export invoices to CSV with the default column titles (or supply map.json)
+      - export CLIENT_ID / CLIENT_SECRET
+      - 'fpy-generator -p invoices.csv -k <creditor IBAN> -r <ok url> -n <ko url>'
+      - read code_invoice / url_checkout columns from the output CSV and send the links to debtors
+note: BANCOMAT S.p.A. itself ships no CLI.

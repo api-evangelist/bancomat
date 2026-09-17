@@ -1,0 +1,178 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  docs.flowpay.it (v1 contract description: Autenticazione, Webhooks, Signature chapters);
+  https://github.com/FlowPay/client-openapi/blob/main/docs/general.md (Pagination, Rate limits,
+  Sandbox, Onboarding); operation descriptions in openapi/bancomat-flowpay-api-v1-openapi.yml and
+  openapi/bancomat-flowpay-api-v2-openapi.yml; live unauthenticated responses from app.flowpay.it/api
+  and api.flowpay.it/v2 (2026-09-17)
+scope: >-
+  FlowPay open-banking API (FlowPay S.r.l., a BANCOMAT company since 2025-07-22). The BANCOMAT
+  scheme itself (PagoBancomat, BANCOMAT Pay, ATM) publishes no public API conventions — its
+  technical material is member-only behind https://insight.bancomat.it.
+cross_links:
+  authentication: authentication/bancomat-authentication.yml
+  scopes: scopes/bancomat-scopes.yml
+  errors: errors/bancomat-problem-types.yml
+  lifecycle: lifecycle/bancomat-lifecycle.yml
+  rate_limits: rate-limits/bancomat-rate-limits.yml
+  sandbox: sandbox/bancomat-sandbox.yml
+  webhooks: asyncapi/bancomat-flowpay-webhooks.yml
+
+authentication:
+  style: OAuth 2.0 bearer tokens (authorization_code with PKCE for user-delegated access, client_credentials for the client's own tenant); OpenID Connect id_tokens (ES256)
+  header: 'Authorization: Bearer <access_token>'
+  token_endpoint: https://core.flowpay.it/api/oauth/token
+  discovery: https://core.flowpay.it/api/openid/.well-known/openid-configuration
+  tenant_scoping: v1 prefixes every resource path with /{tenantID}; v2 derives the tenant from the token ("tenant filtering in headers", general.md)
+  detail: authentication/bancomat-authentication.yml
+
+idempotency:
+  coverage: none
+  header: null
+  scope: []
+  retention: null
+  note: >-
+    No Idempotency-Key (or equivalent) header is documented on any write in either contract.
+    Documents are addressed by a content `fingerprint` (MD5-shaped in examples) and v1 rejects a
+    re-upload with application code 2012 "Si sta provando a caricare un documento già esistente",
+    which prevents duplicate documents but is not a replay-safe idempotency mechanism for
+    payments, checkouts or transfers. Outbound webhook deliveries DO carry an `eventID`
+    "identificativo di idempotenza" so receivers can de-duplicate — that is the receiver's
+    idempotency, not the API's.
+
+pagination:
+  style: page-number
+  params:
+    - page
+    - size
+    - pageSize
+    - limit
+  response_fields: []
+  note: >-
+    v2 lists (invoices, proforma, creditNotes, transactions, payments, transfers, bulk, chain,
+    constructions/*) take `page` plus `size` (some `pageSize` or `limit`) and date-window
+    `from`/`to` query params; the "Pagination" heading in general.md is empty, and no total /
+    next-cursor response fields are documented. v1 lists (/{tenantID}/invoices etc.) accept no
+    pagination parameters at all and return bare JSON arrays.
+
+filtering:
+  params:
+    - from
+    - to
+    - status
+    - types
+    - methods
+    - sort
+    - filter
+  note: date windows default to "first day of the current month" through "today" on v2 list endpoints (getInvoices description).
+
+field_expansion: none documented
+sparse_fields: none documented
+metadata: none documented (documents carry `information`/`remittance` free-text and `items[]` line items instead)
+
+request_tracing:
+  header: null
+  response_field: requestID (v1 ErrorDTO, v2 error components) / correlationId (observed live on api.flowpay.it/v2)
+  note: no request-id REQUEST header is documented; the server-generated id is returned only in error bodies.
+
+versioning:
+  scheme: URL path
+  current:
+    - 'v1: https://app.flowpay.it/api (OpenAPI 3.0.3, no operationIds, Italian-language contract)'
+    - 'v2: https://api.flowpay.it/v2 (OpenAPI 3.1.0, info.version 2.0.0-alpha.4, English contract, operationIds)'
+  policy: none published — no deprecation timeline for v1, no Sunset/Deprecation headers documented
+  detail: lifecycle/bancomat-lifecycle.yml
+
+error_envelope:
+  v1: '{statusCode, code, errorDescription, errorURI, expectedType, field, requestID, service}' 
+  v2: '{statusCode, requestID, message, additionalInfo{path,key,type}}'
+  v2_observed_live: '{error, correlationId, statusCode, message, additionalData{statusCode,reason}}'
+  content_type: application/json
+  rfc9457: false
+  detail: errors/bancomat-problem-types.yml
+
+rate_limit_signaling:
+  documented: 'v2: 100 requests/minute per source IP, burst 10 requests/second, HTTP 429 on excess (general.md)'
+  headers: []
+  note: no RateLimit-* / X-RateLimit-* / Retry-After headers are documented; v1 documents no limits at all.
+  detail: rate-limits/bancomat-rate-limits.yml
+
+dry_run_mode:
+  status: na
+  note: >-
+    No dry-run / validate-only flag exists on any write. The shared public sandbox
+    (core.sandbox-new.flowpay.it, sandbox.{customerID}.flowpay.it) is the rehearsal surface —
+    see sandbox/bancomat-sandbox.yml.
+
+reversibility:
+  grade: documented
+  note: >-
+    Every FlowPay "document" write has a matching DELETE, and the contracts state the CONDITION
+    under which it works (unpaid / not yet executed) but never a time WINDOW, so the grade is
+    documented (reversal path exists) rather than verified (path + stated window). Executed
+    payments are SEPA credit transfers initiated at the user's bank via PIS: no refund, void or
+    reverse operation exists in either contract — a payment already received can only be
+    returned by issuing a credit note and a new checkout (invoice_lifecycle.md).
+  surfaces:
+    - write: createCheckout (v2 POST /checkout; v1 POST /{tenantID}/checkout)
+      reversal: deleteCheckout (v2 DELETE /checkout/{code}; v1 DELETE /{tenantID}/checkout/{code})
+      window: null
+      condition: '"can be used to delete a checkout that has not been paid yet. If the checkout has been paid, it cannot be deleted and this endpoint will return an error."'
+      docs: https://github.com/FlowPay/client-openapi/blob/main/openapi.json
+    - write: createTransfer (v2 POST /transfers; v1 POST /{tenantID}/transfers)
+      reversal: deleteTransfer (v2 DELETE /transfers/{transferID}; v1 DELETE /{tenantID}/transfers/{fingerprint})
+      window: null
+      condition: '"Delete a transfer document that has not yet been executed" — once the SEPA transfer is executed there is no reversal'
+      docs: https://github.com/FlowPay/client-openapi/blob/main/openapi.json
+    - write: createInvoice (v2 POST /invoices; v1 POST /{tenantID}/invoices)
+      reversal: 'v1 DELETE /{tenantID}/invoices/{fingerprint}; v2 has no deleteInvoice — reverse a paid invoice with createCreditNote (POST /creditNotes) linked to the original'
+      window: null
+      condition: 'v1: "L''eliminazione è consentita finché non esiste un pagamento per il documento" and only by the client that uploaded it (application code 2002 otherwise)'
+      docs: https://docs.flowpay.it/
+    - write: createProformaInvoice (v2 POST /proforma)
+      reversal: deleteProformaInvoice (v2 DELETE /proforma/{fingerprint})
+      window: null
+      condition: '"allowed only if the proforma invoice is not yet paid"'
+      docs: https://github.com/FlowPay/client-openapi/blob/main/openapi.json
+    - write: createCreditNote (v2 POST /creditNotes)
+      reversal: deleteCreditNote (v2 DELETE /creditNotes/{fingerprint})
+      window: null
+      condition: none stated
+      docs: https://github.com/FlowPay/client-openapi/blob/main/openapi.json
+    - write: createBulkPayment (v2 POST /bulk; v1 POST /{tenantID}/bulk)
+      reversal: deleteBulkPayment (v2 DELETE /bulk/{fingerprint}; v1 DELETE /{tenantID}/bulk/{fingerprint})
+      window: null
+      condition: '"Deleting a bulk payment will not delete the linked documents" — reversal detaches the aggregate only'
+      docs: https://github.com/FlowPay/client-openapi/blob/main/docs/bulk_lifecycle.md
+    - write: createChainPayment (v2 POST /chain; v1 POST /{tenantID}/chain)
+      reversal: null
+      window: null
+      condition: no DELETE exists for chain documents in either contract
+      docs: https://github.com/FlowPay/client-openapi/blob/main/docs/chain_lifecycle.md
+    - write: pagopaPayment (v2 POST /pagopa; v1 POST /pagopa)
+      reversal: null
+      window: null
+      condition: 'pagoPA notices move ready -> activated -> paid on the pagoPA platform (pagopa_status.md); v1 PATCH /pagopa/{fingerprint} edits the document, but no cancel of an activated notice is exposed'
+      docs: https://github.com/FlowPay/client-openapi/blob/main/docs/pagopa_status.md
+    - write: v1 POST /{tenantID}/salaries
+      reversal: v1 DELETE /{tenantID}/salaries/{fingerprint}
+      window: null
+      condition: none stated
+      docs: https://docs.flowpay.it/
+    - write: addSiteWorker (v2 POST /constructions/contracts)
+      reversal: withdrawFromSite (v2 DELETE /constructions/contracts/{identifier})
+      window: null
+      condition: '"must be authorized by the worker or the site owner"'
+      docs: https://github.com/FlowPay/client-openapi/blob/main/openapi.json
+    - write: v1 POST /{tenantID}/webhooks
+      reversal: v1 DELETE /{tenantID}/webhooks/{id} (and DELETE /webhooks/{id})
+      window: 'webhook subscriptions expire on their own after at most 1 month unless renewed (PUT /webhooks/{id}/renew)'
+      condition: revoking the token that created a webhook also deletes it and triggers a final DELETE callback
+      docs: https://docs.flowpay.it/
+
+webhooks:
+  style: subscription per event per tenant (v1 POST /{tenantID}/webhooks); https-only in production; expires <= 1 month, renewable
+  signature: ECDSA P-256 / SHA-256 over "<X-FlowPay-Timestamp>.<raw body>", base64 in X-FlowPay-Raw-Signature (r||s) and X-FlowPay-Der-Signature (DER)
+  delivery: POST application/json; 200 within 10 s counts as delivered; retried with randomised exponential backoff; server certificate verified (no self-signed)
+  detail: asyncapi/bancomat-flowpay-webhooks.yml

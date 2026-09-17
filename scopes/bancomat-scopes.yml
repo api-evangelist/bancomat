@@ -1,0 +1,400 @@
+generated: '2026-09-17'
+method: searched
+docs: https://core.flowpay.it/api/openid/.well-known/openid-configuration
+source: openapi/bancomat-flowpay-api-v1-openapi.yml, openapi/bancomat-flowpay-api-v2-openapi.yml; scopes_supported
+  from https://core.flowpay.it/api/openid/.well-known/openid-configuration (200, 2026-09-17)
+note: 'Two generations of scope vocabulary coexist: v1 uses singular names (account:read, invoice:write, salary:read,
+  bill, pagopa, authorization_intent, reconciliation) and v2 uses plural names (accounts:read, invoices:write, pagopa:read/write,
+  bills:write, ade, wallet:`document_type`). The live OpenID Provider metadata publishes 35 distinct scopes_supported,
+  15 of which appear in neither contract (added below without descriptions). OpenID Connect scopes openid / profile
+  / email are also supported for user identity.'
+scope_count: 55
+schemes:
+- name: ThirdPartyAuthorizationCode
+  source: openapi/bancomat-flowpay-api-v1-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+    tokenUrl: https://core.flowpay.it/api/oauth/token
+  description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+- name: ThirdPartyClientCredential
+  source: openapi/bancomat-flowpay-api-v1-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://core.flowpay.it/api/oauth/token
+  description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+- name: oAuth2
+  source: openapi/bancomat-flowpay-api-v2-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /openid/authenticate
+    tokenUrl: /oauth/token
+  - flow: clientCredentials
+    tokenUrl: /oauth/token
+  description: OAuth2 flow
+scopes:
+- scope: account:read
+  description: Operazioni di lettura sui conti
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: account:write
+  description: Operazione di modifica sui conti
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: accounts:read
+  description: Allow to read accounts
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: accounts:write
+  description: Allow to mediate accounts creation and open banking consent renewal
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: ade
+  description: Allow to interact with Agenzia delle Entrate services
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: authorization_code
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: authorization_intent
+  description: Creazione di intenti a consensi relativi a risorse di un utente
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: bill
+  description: Gestione di ricevute
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: bill:write
+  description: Creazione e gestione di ricevute
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: bills:read
+  description: Allow to read bills
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: bills:write
+  description: Allow to create bills and manage lifecycle
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: business:read
+  description: Operazioni di lettura sulle informazioni della azienda
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: checkout:read
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: construction:read
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: construction:write
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: constructions:read
+  description: Allow to read information about construction sites
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: constructions:write
+  description: Allow to create construction sites and manage the lifecycle
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: contacts:read
+  description: Operazioni di lettura sulla rete aziendale
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: fees:read
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: invoice:read
+  description: Operazioni di lettura sulle fatture
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: invoice:write
+  description: Operazioni di scrittura sulle fatture
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: invoices:read
+  description: Allow to read invoices
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: invoices:write
+  description: Allow to create invoices and manage lifecycle
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: kyc
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: openid
+  description: Allow to read user profile
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: pagopa
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+- scope: pagopa:read
+  description: Allow to retrieve users' PagoPA payment notices
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: pagopa:write
+  description: Allow to create PagoPA payment notices
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: payment:read
+  description: Operazioni di lettura sui pagamenti
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: payments:read
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: salary:read
+  description: Operazioni di lettura sulle buste paga
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: salary:write
+  description: Operazioni di scrittura sui salary
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: statistic:read
+  description: Lettura dei dati statistici raggruppati
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: transactions:read
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: transfer:read
+  description: Operazioni di lettura sui trasferimenti
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: transfer:write
+  description: Operazioni di scrittura sui trasferimenti
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: transfers:read
+  description: Allow to read transfers
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: transfers:write
+  description: Allow to create transfers and manage lifecycle
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: wallet:`document_type`
+  description: Allow to manage wallet for the specified use case
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+- scope: wallet:construction
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+  - well-known/bancomat-flowpay-openid-configuration.json
+- scope: profile
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: email
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: disclaimer
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: vatCode
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: business
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: consumer
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: tenant_id
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: test_scope
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: factoring
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: wallet:transfer
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: wallet:pagopa
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: payment_method:sdd
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: payment_method:card
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: authentication_level:sca
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description
+- scope: track
+  description: null
+  flows: []
+  sources:
+  - well-known/bancomat-flowpay-openid-configuration.json
+  note: listed in scopes_supported of the live OpenID Provider metadata but declared in neither OpenAPI; no published
+    description

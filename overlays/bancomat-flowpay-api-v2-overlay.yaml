@@ -1,0 +1,59 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist overlay for the FlowPay API (v2)
+  version: 1.0.0
+  x-generated: '2026-09-17'
+  x-method: generated
+  x-source: openapi/bancomat-flowpay-api-v2-openapi.yml plus the enrichment artifacts of this repository
+extends: openapi/bancomat-flowpay-api-v2-openapi.yml
+actions:
+  - target: $.info
+    description: Record provenance and ownership; the original contract is never mutated
+    update:
+      x-api-evangelist-provenance:
+        fetched: '2026-09-17'
+        spec_url: https://raw.githubusercontent.com/FlowPay/client-openapi/main/openapi.json
+        repository: https://github.com/FlowPay/client-openapi
+        owner: FlowPay S.r.l., a BANCOMAT S.p.A. company since 2025-07-22
+      x-conventions: conventions/bancomat-conventions.yml
+      x-errors: errors/bancomat-problem-types.yml
+      x-webhooks: asyncapi/bancomat-flowpay-webhooks.yml
+      x-sandbox: sandbox/bancomat-sandbox.yml
+      x-lifecycle: lifecycle/bancomat-lifecycle.yml
+      x-rate-limits: rate-limits/bancomat-rate-limits.yml
+      x-scopes: scopes/bancomat-scopes.yml
+      x-mcp-candidate: mcp/bancomat-mcp.yml
+      x-idempotency-coverage: none
+      x-reversibility-grade: documented
+  - target: $.servers[?(@.url == 'https://api.flowpay.it/v2')]
+    description: The contract labels production "Not implementend"; GET /v2/banks answered 200 on 2026-09-17
+    update:
+      x-observed: 'GET https://api.flowpay.it/v2/banks -> 200 application/json (2026-09-17)'
+  - target: $.servers[?(@.url == 'https://mock.flowpay.it/v2')]
+    update:
+      x-observed: 'GET https://mock.flowpay.it/v2/banks -> 502 Bad Gateway (2026-09-17)'
+  - target: $.info
+    description: Rate limits and error envelope differences documented outside the contract
+    update:
+      x-rate-limit: 100 requests/minute per source IP, burst 10 requests/second, HTTP 429 (docs/general.md)
+      x-live-error-envelope: '{error, correlationId, statusCode, message, additionalData{statusCode, reason}} observed; contract says {statusCode, requestID, message, additionalInfo}'
+  - target: $.paths['/checkout/{code}'].delete
+    update:
+      x-reversal-of: createCheckout
+      x-reversal-condition: unpaid checkouts only
+  - target: $.paths['/transfers/{transferID}'].delete
+    update:
+      x-reversal-of: createTransfer
+      x-reversal-condition: not yet executed
+  - target: $.paths['/proforma/{fingerprint}'].delete
+    update:
+      x-reversal-of: createProformaInvoice
+      x-reversal-condition: not yet paid
+  - target: $.paths['/creditNotes'].post
+    update:
+      x-reverses: a paid invoice (createInvoice) — the only reversal path once a payment has been received
+  - target: $.paths['/constructions/sites/{identifier}/cashout'].post
+    description: The one untagged operation in the contract
+    update:
+      tags:
+        - Construction

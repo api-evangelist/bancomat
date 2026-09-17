@@ -1,0 +1,56 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist overlay for the FlowPay API (v1)
+  version: 1.0.0
+  x-generated: '2026-09-17'
+  x-method: generated
+  x-source: openapi/bancomat-flowpay-api-v1-openapi.yml plus the enrichment artifacts of this repository
+extends: openapi/bancomat-flowpay-api-v1-openapi.yml
+actions:
+  - target: $.info
+    description: Record provenance and ownership; the original contract is never mutated
+    update:
+      x-api-evangelist-provenance:
+        fetched: '2026-09-17'
+        served_through: https://docs.flowpay.it/
+        spec_url: https://gist.githubusercontent.com/RaesakAce/be1ea786e0949c700d90099c8504f03a/raw/f4cc83791e32b45957a364b0f2466f8895422d8b/fp-docs.json
+        owner: FlowPay S.r.l., a BANCOMAT S.p.A. company since 2025-07-22
+      x-conventions: conventions/bancomat-conventions.yml
+      x-errors: errors/bancomat-problem-types.yml
+      x-webhooks: asyncapi/bancomat-flowpay-webhooks.yml
+      x-sandbox: sandbox/bancomat-sandbox.yml
+      x-lifecycle: lifecycle/bancomat-lifecycle.yml
+      x-rate-limits: rate-limits/bancomat-rate-limits.yml
+      x-idempotency-coverage: none
+      x-reversibility-grade: documented
+  - target: $.info
+    description: Flag the contract-level gaps an integrator should know before generating a client
+    update:
+      x-api-evangelist-findings:
+        - no operationId on any of the 59 operations (clients must synthesise names from method + path)
+        - 15 tags, Italian-language titles; 38 of 59 operations have an empty summary
+        - no pagination parameters on list endpoints; bare JSON arrays returned
+        - 417 Expectation Failed carries business-rule violations (40 operations)
+        - the Webhooks chapter is declared experimental and subject to breaking changes
+  - target: $.components.securitySchemes.ThirdPartyClientCredential
+    description: Point at the live OpenID Provider metadata the contract does not reference
+    update:
+      x-openid-configuration: https://core.flowpay.it/api/openid/.well-known/openid-configuration
+  - target: $.components.securitySchemes.ThirdPartyAuthorizationCode
+    update:
+      x-openid-configuration: https://core.flowpay.it/api/openid/.well-known/openid-configuration
+      x-pkce: S256 documented
+      x-par: https://core.flowpay.it/api/oauth/par
+  - target: $.paths['/{tenantID}/checkout'].post
+    description: Reversibility — checkout can be deleted only while unpaid
+    update:
+      x-reversal: DELETE /{tenantID}/checkout/{code} (unpaid only)
+  - target: $.paths['/{tenantID}/transfers'].post
+    update:
+      x-reversal: DELETE /{tenantID}/transfers/{fingerprint} (not yet executed only)
+  - target: $.paths['/{tenantID}/invoices'].post
+    update:
+      x-reversal: DELETE /{tenantID}/invoices/{fingerprint} (no payment linked; same client that created it)
+  - target: $.paths['/{tenantID}/chain'].post
+    update:
+      x-reversal: none — no DELETE for chain documents

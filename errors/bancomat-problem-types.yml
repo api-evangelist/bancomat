@@ -1,0 +1,182 @@
+generated: '2026-09-17'
+method: derived
+source: openapi/bancomat-flowpay-api-v1-openapi.yml (components.schemas.ErrorDTO code table + 4xx responses), openapi/bancomat-flowpay-api-v2-openapi.yml
+  (components.responses), plus two live unauthenticated 404 envelopes observed on app.flowpay.it/api and api.flowpay.it/v2
+  (2026-09-17)
+format: custom-json
+rfc9457: false
+note: FlowPay (a BANCOMAT company) API errors. Neither generation uses application/problem+json. v1 returns an ErrorDTO
+  with a numeric application code alongside the HTTP status; v2 returns {statusCode, requestID, message, additionalInfo}.
+  The live v2 host answered with {error, correlationId, statusCode, message, additionalData{statusCode, reason}}
+  — field names differ from the contract (correlationId vs requestID, additionalData vs additionalInfo). The BANCOMAT
+  scheme itself publishes no error reference.
+envelopes:
+- api: FlowPay API (v1)
+  content_type: application/json; charset=utf-8
+  schema: ErrorDTO
+  fields:
+  - code
+  - errorDescription
+  - errorURI
+  - expectedType
+  - field
+  - requestID
+  - service
+  - statusCode
+  observed_live:
+    url: https://app.flowpay.it/api
+    status: 404
+    body:
+      statusCode: 404
+      code: -404
+      errorDescription: Not Found
+      requestID: <uuid>
+- api: FlowPay API (v2)
+  content_type: application/json
+  fields:
+  - statusCode
+  - requestID
+  - message
+  - additionalInfo{path,key,type}
+  observed_live:
+    url: https://api.flowpay.it/v2
+    status: 404
+    body:
+      error: true
+      correlationId: <uuid>
+      statusCode: 404
+      message: Not Found
+      additionalData:
+        statusCode: 404
+        reason: Not Found
+  note: live field names (correlationId, additionalData) differ from the contract (requestID, additionalInfo)
+http_statuses_v1:
+- status: 400
+  count: 59
+  description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla
+    documentazione
+- status: 401
+  count: 58
+  description: Le credenziali fornite non sono sufficienti a completare la richiesta
+- status: 403
+  count: 59
+  description: La richiesta non è autorizzata a procedere con le credenziali fornite
+- status: 404
+  count: 59
+  description: La richiesta fa riferimento ad una risorsa inesistente
+- status: 417
+  count: 40
+  description: La richiesta non è corretta semanticamente
+http_statuses_v2:
+- status: '400'
+  count: 52
+  component: BadRequest
+  description: Client has provided invalid data
+- status: '401'
+  count: 57
+  component: Unauthorized
+  description: Client has not provided valid credentials to access the requested resource
+- status: '403'
+  count: 53
+  component: Forbidden
+  description: Client is not authorized to access the requested resource
+- status: '500'
+  count: 52
+  component: InternalServerError
+  description: Server encountered an unexpected condition that prevented it from fulfilling the request
+- status: default
+  count: 1
+  component: InternalServerError
+  description: Server encountered an unexpected condition that prevented it from fulfilling the request
+- status: '404'
+  count: 29
+  component: NotFound
+  description: The requested resource was not found
+- status: '409'
+  count: 4
+  component: Conflict
+  description: The requested resource is in conflict with the current state of the server
+application_codes_v1:
+- code: '401'
+  title: Errore generale di codifica
+- code: '402'
+  title: Campo necessario mancante
+- code: '403'
+  title: Valore di un campo del tipo sbagliato
+- code: '404'
+  title: Valore di un campo assente
+- code: '405'
+  title: Errore di codifica sconosciuto
+- code: '406'
+  title: Null pointer exception
+- code: '407'
+  title: Campo necessario mancante
+- code: '408'
+  title: Errore di connessione
+- code: '409'
+  title: Errore di input output
+- code: 410 - 428
+  title: Errore generico con il database
+- code: 429, 432, 433
+  title: Errore di logica con il database
+- code: '430'
+  title: Campo invalido
+- code: '431'
+  title: Campo assente
+- code: '434'
+  title: Risultati non trovati
+- code: '500'
+  title: Errore generico
+- code: '2000'
+  title: Tenant non specificato
+- code: '2001'
+  title: Non autorizzato ad operare su questa risorsa
+- code: '2002'
+  title: Impossibile eliminare il documento poiché sono presente dei pagamenti collegati
+- code: '2003'
+  title: Non autorizzato a creare la risorsa
+- code: '2004'
+  title: Non autorizzato ad operare su questa risorsa
+- code: '2005'
+  title: Si sta provando a modificare un termine non di questo documento
+- code: '2006'
+  title: Codice istant scaduto
+- code: '2007'
+  title: Non autorizzato generare un codice instant
+- code: '2008'
+  title: Codice instant inesistente o non autorizzato a leggerlo
+- code: '2012'
+  title: Si sta provando a caricare un documento già esistente
+- code: '3001'
+  title: Tenant non specificato
+- code: '4001'
+  title: Tenant non specificato
+- code: '5001'
+  title: Corpo richiesta mancante
+- code: '5002'
+  title: Corpo richiesta non valido
+- code: '5003'
+  title: Vatcode del ricevente fattura mancante
+- code: '6001'
+  title: Tenant non specificato
+- code: '6002'
+  title: Ricevuta non trovata
+- code: '8005'
+  title: Non puoi modificare questo conto
+- code: '8010'
+  title: Troppi risultati ottenuti
+- code: '11001'
+  title: Non autorizzato ad accedere a questa risorsa
+- code: '11002'
+  title: Si sta provando a caricare un documento già esistente
+- code: '13001'
+  title: Azienda non trovata
+- code: '13003'
+  title: vatcode non è valido
+request_id_field: requestID (v1/v2 contract) / correlationId (v2 live) — quote it in support tickets at https://youtrack.flowpay.it/
+retry_guidance:
+  '429': 'documented for v2: 100 requests/minute per source IP and 10 requests/second burst; back off and retry
+    (no Retry-After header documented)'
+  5xx: v2 InternalServerError component; retry with backoff
+  '417': v1 uses 417 Expectation Failed for business-rule violations (e.g. document already exists, payments linked)
+    — not retryable without changing the request

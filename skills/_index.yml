@@ -1,0 +1,28 @@
+generated: '2026-09-17'
+method: generated
+source: >-
+  Packaged Agent Skills generated from the FlowPay API v2 OpenAPI
+  (openapi/bancomat-flowpay-api-v2-openapi.yml, github.com/FlowPay/client-openapi) and its
+  docs/*.md lifecycle guides. Every step names an operationId verified verbatim in that
+  contract; cross-cutting rules cite conventions/, errors/, authentication/, sandbox/ and
+  asyncapi/. The v1 contract has no operationIds and is referenced by method + path only.
+  Searched github.com/FlowPay and developer.flowpay.it for provider-published skills or an
+  AGENTS.md — none exist. The BANCOMAT scheme has no public API to ground a skill in.
+provider: FlowPay S.r.l. (a BANCOMAT company)
+skills:
+  - file: bancomat-flowpay-invoice-to-checkout.md
+    name: Issue an invoice and collect it through a hosted checkout
+    api: openapi/bancomat-flowpay-api-v2-openapi.yml
+    operations: [createInvoice, createCheckout, getCheckout, getPayments, deleteCheckout]
+  - file: bancomat-flowpay-connect-bank-account.md
+    name: Connect a tenant's bank account (AIS consent) and read balances
+    api: openapi/bancomat-flowpay-api-v2-openapi.yml
+    operations: [getBanks, createAisConsentSession, getAccounts, getAccount, getTransactions]
+  - file: bancomat-flowpay-pay-pagopa-notice.md
+    name: Pay an Italian pagoPA notice
+    api: openapi/bancomat-flowpay-api-v2-openapi.yml
+    operations: [pagopaPayment, getPagopaDetails, createCheckout, getPagopaReceipt]
+  - file: bancomat-flowpay-bulk-pay-documents.md
+    name: Settle several documents with one SCA (bulk payment)
+    api: openapi/bancomat-flowpay-api-v2-openapi.yml
+    operations: [getInvoices, createBulkPayment, createCheckout, getBulkPayment, deleteBulkPayment]

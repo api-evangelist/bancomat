@@ -1,0 +1,79 @@
+generated: '2026-09-17'
+method: searched
+source: openapi/bancomat-flowpay-api-v1-openapi.yml, openapi/bancomat-flowpay-api-v2-openapi.yml; "Autenticazione"
+  chapter of the v1 contract (docs.flowpay.it) and https://github.com/FlowPay/client-openapi/blob/main/docs/general.md;
+  live OIDC metadata https://core.flowpay.it/api/openid/.well-known/openid-configuration
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - authorizationCode
+  - clientCredentials
+schemes:
+- name: ThirdPartyAuthorizationCode
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+    tokenUrl: https://core.flowpay.it/api/oauth/token
+    scopes: 12
+  description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+- name: ThirdPartyClientCredential
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://core.flowpay.it/api/oauth/token
+    scopes: 14
+  description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+  sources:
+  - openapi/bancomat-flowpay-api-v1-openapi.yml
+- name: oAuth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /openid/authenticate
+    tokenUrl: /oauth/token
+    scopes: 14
+  - flow: clientCredentials
+    tokenUrl: /oauth/token
+    scopes: 15
+  description: OAuth2 flow
+  sources:
+  - openapi/bancomat-flowpay-api-v2-openapi.yml
+docs: https://docs.flowpay.it/
+details:
+  issuer: https://core.flowpay.it/api
+  authorization_endpoint: https://core.flowpay.it/api/openid/authenticate
+  token_endpoint: https://core.flowpay.it/api/oauth/token
+  pushed_authorization_request_endpoint: https://core.flowpay.it/api/oauth/par
+  introspection_endpoint: https://core.flowpay.it/api/openid/token/introspection
+  sandbox_issuer: https://core.sandbox-new.flowpay.it/api/openid
+  client_types:
+  - public (client_id only; SPA/mobile) — must use PKCE
+  - confidential (client_id + client_secret; server-side)
+  grant_types:
+  - authorization_code
+  - client_credentials
+  - refresh_token
+  pkce: documented (S256 code_challenge example in the v1 contract); in sandbox all clients are confidential but
+    PKCE can still be exercised
+  pushed_authorization_requests: RFC 9126 PAR endpoint /api/oauth/par — "in development, already usable in sandbox";
+    request_uri is single-use and time-limited
+  request_objects: JWT request objects (RFC 9101-style) signed ES256 or PS256, aud = issuer, carry an authorization_details-style
+    consent block; signature not verified in sandbox, required in production
+  token_format: bearer access_token, expires_in 3600 (example), refresh_token issued on authorization_code grant
+  id_token_signing_alg:
+  - ES256
+  consent_model: client_credentials token with scope authorization_intent creates a reconciliation consent, which
+    the user then authorises via the authorization_code flow (AIS consents recur for 90 days)
+  multi_tenancy: every v1 resource path is prefixed by the tenantID (UUID) the token was granted for; v2 filters
+    tenant from the token
+  onboarding: register a company account on https://developer.flowpay.it (bank-account ownership + identity check),
+    create an application to obtain client_id/client_secret; sandbox enabled immediately, production third-party
+    access after enablement
+  gated_scheme_surface: BANCOMAT scheme (PagoBancomat / BANCOMAT Pay) integration credentials and specs are issued
+    only to members via https://insight.bancomat.it (OTP login) — no public auth surface
+note: Profile covers the FlowPay open-banking API (a BANCOMAT company). The BANCOMAT scheme itself exposes no public
+  authentication surface.

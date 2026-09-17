@@ -6,6 +6,10 @@ description: >-
   withdrawals and expanded in 1986 with PagoBancomat for PIN-based POS payments, the network
   underpins Italian electronic payment infrastructure. BANCOMAT Pay, introduced in 2019, enables
   mobile e-commerce and P2P payments linked to bank accounts via phone number and IBAN.
+  Since the 2025-07-22 acquisition of FlowPay S.r.l., a Bank of Italy-authorised payment institution
+  (AISP/PISP), the group also publishes a public open-banking REST API — account information,
+  payment initiation, invoicing, pagoPA notices and webhooks — with OpenAPI contracts on
+  docs.flowpay.it and GitHub.
 type: Index
 deliveryModel:
   model: unknown
@@ -39,6 +43,12 @@ tags:
   - Mobile Payments
   - Payments
   - Debit Cards
+  - Open Banking
+  - PSD2
+  - Account Information
+  - Payment Initiation
+  - Invoicing
+  - pagoPA
 tags_raw:
   - ATM
   - Banking
@@ -47,18 +57,28 @@ tags_raw:
   - Mobile Payments
   - Payments
   - Debit Cards
+  - Open Banking
+  - PSD2
+  - Account Information
+  - Payment Initiation
+  - Invoicing
+  - pagoPA
 url: https://raw.githubusercontent.com/api-evangelist/bancomat/refs/heads/main/apis.yml
 created: '2024-01-15'
-modified: '2026-04-21'
+modified: '2026-09-17'
 specificationVersion: '0.23'
 apis:
   - aid: bancomat:bancomat-pay
     name: BANCOMAT Pay
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
     description: >-
       BANCOMAT Pay is a mobile payment service enabling Italian consumers to make e-commerce
       purchases and P2P transfers through a smartphone app linked to their bank account by
       phone number and IBAN. Merchant integration is typically handled through PSPs such as
-      Nexi, Axerve, PPRO, and HiPay rather than a direct public API.
+      Nexi, Axerve, PPRO, and HiPay rather than a direct public API. Scheme-level technical
+      documentation and certification material for issuers, acquirers and certified operators
+      is distributed only through BANCOMAT Insight (insight.bancomat.it), an OTP-gated member
+      portal; api.bancomat.it answers every unauthenticated path with a JSON 404.
     humanURL: https://bancomat.it/en/bancomat-pay
     tags:
       - Mobile Payments
@@ -71,11 +91,147 @@ apis:
       - type: Documentation
         url: https://developer.nexigroup.com/xpayglobal/en-EU/docs/bancomat-pay/
         name: Nexi Integration Guide
+  - aid: bancomat:flowpay-api-v1
+    name: FlowPay API (v1)
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
+    description: >-
+      Production REST API of FlowPay S.r.l., the Bank of Italy-authorised payment institution
+      (AISP/PISP, ref. 36925) that BANCOMAT S.p.A. acquired on 2025-07-22. Tenant-scoped
+      endpoints for account information (AIS consents, accounts, balances, transactions),
+      payment initiation (transfers, bulk and chain payments, hosted checkout sessions),
+      invoices, salaries, pagoPA notices and webhook subscriptions, secured by OAuth 2.0
+      authorization-code and client-credentials flows with PKCE, PAR and signed request objects.
+      The contract is rendered by ReDoc on docs.flowpay.it from a 59-operation OpenAPI 3.0.3.
+    humanURL: https://docs.flowpay.it/
+    baseURL: https://app.flowpay.it/api
+    tags:
+      - Open Banking
+      - Account Information
+      - Payment Initiation
+      - Invoicing
+      - Webhooks
+      - pagoPA
+      - Italy
+    properties:
+      - type: Documentation
+        url: https://docs.flowpay.it/
+      - type: APIReference
+        url: https://docs.flowpay.it/
+      - type: DeveloperPortal
+        url: https://developer.flowpay.it/
+      - type: OpenAPI
+        url: openapi/bancomat-flowpay-api-v1-openapi.yml
+      - type: OpenAPI
+        url: openapi/_original/bancomat-flowpay-api-v1-openapi.json
+        name: FlowPay API v1 OpenAPI (verbatim, as served through docs.flowpay.it)
+      - type: Webhooks
+        url: asyncapi/bancomat-flowpay-webhooks.yml
+      - type: Sandbox
+        url: sandbox/bancomat-sandbox.yml
+      - type: Overlay
+        url: overlays/bancomat-flowpay-api-v1-overlay.yaml
+      - type: AgentSkill
+        url: skills/_index.yml
+  - aid: bancomat:flowpay-api-v2
+    name: FlowPay API (v2)
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
+    description: >-
+      Second-generation FlowPay API published as OpenAPI 3.1.0 (2.0.0-alpha.4) in the public
+      FlowPay/client-openapi GitHub repository, with operationIds, page/size pagination,
+      documented 100 req/min and 10 req/s rate limits, and a shared public sandbox. Adds
+      credit notes, proforma invoices, construction-site escrow flows, fee rules and KYC to
+      the v1 surface, and describes an AIS consent-status webhook. The production server
+      api.flowpay.it/v2 answers unauthenticated reads (GET /v2/banks returned 200 on
+      2026-09-17) even though the spec still labels it "Not implemented".
+    humanURL: https://github.com/FlowPay/client-openapi
+    baseURL: https://api.flowpay.it/v2
+    tags:
+      - Open Banking
+      - Account Information
+      - Payment Initiation
+      - Invoicing
+      - pagoPA
+      - Italy
+    properties:
+      - type: Documentation
+        url: https://github.com/FlowPay/client-openapi/tree/main/docs
+      - type: SourceCode
+        url: https://github.com/FlowPay/client-openapi
+      - type: DeveloperPortal
+        url: https://developer.flowpay.it/
+      - type: OpenAPI
+        url: openapi/bancomat-flowpay-api-v2-openapi.yml
+      - type: OpenAPI
+        url: openapi/_original/bancomat-flowpay-api-v2-openapi.json
+        name: FlowPay API v2 OpenAPI (verbatim, github.com/FlowPay/client-openapi)
+      - type: Overlay
+        url: overlays/bancomat-flowpay-api-v2-overlay.yaml
+      - type: MCPServer
+        url: mcp/bancomat-mcp.yml
+        name: Derived candidate tool list (no server shipped)
+      - type: AgentSkill
+        url: skills/_index.yml
 common:
+  - type: Website
+    url: https://flowpay.it/
+    name: FlowPay (a Bancomat company)
+  - type: GitHubOrganization
+    url: https://github.com/FlowPay
+  - type: Blog
+    url: https://blog.flowpay.it/
+  - type: BlogRSS
+    url: https://blog.flowpay.it/feed/
+  - type: Support
+    url: https://youtrack.flowpay.it/
+    name: FlowPay API support ticket portal (YouTrack)
+  - type: Support
+    url: https://bancomat.it/en/contact-us
+    name: BANCOMAT contact
+  - type: FAQ
+    url: https://bancomat.it/en/faq
+  - type: PrivacyPolicy
+    url: https://bancomat.it/en/privacy-policy
+  - type: TermsOfService
+    url: https://bancomat.it/en/terms-and-conditions
+  - type: PressReleases
+    url: https://bancomat.it/en/press-releases
+  - type: Login
+    url: https://insight.bancomat.it/
+    name: BANCOMAT Insight (member-only portal, OTP login)
+  - type: Packages
+    url: packages/bancomat-packages.yml
+  - type: SDKs
+    url: packages/bancomat-packages.yml
+  - type: CLI
+    url: cli/bancomat-cli.yml
+  - type: WellKnown
+    url: well-known/bancomat-well-known.yml
+  - type: Authentication
+    url: authentication/bancomat-authentication.yml
+  - type: OAuthScopes
+    url: scopes/bancomat-scopes.yml
+  - type: ErrorCatalog
+    url: errors/bancomat-problem-types.yml
+  - type: Conventions
+    url: conventions/bancomat-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/bancomat-lifecycle.yml
+  - type: Conformance
+    url: conformance/bancomat-conformance.yml
+  - type: Compliance
+    url: conformance/bancomat-conformance.yml
+  - type: DataModel
+    url: data-model/bancomat-data-model.yml
+  - type: LLMsTxt
+    url: llms/bancomat-llms.txt
+  - type: Plans
+    url: plans/bancomat-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/bancomat-rate-limits.yml
   - type: DomainSecurity
     url: security/bancomat-domain-security.yml
   - type: LinkedIn
-    url: https://www.linkedin.com/company/bancomat-spa
+    url: https://www.linkedin.com/company/bancomatofficial
   - type: Website
     url: https://bancomat.it/en
     name: BANCOMAT S.p.A.
@@ -136,3 +292,8 @@ common:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-17'
+  status: enriched
+  artifacts_added: 26
+  pass: local-v3

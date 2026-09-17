@@ -1,0 +1,206 @@
+generated: '2026-09-17'
+method: probed
+source: live GET of /.well-known/* on every host apis.yml and the two FlowPay OpenAPIs name (2026-09-17)
+note: >-
+  One real discovery document is served: FlowPay's OpenID Provider metadata at
+  https://core.flowpay.it/api/openid/.well-known/openid-configuration (also answered at
+  /api/.well-known/openid-configuration) — a non-root path, which is why a root-only probe
+  scores it absent. Every other path 404s or is answered by an SPA catch-all shell.
+  bancomat.it publishes a robots.txt that disallows /.well-known/ for all agents, so that host
+  was NOT probed; flowpay.it, www.flowpay.it, developer.flowpay.it and developers.flowpay.it
+  return HTTP 200 with the site's HTML shell for every path (recorded as spa-shell, treated as
+  a miss). No security.txt, api-catalog, ai-plugin.json, oauth-authorization-server or A2A
+  agent card exists on any host.
+hosts:
+  - host: bancomat.it
+    note: "robots.txt (https://bancomat.it/robots.txt, 200) contains \"Disallow: /.well-known/\" for User-agent *; honoured, not probed."
+    documents:
+      - path: /.well-known/security.txt
+        status: null
+        note: not probed — robots.txt disallow
+      - path: /.well-known/openid-configuration
+        status: null
+        note: not probed — robots.txt disallow
+      - path: /.well-known/oauth-authorization-server
+        status: null
+        note: not probed — robots.txt disallow
+      - path: /.well-known/api-catalog
+        status: null
+        note: not probed — robots.txt disallow
+      - path: /.well-known/ai-plugin.json
+        status: null
+        note: not probed — robots.txt disallow
+      - path: /.well-known/agent-card.json
+        status: null
+        note: not probed — robots.txt disallow
+  - host: api.bancomat.it
+    note: "Azure Application Gateway (gwsdp-api.trafficmanager.net); every path answers a JSON 404 {\"statusCode\":404,\"message\":\"Resource not found\"}."
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: insight.bancomat.it
+    note: BANCOMAT Insight member portal (ASP.NET, OTP login); no well-known documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: core.flowpay.it
+    note: FlowPay OAuth 2.0 / OpenID Provider host named by the v1 OpenAPI securitySchemes. Root /.well-known/* 404s; the discovery document lives under the /api/openid/ issuer path.
+    documents:
+      - path: /api/openid/.well-known/openid-configuration
+        status: 200
+        content_type: application/json; charset=utf-8
+        file: bancomat-flowpay-openid-configuration.json
+        note: >-
+          Real OpenID Provider metadata — issuer https://core.flowpay.it/api, authorization_endpoint
+          /api/openid/authenticate, pushed_authorization_request_endpoint /api/oauth/par,
+          introspection_endpoint, ES256 id_token signing, request_object_signing_alg ES256/PS256,
+          grant types authorization_code / client_credentials / refresh_token, 50 scopes_supported.
+          Also served at /api/.well-known/openid-configuration (200). No token_endpoint key is
+          published and jwks_uri points at the issuer root (GET /api/openid/jwks returned 500).
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: app.flowpay.it
+    note: "v1 API base (https://app.flowpay.it/api); every /.well-known path 404s (\"404: Not Found\")."
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: api.flowpay.it
+    note: v2 API base (https://api.flowpay.it/v2); every /.well-known path answers a JSON 404 envelope. /v2/.well-known/openid-configuration and /v2/openid/.well-known/openid-configuration also 404.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: docs.flowpay.it
+    note: ReDoc host for the v1 contract; nginx 404 on every /.well-known path and on /llms.txt.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: developer.flowpay.it
+    note: Angular "ThirdPartyPortal" SPA; the catch-all returns the HTML shell (200) for most /.well-known paths — not documents. agent-card.json, agent.json and ai-plugin.json 404.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/html
+        note: "spa-shell — HTML application shell, not a security.txt; treated as absent"
+      - path: /.well-known/openid-configuration
+        status: 200
+        content_type: text/html
+        note: "spa-shell — treated as absent"
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        content_type: text/html
+        note: "spa-shell — treated as absent"
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: text/html
+        note: "spa-shell — treated as absent"
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: flowpay.it
+    note: Marketing site (also www.flowpay.it) answers HTTP 200 with the homepage HTML for EVERY path, /.well-known/* and /llms.txt included — a catch-all, not documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: "spa-shell / catch-all homepage — treated as absent"
+      - path: /.well-known/openid-configuration
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: catch-all homepage — treated as absent
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: catch-all homepage — treated as absent
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: catch-all homepage — treated as absent
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: catch-all homepage — treated as absent
+      - path: /.well-known/agent-card.json
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: catch-all homepage — treated as absent; body is <!DOCTYPE html>, not a JSON AgentCard
+      - path: /.well-known/agent.json
+        status: 200
+        content_type: text/html; charset=utf-8
+        note: catch-all homepage — treated as absent
