@@ -109,6 +109,14 @@ apis:
       - Account Information
       - Payment Initiation
       - Invoicing
+      - Webhook
+      - pagoPA
+      - Italy
+    tags_raw:
+      - Open Banking
+      - Account Information
+      - Payment Initiation
+      - Invoicing
       - Webhooks
       - pagoPA
       - Italy
