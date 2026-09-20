@@ -1,0 +1,21 @@
+{
+  "repo": "bancomat",
+  "feeds": [
+    {
+      "source": "https://blog.flowpay.it/",
+      "feed_url": "https://blog.flowpay.it/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    },
+    {
+      "source": "https://github.com/FlowPay",
+      "feed_url": "https://github.com/FlowPay",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-19T20:17:39Z"
+}
