@@ -1,0 +1,393 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Payments API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Payments across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Payments
+  description: Access to payments initiated by FlowPay
+paths:
+  /payments:
+    get:
+      summary: Get payments
+      description: Retrieve payments made through FlowPay
+      operationId: getPayments
+      security:
+      - oAuth2:
+        - payments:read
+      parameters:
+      - name: accountID
+        in: query
+        description: Account identifier
+        required: false
+        schema:
+          type: string
+          format: uuid
+        x-faker: datatype.uuid
+      - name: from
+        in: query
+        description: Start date of the payments to retrieve. If not specified, the default value is the first day of the current month
+        required: false
+        schema:
+          type: string
+          format: iso8601
+        x-faker: date.past
+      - name: to
+        in: query
+        description: End date of the payments to retrieve. If not specified, the default value is the last day of the current month
+        required: false
+        schema:
+          type: string
+          format: iso8601
+        x-faker: date.future
+      responses:
+        '200':
+          description: Payments
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Payments
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /payments/{paymentID}:
+    get:
+      summary: Get payment details
+      description: Retrieve details of a specific payment
+      operationId: getPayment
+      security:
+      - oAuth2:
+        - payments:read
+      parameters:
+      - name: paymentID
+        in: path
+        description: Payment identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+        x-faker: datatype.uuid
+      responses:
+        '200':
+          description: Payment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Payments
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    PaymentStatusEnum:
+      type: string
+      enum:
+      - authorized
+      - arrived_to_technical_account
+      - outgoing_from_technical_account
+      - completed
+      - rejected
+      - revoked
+      description: 'Status of the payment.<br/> - `authorized`: payment authorized by the user<br> - `arrived_to_technical_account`: payment arrived to the FlowPay technical account. t<br> - `outgoing_from_technical_account`: payment outgoing from the technical account<br> - `completed`: funds has been transferred to the beneficiary<br> - `rejected`: payment rejected by the bank<br> - `revoked`: payment revoked by the user or by the client in case of conditional payment'
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the payment assigned by FlowPay.
+          x-faker: random.uuid
+        sessionID:
+          type: string
+          format: uuid
+          description: Unique identifier of the checkout session
+          x-faker: random.uuid
+        amount:
+          type: number
+          description: Amount of the payment
+          example: 100.0
+        currency:
+          type: string
+          description: Currency of the payment
+          example: EUR
+        remittance:
+          type: string
+          description: Remittance information of the payment
+          example: Payment for invoice 1234
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        createdAt:
+          type: string
+          format: iso8601
+          description: Date and time of the payment creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        updatedAt:
+          type: string
+          format: iso8601
+          description: Date and time of the last payment update
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        debtorIBAN:
+          type: string
+          description: IBAN of the debtor
+          example: IT60X0542811101000000123456
+          x-faker: finance.iban
+  responses:
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

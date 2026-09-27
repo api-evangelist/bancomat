@@ -1,0 +1,207 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Webhooks API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Webhooks across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Webhooks
+  description: Manage webhooks
+paths: {}
+webhooks:
+  AIS consent status:
+    post:
+      summary: AIS consent status
+      description: Notify the status of the account information service (AIS)
+      operationId: AISConsentStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: '#/components/schemas/BankAccount'
+                status:
+                  type: string
+                  enum:
+                  - ACTIVATED
+                  - REVOKED
+                  - EXPIRED
+                  description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `ACTIVATED`: consent granted by account owner<br> - `REVOKED`: consent revoked by account owner<br> - `EXPIRED`: consent expired'
+                rejectionReason:
+                  type: string
+                  description: 'Reason of the rejection of the consent. It is present only if the status is `REVOKED`. <br> <b>Note: The majority of the banks do not provide this information</b>. Consent may be revoked from the bank for any reason or by the user from the bank website.'
+                  example: Operation not allowed on ASPSP system
+              required:
+              - consentId
+              - status
+              - account
+      security: []
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Webhooks
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    BankAccount:
+      type: object
+      properties:
+        owner:
+          type: string
+          format: uuid
+          description: Identifier of the owner of the bank account
+        iban:
+          type: string
+          description: International Bank Account Number
+          x-faker: finance.iban
+          example: IT60X0542811101000000123456
+        currencies:
+          type: array
+          items:
+            type: string
+            description: Currencies supported by the bank account
+            x-faker: finance.currencyCode
+          example:
+          - EUR
+          - CHF
+          - GBP
+        bankName:
+          type: string
+          description: Identifier of the bank
+          example: intesa_sanpaolo
+        owners:
+          type: array
+          description: List of owners of the bank account
+          items:
+            type: string
+            description: Name of the owner of the bank account
+            x-faker: person.fullName
+          example:
+          - Maria Fumagalli
+          - Luigi Verdi
+        consentStatus:
+          $ref: '#/components/schemas/ConsentStatusEnum'
+    ConsentStatusEnum:
+      type: string
+      enum:
+      - not_granted
+      - granted
+      - revoked
+      - expired
+      - all
+      default: all
+      description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
+  responses:
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

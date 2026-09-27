@@ -1,0 +1,292 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Conti API
+  version: 1.0.0
+  contact:
+    email: federico.giuntoli@flowpay.it
+    name: Federico Giuntoli
+  termsOfService: https://www.flowpay.it/tos
+  description: 'Operations tagged Conti across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://app.flowpay.it/api
+  variables: {}
+tags:
+- name: Conti
+paths:
+  /{tenantID}/accounts:
+    get:
+      description: Ottiene la lista di account relative all'azienda identificata da `tenantID`
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: F6E7643D-C4CF-4E1C-9FB3-D05E231E165C
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: F6E7643D-C4CF-4E1C-9FB3-D05E231E165C
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+              - additionalData: null
+                bankID: hello
+                currency: hello
+                iban: hello
+                id: null
+                label: null
+                userIDs:
+                - cb15b52a-91db-41ed-81a0-764a0cc4795d
+                vatCode: hello
+              schema:
+                $ref: '#/components/schemas/Accounts'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - account:read
+      - ThirdPartyOauth:
+        - account:read
+      summary: Get by tenant id accounts
+      tags:
+      - Conti
+      x-summary-source: derived
+      operationId: getByTenantIDAccounts
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+components:
+  schemas:
+    Account:
+      properties:
+        additionalData:
+          description: Dati aggiuntivi sull'account, in particolare i dati si riferiscono allo stato attuale del consenso che FlowPay ha sull'account
+          properties:
+            consentActive:
+              example: 'true'
+              type: boolean
+            consentValidUntil:
+              example: '2020-03-03T17:32:28Z'
+              format: date-time
+              type: string
+            hasAccessRight:
+              example: 'true'
+              type: boolean
+          required:
+          - consentActive
+          type: object
+        bankID:
+          description: 'ID FlowPay della banca all''interno del Bank Gateway.
+
+
+            Identifica l''istituto di pagamento dove è collocato l''account'
+          example: string
+          type: string
+        currency:
+          description: 'Valuta dell''account (e.g. `EUR`, `CHF`).
+
+
+            Verrà probabilmente codificato in futuro con una enum'
+          example: string
+          type: string
+        iban:
+          description: IBAN dell'account
+          example: string
+          type: string
+        id:
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        label:
+          description: Testo libero per identificare meglio l'account
+          example: string
+          type: string
+        userIDs:
+          items:
+            example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+            format: uuid
+            type: string
+          type: array
+        vatCode:
+          description: Partita iva a cui appartiene questo account
+          example: string
+          type: string
+      required:
+      - iban
+      - currency
+      - vatCode
+      - bankID
+      - userIDs
+      type: object
+    ErrorDTO:
+      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+      properties:
+        code:
+          description: Codice errore
+          example: '12345678'
+          format: int64
+          type: integer
+        errorDescription:
+          description: Descrizione errore
+          example: string
+          type: string
+        errorURI:
+          description: URI dell'errore se presente
+          example: string
+          type: string
+        expectedType:
+          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+          example: string
+          type: string
+        field:
+          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
+          example: string
+          type: string
+        requestID:
+          description: ID della richiesta da comunicare per poter fornire un supporto
+          example: string
+          type: string
+        service:
+          description: ID interno del servizio
+          example: '12345678'
+          format: int64
+          type: integer
+        statusCode:
+          description: Codice di stato HTTP
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - service
+      - code
+      - errorDescription
+      - statusCode
+      type: object
+    Accounts:
+      items:
+        $ref: '#/components/schemas/Account'
+      type: array
+  securitySchemes:
+    ThirdPartyAuthorizationCode:
+      description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            bill:write: Creazione e gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            contacts:read: Operazioni di lettura sulla rete aziendale
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: Operazioni di lettura sui trasferimenti
+            transfer:write: Operazioni di scrittura sui trasferimenti
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+    ThirdPartyClientCredential:
+      description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+      flows:
+        clientCredentials:
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            account:write: Operazione di modifica sui conti
+            authorization_intent: Creazione di intenti a consensi relativi a risorse di un utente
+            bill: Gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            pagopa: ''
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: ''
+            transfer:write: ''
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+x-refined-from:
+- bancomat-flowpay-api-v1-openapi.json
+- bancomat-flowpay-api-v1-openapi.yml

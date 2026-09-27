@@ -1,0 +1,368 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Consent API
+  version: 1.0.0
+  contact:
+    email: federico.giuntoli@flowpay.it
+    name: Federico Giuntoli
+  termsOfService: https://www.flowpay.it/tos
+  description: 'Operations tagged Consent across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://app.flowpay.it/api
+  variables: {}
+tags:
+- description: Gestione del consenso per l'accesso ai dati bancari
+  name: Consent
+paths:
+  /{tenantID}/consents:
+    get:
+      description: Ottiene la lista di consensi che l'utente ha fornito
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ConsentDTO'
+                type: array
+          description: Bulk payments list
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+      security:
+      - ThirdPartyClientCredential: []
+      - ThirdPartyAuthorizationCode: []
+      tags:
+      - Consent
+      summary: Get by tenant id consents
+      x-summary-source: derived
+      operationId: getByTenantIDConsents
+      x-operation-id-source: derived
+    post:
+      description: 'Il flusso previsto per questa chiamata prevede che la terza parte invii l''id della banca che l''utente desidera collegare o per la quale intende rinnovare il consenso.
+
+
+        Viene restituito un link valido una singola volta.
+
+
+        L''utente deve essere redirezionato verso il link, l''utente deve effettuare una SCA presso la propria banca e a seconda del successo o del fallimento di tale operazione viene in seguito redirezionato verso i link di ok o di nok che sono stati forniti nella richiesta.'
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bankID:
+                  type: string
+                  description: id della banca da collegare, corrisponde al flowpayID ottenibile attraverso la relativa chiamata verso le api GET /banks.
+                okRedirect:
+                  type: string
+                  description: url di redirect in caso di flusso di collegamento conto completato con successo
+                nokRedirect:
+                  type: string
+                  description: url di redirect in caso di flusso di collegamento completato con fallimento
+              required:
+              - bankID
+              - okRedirect
+              - nokRedirect
+      responses:
+        '200':
+          description: risposta di successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: url dove redirezionare l'utente per iniziare il processo di collegamento account
+                required:
+                - url
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+      security:
+      - ThirdPartyClientCredential: []
+      - ThirdPartyAuthorizationCode: []
+      tags:
+      - Consent
+      summary: Create by tenant id consents
+      x-summary-source: derived
+      operationId: postByTenantIDConsents
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+components:
+  schemas:
+    ConsentType:
+      type: string
+      enum:
+      - account
+      - balance
+      - transaction
+      description: 'Tipi di consenso disponibili: account, balance, transaction'
+    ErrorDTO:
+      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+      properties:
+        code:
+          description: Codice errore
+          example: '12345678'
+          format: int64
+          type: integer
+        errorDescription:
+          description: Descrizione errore
+          example: string
+          type: string
+        errorURI:
+          description: URI dell'errore se presente
+          example: string
+          type: string
+        expectedType:
+          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+          example: string
+          type: string
+        field:
+          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
+          example: string
+          type: string
+        requestID:
+          description: ID della richiesta da comunicare per poter fornire un supporto
+          example: string
+          type: string
+        service:
+          description: ID interno del servizio
+          example: '12345678'
+          format: int64
+          type: integer
+        statusCode:
+          description: Codice di stato HTTP
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - service
+      - code
+      - errorDescription
+      - statusCode
+      type: object
+    ConsentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id univoco del consenso
+        bankID:
+          type: string
+          description: Nome univoco della banca per la quale è stato concesso il consenso
+        expiresAt:
+          type: string
+          format: date-time
+          description: Data nella quale il consenso finisce di valere
+        createdAt:
+          type: string
+          format: date-time
+          description: Data nella quale il consenso è stato creato
+        recurring:
+          type: boolean
+          description: Indica se il consenso è di tipo ricorrente oppure no
+        usableFor:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentType'
+          description: Indica per cosa questo consenso può essere usato (e.g. Lettura conti, saldo, transazioni)
+        userID:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - id
+      - bankID
+      - expiresAt
+      - createdAt
+      - recurring
+      - usableFor
+  securitySchemes:
+    ThirdPartyAuthorizationCode:
+      description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            bill:write: Creazione e gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            contacts:read: Operazioni di lettura sulla rete aziendale
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: Operazioni di lettura sui trasferimenti
+            transfer:write: Operazioni di scrittura sui trasferimenti
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+    ThirdPartyClientCredential:
+      description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+      flows:
+        clientCredentials:
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            account:write: Operazione di modifica sui conti
+            authorization_intent: Creazione di intenti a consensi relativi a risorse di un utente
+            bill: Gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            pagopa: ''
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: ''
+            transfer:write: ''
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+x-refined-from:
+- bancomat-flowpay-api-v1-openapi.json
+- bancomat-flowpay-api-v1-openapi.yml

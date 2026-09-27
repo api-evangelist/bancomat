@@ -1,0 +1,356 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Authentication API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Authentication across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Authentication
+  description: Manage authentication
+paths:
+  /oauth/token:
+    post:
+      summary: Get an access token or refresh an existing one
+      operationId: GetAccessToken
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - authorization_code
+                  - client_credentials
+                  - refresh_token
+                client_id:
+                  type: string
+                  format: uuid
+                client_secret:
+                  type: string
+                code:
+                  type: string
+                redirect_uri:
+                  type: string
+                  format: uri
+                refresh_token:
+                  type: string
+                scope:
+                  type: string
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              - scope
+      responses:
+        '200':
+          description: Token obtained
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token to be used to access protected resources
+                  expires_in:
+                    type: integer
+                    example: 3600
+                    x-faker:
+                      datatype.number:
+                        min: 3000
+                        max: 3600
+                    description: Number of seconds before the access token expires
+                  refresh_token:
+                    type: string
+                    description: Refresh token to be used to obtain a new access token
+                  scope:
+                    type: string
+                    description: List of scopes granted to the client, separated by a space
+                required:
+                - access_token
+                - expires_in
+                - scope
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Authentication
+      security: []
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /oauth/token/info:
+    post:
+      summary: Get information about the token
+      operationId: GetTokenInfo
+      security: []
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Token to be checked
+              required:
+              - token
+      responses:
+        '200':
+          description: Token information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                    example: true
+                    description: Whether the token is active or not
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                  client_id:
+                    type: string
+                    format: uuid
+                    example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    description: Client identifier of the application that obtained the token
+                  clientID:
+                    type: string
+                    format: uuid
+                    example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    description: Client identifier of the application that obtained the token
+                  expiresAt:
+                    type: string
+                    format: date-time
+                    example: '2020-01-01T00:00:00Z'
+                    description: Date and time when the token expires
+                    x-faker: date.recent
+                  exp:
+                    type: number
+                    example: 1577836800
+                    description: The unix timestamp indicating when this token will expire.
+                    x-faker: date.unix
+                  consumer:
+                    type: string
+                    format: uuid
+                    example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    description: Consumer identifier that granted the token
+                  companies:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                      description: Company identifier
+                    description: List of companies for which consumer has access to
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  responses:
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  schemas:
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

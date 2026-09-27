@@ -1,0 +1,528 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Accounts API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Accounts across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Accounts
+  description: Manage accounts
+paths:
+  /accounts:
+    get:
+      summary: Get the list of accounts
+      description: Get the list of accounts associated to the token
+      operationId: getAccounts
+      security:
+      - oAuth2:
+        - accounts:read
+      parameters:
+      - name: page
+        in: query
+        description: Page number to retrieve
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+        example: 1
+        x-faker: datatype.number
+      - name: tenantID
+        in: query
+        description: Tenant identifier to filter accounts. <br /> This has effect only for token obtained with client_credentials grant type which could be associated to multiple tenants.  <br/> If not specified, response will contain all accounts associated to all tenants the token is authorized to access
+        required: false
+        schema:
+          type: string
+          format: uuid
+        x-faker: datatype.uuid
+      - name: bank
+        in: query
+        description: Bank identifier to filter accounts.
+        required: false
+        schema:
+          type: string
+        example: intesa_sanpaolo
+      - name: consent
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/ConsentStatusEnum'
+      responses:
+        '200':
+          description: 'List of accounts. TODO: La paginazione non serve qui, è per prototipo'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/BankAccount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Accounts
+    post:
+      summary: Create account consent session
+      description: 'Create a new session to allow an user to grant consent to FlowPay to access his accounts for AIS service.
+
+        Clients can use this endpoint to create a new session to allow an user to grant consent to FlowPay to access his accounts for AIS service.'
+      operationId: createAisConsentSession
+      security:
+      - oAuth2:
+        - accounts:write
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenantID:
+                  type: string
+                  format: uuid
+                  description: Tenant identifier of user who will grant consent to FlowPay to access his accounts for AIS service
+                bank:
+                  type: string
+                  description: Bank identifier. If not specified, the user will be able to choose the bank from a list of supported banks
+                  example: intesa_sanpaolo
+              required:
+              - tenantID
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link:
+                    type: string
+                    format: uri
+                    description: URL to be used to redirect the user to the bank website to grant consent to FlowPay to access his accounts for AIS service
+                required:
+                - sessionID
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      callbacks:
+        ok:
+          /:
+            get:
+              summary: Consent correctly granted
+              description: 'Redirect URL to be used by FlowPay to notify the client that user has granted consent to FlowPay to access his accounts for AIS service. <br> After the user has granted consent to FlowPay to access his accounts for AIS service, the bank will redirect to FlowPay server to notify the result of the operation, FlowPay will then redirect to the client to notify the result of the operation.<br> Use this redirect URL to manage user experience, for example, you can synchronously refresh token at backend and redirect the user to a specific page in your client application.<br> Note: You can be notified of the result of the operation also by using the webhook mechanism.'
+              operationId: aisOkConsentSessionCallback
+              parameters:
+              - name: owner
+                in: query
+                description: Identifier of the user who has granted consent.
+                required: true
+                schema:
+                  type: string
+                  format: uuid
+                x-faker: datatype.uuid
+              security: []
+        ko:
+          /:
+            get:
+              summary: Some error occured
+              description: Redirect URL to be used by FlowPay to notify the client that user has not granted consent to FlowPay to access his accounts for AIS service. <br>After user redirection to FlowPay server, FlowPay will then redirect to the client to notify the result of the operation.<br> Use this redirect URL to manage user experience.
+              operationId: aisKoConsentSessionCallback
+              parameters:
+              - name: owner
+                in: query
+                description: Identifier of the user who has not granted consent.
+                required: true
+                schema:
+                  type: string
+                  format: uuid
+                x-faker: datatype.uuid
+              - name: reason
+                in: query
+                description: 'Reason why user has not granted consent. <b>Note: This parameter is optional and it is not supported by all banks.</b> User may voluntarily not grant consent or he may have not been able to grant consent due to some bank error.'
+                required: false
+                schema:
+                  type: string
+              security: []
+      tags:
+      - Accounts
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /accounts/{accountID}:
+    get:
+      summary: Get account details
+      description: Retrieve details of a specific account
+      operationId: getAccount
+      security:
+      - oAuth2:
+        - accounts:read
+      parameters:
+      - name: accountID
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+        x-faker: datatype.uuid
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Accounts
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+webhooks:
+  AIS consent status:
+    post:
+      summary: AIS consent status
+      description: Notify the status of the account information service (AIS)
+      operationId: AISConsentStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: '#/components/schemas/BankAccount'
+                status:
+                  type: string
+                  enum:
+                  - ACTIVATED
+                  - REVOKED
+                  - EXPIRED
+                  description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `ACTIVATED`: consent granted by account owner<br> - `REVOKED`: consent revoked by account owner<br> - `EXPIRED`: consent expired'
+                rejectionReason:
+                  type: string
+                  description: 'Reason of the rejection of the consent. It is present only if the status is `REVOKED`. <br> <b>Note: The majority of the banks do not provide this information</b>. Consent may be revoked from the bank for any reason or by the user from the bank website.'
+                  example: Operation not allowed on ASPSP system
+              required:
+              - consentId
+              - status
+              - account
+      security: []
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Accounts
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    BankAccount:
+      type: object
+      properties:
+        owner:
+          type: string
+          format: uuid
+          description: Identifier of the owner of the bank account
+        iban:
+          type: string
+          description: International Bank Account Number
+          x-faker: finance.iban
+          example: IT60X0542811101000000123456
+        currencies:
+          type: array
+          items:
+            type: string
+            description: Currencies supported by the bank account
+            x-faker: finance.currencyCode
+          example:
+          - EUR
+          - CHF
+          - GBP
+        bankName:
+          type: string
+          description: Identifier of the bank
+          example: intesa_sanpaolo
+        owners:
+          type: array
+          description: List of owners of the bank account
+          items:
+            type: string
+            description: Name of the owner of the bank account
+            x-faker: person.fullName
+          example:
+          - Maria Fumagalli
+          - Luigi Verdi
+        consentStatus:
+          $ref: '#/components/schemas/ConsentStatusEnum'
+    ConsentStatusEnum:
+      type: string
+      enum:
+      - not_granted
+      - granted
+      - revoked
+      - expired
+      - all
+      default: all
+      description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+  responses:
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

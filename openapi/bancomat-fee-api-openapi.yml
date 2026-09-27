@@ -1,0 +1,585 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Fee API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Fee across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Fee
+  description:
+    $ref: docs/fee_description.md
+paths:
+  /fee:
+    get:
+      summary: List fees
+      description: Retrieve the list of fees applied to the customer for the services provided by the client
+      operationId: getFees
+      security:
+      - oAuth2:
+        - fees:read
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          format: int32
+        x-faker: random.number
+      - name: size
+        in: query
+        description: Page size
+        required: false
+        schema:
+          type: integer
+          format: int32
+        x-faker: random.number
+      responses:
+        '200':
+          description: Fees list
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Fee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Fee
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /fee/rules:
+    get:
+      summary: List fee rules
+      operationId: list_fee_rules
+      description: Retrieve a list of fee rules based on query parameters.
+      security:
+      - oAuth2: []
+      tags:
+      - Fee
+      parameters:
+      - name: types
+        in: query
+        description: Filter fee rules by document kind (e.g., invoice, bill, etc.)
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentKindEnum'
+      - name: methods
+        in: query
+        description: Filter fee rules by payment method (e.g., card, sdd, pis)
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - pis
+            - sdd
+            - card
+            description: Payment method the rule applies to
+      - name: lowerBound
+        in: query
+        description: Filter fee rules by lower bound
+        required: false
+        schema:
+          type: number
+          format: double
+      responses:
+        '200':
+          description: List of fee rules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeeRule'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /fee/rules/{kind}/{fingerprint}:
+    get:
+      summary: Retrieve fee rules for a document
+      description: Retrieve fee rules for a document identified by its type and fingerprint. The response is a mapping of payment methods (e.g., card, sdd, pis) to the corresponding fee rule.
+      operationId: getFeeRules
+      security:
+      - oAuth2: []
+      parameters:
+      - name: kind
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/DocumentKindEnum'
+      - name: fingerprint
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Fingerprint'
+      tags:
+      - Fee
+      responses:
+        '200':
+          description: Mapping of fee rules retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeRuleMap'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /fee/rules/{kind}/{fingerprint}/{payer}:
+    get:
+      summary: Retrieve fee rule for a specific payer
+      description: Retrieve fee rule(s) for a document identified by its type and fingerprint, filtered by the specified payer. Optionally, an 'amount' query parameter can be provided to influence fee calculation.
+      operationId: getFeeRuleForPayer
+      security:
+      - oAuth2: []
+      parameters:
+      - name: kind
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/DocumentKindEnum'
+      - name: fingerprint
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Fingerprint'
+      - name: payer
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/FeeRulePayer'
+      tags:
+      - Fee
+      responses:
+        '200':
+          description: Fee rule for the specified payer retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeRuleAmountMap'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    FeeRuleMap:
+      type: object
+      description: A dictionary mapping document fingerprints to fee amounts.
+      propertyNames:
+        $ref: '#/components/schemas/Fingerprint'
+      additionalProperties:
+        type: number
+        format: double
+      example:
+        d41d8cd98f00b204e9800998ecf8427e: 0.05
+        e56d7ef1234567890abcde1234567890: 0.1
+    FeeRuleMethods:
+      type: string
+      enum:
+      - pis
+      - card
+      - sdd
+      description: 'Payment methods applicable for fee rules.
+
+
+        - **pis**: Used for bank transfers, including standard bank transfers and instant transfers (bonifico istantaneo).
+
+        - **card**: Used for card payments, including mobile wallet transactions.
+
+        - **sdd**: Used for direct debit payments.'
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
+    Fee:
+      type: object
+      properties:
+        fingerprint:
+          $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprint of the fee
+        amount:
+          type: number
+          format: double
+          minimum: 0
+          example: 0.5
+          description: Amount of the fee
+        targetFingerprint:
+          $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprint of the document the fee is related to
+        targetType:
+          $ref: '#/components/schemas/DocumentKindEnum'
+          description: Type of the document the fee is related to
+        ruleID:
+          type: string
+          format: uuid
+          description: Identifier of the rule that generated the fee
+        linkedFingerprint:
+          $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprint of the document the fee is linked to. Can be related to a `bulk` if the payer is the debtor of the target or to a `chain` if the payer is the creditor of the target.
+    FeeRule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the fee rule
+          x-faker: datatype.uuid
+        clientID:
+          type: string
+          format: uuid
+          description: Unique identifier of the client that created the rule
+          x-faker: datatype.uuid
+        useCase:
+          $ref: '#/components/schemas/DocumentKindEnum'
+          description: Use case of the rule
+        method:
+          $ref: '#/components/schemas/FeeRuleMethods'
+        lowerBound:
+          type: number
+          format: double
+          description: Lower bound of the rule. If the amount is lower than this value, the rule does not apply.
+        kind:
+          type: string
+          enum:
+          - fixed
+          - percentage
+          description: 'Calculation method of the fee. <br> - `fixed`: the fee is a fixed amount<br> - `percentage`: the fee is a percentage of the target''s amount'
+        numeric:
+          type: number
+          format: double
+          description: Value of the fee. If the kind is `percentage`, the value is a percentage of the target's amount and can assume values between 0 and 1.
+        remittance:
+          type: string
+          description: Remittance information of the fee charged to the payer
+        payer:
+          $ref: '#/components/schemas/FeeRulePayer'
+          description: 'Payer of the fee. <br> - `debtor`: the debtor of the target document pays the fee using a bulk<br> - `creditor`: the creditor of the target document pays the fee using a chain'
+      required:
+      - id
+      - clientID
+      - useCase
+      - method
+      - kind
+      - numeric
+      - payer
+      - lowerBound
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    FeeRuleAmountMap:
+      type: object
+      description: A dictionary mapping payment methods to payment amounts including fees for a specific document
+      propertyNames:
+        $ref: '#/components/schemas/FeeRuleMethods'
+      additionalProperties:
+        type: number
+        format: double
+      example:
+        pis: 0.05
+        card: 0.1
+    FeeRulePayer:
+      type: string
+      enum:
+      - debtor
+      - creditor
+      description: 'Payer types applicable for fee rules.
+
+
+        - **debtor**: The fees are paid by the debtor via a bulk payment.
+
+        - **creditor**: The fees are paid by the creditor via a split payment.'
+    DocumentKindEnum:
+      type: string
+      enum:
+      - bill
+      - bulk
+      - chain
+      - construction
+      - invoice
+      - pagopa
+      - transfer
+      description:
+        $ref: types/DocumentKind.md
+  responses:
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

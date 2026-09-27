@@ -12,15 +12,20 @@ description: >-
   docs.flowpay.it and GitHub.
 type: Index
 deliveryModel:
-  model: unknown
-  open_source: false
-  commercial: false
-  callable_host: false
-  label: Delivery model not determined — needs a product licence on record
+  model: saas
+  license_evidence:
+    not_product:
+    - flowpay/client-openapi
+  open_source: unknown
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
   confidence: low
   source:
-  - none
-  generated: '2026-08-28'
+  - openapi
+  - pricing
+  - repository-not-product
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: freemium
@@ -38,7 +43,7 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.p
 tags:
   - ATM
   - Banking
-  - Financial-Services
+  - Financial Services
   - Italy
   - Mobile Payments
   - Payments
@@ -63,123 +68,906 @@ tags_raw:
   - Payment Initiation
   - Invoicing
   - pagoPA
+  - Financial-Services
 url: https://raw.githubusercontent.com/api-evangelist/bancomat/refs/heads/main/apis.yml
 created: '2024-01-15'
 modified: '2026-09-17'
 specificationVersion: '0.23'
 apis:
-  - aid: bancomat:bancomat-pay
-    name: BANCOMAT Pay
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
-    description: >-
-      BANCOMAT Pay is a mobile payment service enabling Italian consumers to make e-commerce
-      purchases and P2P transfers through a smartphone app linked to their bank account by
-      phone number and IBAN. Merchant integration is typically handled through PSPs such as
-      Nexi, Axerve, PPRO, and HiPay rather than a direct public API. Scheme-level technical
-      documentation and certification material for issuers, acquirers and certified operators
-      is distributed only through BANCOMAT Insight (insight.bancomat.it), an OTP-gated member
-      portal; api.bancomat.it answers every unauthenticated path with a JSON 404.
-    humanURL: https://bancomat.it/en/bancomat-pay
-    tags:
-      - Mobile Payments
-      - P2P
-      - Payments
-      - Italy
-    properties:
-      - type: Documentation
-        url: https://bancomat.it/en/bancomat-pay
-      - type: Documentation
-        url: https://developer.nexigroup.com/xpayglobal/en-EU/docs/bancomat-pay/
-        name: Nexi Integration Guide
-  - aid: bancomat:flowpay-api-v1
-    name: FlowPay API (v1)
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
-    description: >-
-      Production REST API of FlowPay S.r.l., the Bank of Italy-authorised payment institution
-      (AISP/PISP, ref. 36925) that BANCOMAT S.p.A. acquired on 2025-07-22. Tenant-scoped
-      endpoints for account information (AIS consents, accounts, balances, transactions),
-      payment initiation (transfers, bulk and chain payments, hosted checkout sessions),
-      invoices, salaries, pagoPA notices and webhook subscriptions, secured by OAuth 2.0
-      authorization-code and client-credentials flows with PKCE, PAR and signed request objects.
-      The contract is rendered by ReDoc on docs.flowpay.it from a 59-operation OpenAPI 3.0.3.
-    humanURL: https://docs.flowpay.it/
-    baseURL: https://app.flowpay.it/api
-    tags:
-      - Open Banking
-      - Account Information
-      - Payment Initiation
-      - Invoicing
-      - Webhook
-      - pagoPA
-      - Italy
-    tags_raw:
-      - Open Banking
-      - Account Information
-      - Payment Initiation
-      - Invoicing
-      - Webhooks
-      - pagoPA
-      - Italy
-    properties:
-      - type: Documentation
-        url: https://docs.flowpay.it/
-      - type: APIReference
-        url: https://docs.flowpay.it/
-      - type: DeveloperPortal
-        url: https://developer.flowpay.it/
-      - type: OpenAPI
-        url: openapi/bancomat-flowpay-api-v1-openapi.yml
-      - type: OpenAPI
-        url: openapi/_original/bancomat-flowpay-api-v1-openapi.json
-        name: FlowPay API v1 OpenAPI (verbatim, as served through docs.flowpay.it)
-      - type: Webhooks
-        url: asyncapi/bancomat-flowpay-webhooks.yml
-      - type: Sandbox
-        url: sandbox/bancomat-sandbox.yml
-      - type: Overlay
-        url: overlays/bancomat-flowpay-api-v1-overlay.yaml
-      - type: AgentSkill
-        url: skills/_index.yml
-  - aid: bancomat:flowpay-api-v2
-    name: FlowPay API (v2)
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
-    description: >-
-      Second-generation FlowPay API published as OpenAPI 3.1.0 (2.0.0-alpha.4) in the public
-      FlowPay/client-openapi GitHub repository, with operationIds, page/size pagination,
-      documented 100 req/min and 10 req/s rate limits, and a shared public sandbox. Adds
-      credit notes, proforma invoices, construction-site escrow flows, fee rules and KYC to
-      the v1 surface, and describes an AIS consent-status webhook. The production server
-      api.flowpay.it/v2 answers unauthenticated reads (GET /v2/banks returned 200 on
-      2026-09-17) even though the spec still labels it "Not implemented".
-    humanURL: https://github.com/FlowPay/client-openapi
-    baseURL: https://api.flowpay.it/v2
-    tags:
-      - Open Banking
-      - Account Information
-      - Payment Initiation
-      - Invoicing
-      - pagoPA
-      - Italy
-    properties:
-      - type: Documentation
-        url: https://github.com/FlowPay/client-openapi/tree/main/docs
-      - type: SourceCode
-        url: https://github.com/FlowPay/client-openapi
-      - type: DeveloperPortal
-        url: https://developer.flowpay.it/
-      - type: OpenAPI
-        url: openapi/bancomat-flowpay-api-v2-openapi.yml
-      - type: OpenAPI
-        url: openapi/_original/bancomat-flowpay-api-v2-openapi.json
-        name: FlowPay API v2 OpenAPI (verbatim, github.com/FlowPay/client-openapi)
-      - type: Overlay
-        url: overlays/bancomat-flowpay-api-v2-overlay.yaml
-      - type: MCPServer
-        url: mcp/bancomat-mcp.yml
-        name: Derived candidate tool list (no server shipped)
-      - type: AgentSkill
-        url: skills/_index.yml
+- aid: bancomat:bancomat-pay
+  name: BANCOMAT Pay
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
+  description: >-
+    BANCOMAT Pay is a mobile payment service enabling Italian consumers to make e-commerce purchases and
+    P2P transfers through a smartphone app linked to their bank account by phone number and IBAN. Merchant
+    integration is typically handled through PSPs such as Nexi, Axerve, PPRO, and HiPay rather than a
+    direct public API. Scheme-level technical documentation and certification material for issuers, acquirers
+    and certified operators is distributed only through BANCOMAT Insight (insight.bancomat.it), an OTP-gated
+    member portal; api.bancomat.it answers every unauthenticated path with a JSON 404.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  tags:
+  - Mobile Payments
+  - P2P
+  - Payments
+  - Italy
+  properties:
+  - type: Documentation
+    url: https://bancomat.it/en/bancomat-pay
+  - type: Documentation
+    url: https://developer.nexigroup.com/xpayglobal/en-EU/docs/bancomat-pay/
+    name: Nexi Integration Guide
+- aid: bancomat:bancomat-accounts-api
+  name: Bancomat Accounts API
+  description: Manage accounts
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-ais-service-api
+  name: Bancomat AIS Service API
+  description: >-
+    Endpoint per il servizio di AIS in cui è possbile ottenere informazioni di un account o semplicemente
+    un check iban
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - AIS Service
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-ais-service-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-authentication-api
+  name: Bancomat Authentication API
+  description: Manage authentication
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-banche-api
+  name: Bancomat Banche API
+  description: Banche conformi allo standard PSD2
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Banche
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-banche-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-banks-api
+  name: Bancomat Banks API
+  description: Banks informations
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Banks
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-banks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-bulk-api
+  name: Bancomat Bulk API
+  description: >-
+    Questo endpoint consente di effettuare pagamenti bulk di documenti di diversi tipi. <br> Nota: l'API
+    di questo endpoint non richiede scope specifici, il token di autorizzazione utilizzato deve avere
+    accesso ai documenti che desidera pagare.
+
+
+    <p align="center">
+
+
+    <img src="https://mermaid.ink/svg/pako:eNqFkl9rwjAUxb9KyB58qWCryOjDwO4PCGOIle2lL7fNrQs2iUtT0YnffYmtGjdhebo553dPEm72tFAMaUxrAwafOCw1iEwSuxjXWBiuJHmdt8pUbhQvMExQhv3-A0maanXlRM4hNy3XFP2yZrBUs4kTL5qrjthsmnbUND0Ki0m7Xxw7yIe9njvulhjRgArUAjizT9s7JKPmEwVmNLZlDrWtAk9_B80hr7B2wL7NzGippHkBwatd29ebq1wZ1QvIBjUDCQFxfVWXdWpJ-Xd3UDhebz1zrbkAvXtUldItcMcYDsviL5MozVD75Gg8LMrSI8FOZwNuQslq6ZNlVN5fZXrk_7HdBRa4NT4XDoaDEXpcjV8NygLfGpFfR57e5MhDJg92GtAYle5kQWOjGwxos2aX_0bjEqr6rD4zbpTuxMMPPNfQrg"
+    width="50%">
+
+
+    </p>
+
+
+    Il diagramma sopra mostra come funziona bulk.
+
+
+    Supponiamo il caso in cui un utente abbia due fatture per il beneficiario 1 (Ben1), una fattura per
+    il beneficiario 2 (Ben2) e un pagamento PagoPA
+
+
+    L'utente desidera pagare tutti in un'unica operazione.
+
+
+    Il client dell'utente, che ha accesso a tutti i documenti, chiama l'endpoint in blocco con l'elenco
+    dei documenti da pagare, l'endpoint restituisce un nuovo documento (Bulk) collegato a tutti i documenti
+    da pagare.
+
+
+    Il client fornisce il documento bulk all'utente, che ora può pagarlo con un'unica operazione di Payment
+    Initiation (PIS). Il bonifico bancario consentito con PIS sul documento in blocco è indirizzato al
+    conto tecnico FlowPay (TA). Quando il TA riceve il pagamento, divide l'importo tra i beneficiari e
+    invia loro i pagamenti tramite bonifico bancario.
+
+
+    In caso di pagamento bulk allo stesso beneficiario, il beneficiario effettivo di avvio del pagamento
+    è il beneficiario stesso, quindi il pagatore può riconoscere facilmente la transazione. In caso contrario,
+    il beneficiario effettivo di avvio del pagamento è FlowPay.
+
+
+    I bonifici bancari ai beneficiari vengono inviati con lo stesso pagatore originale, quindi i beneficiari
+    possono identificare facilmente il pagatore.
+
+
+    Nota: il destinatario dei pagamenti pagoPA è FlowPay stesso, quindi i pagamenti correlati non vengono
+    conteggiati nelle operazioni di suddivisione.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Bulk
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-bulk-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-chain-api
+  name: Bancomat Chain API
+  description: >-
+    Questo endpoint consente di concatenare i pagamenti tra diversi documenti, automatizzando il pagamento
+    di una fattura utilizzando l'importo ricevuto da un'altra fattura attiva. <br> Nota: L'API per questo
+    endpoint non richiede scopi specifici; il token di autorizzazione utilizzato deve avere accesso ai
+    documenti da pagare.
+
+
+    Il processo della catena di pagamento funziona collegando un documento "ring" che collega un documento
+    di attivazione a un documento di destinazione. Una volta creato il documento ring, esso stabilisce
+    una connessione tra il documento di attivazione, che avvia la catena di pagamento, e il documento
+    di destinazione, che riceverà il pagamento una volta che il documento di attivazione è stato pagato
+    tramite FlowPay.
+
+
+    Ad esempio, supponiamo che ci siano due documenti. Il primo documento riguarda un pagamento che l'azienda
+    A deve effettuare all'azienda B, mentre il secondo documento riguarda un pagamento che l'azienda B
+    deve effettuare all'azienda C. Per automatizzare questi pagamenti, l'azienda B crea un "anello" utilizzando
+    il suo token di autorizzazione. Questo anello collega il primo documento come "trigger" (documento
+    di attivazione) e il secondo documento come "target" (documento di destinazione).
+
+
+    Una volta creato l'anello, è possibile generare sessioni di checkout per ciascun documento. Il checkout
+    per il documento di attivazione procede come un processo di pagamento standard, mentre il checkout
+    per il documento di destinazione viene creato con un tipo di catena. Questo tipo di checkout a catena
+    per il documento di destinazione non richiede un pagamento immediato, ma attende il pagamento del
+    documento di attivazione.
+
+
+    Quando l'azienda B accede e completa il checkout per il documento di destinazione, non viene effettuato
+    alcun pagamento. Tuttavia, quando il documento di attivazione viene pagato, si attiva automaticamente
+    il pagamento del documento di destinazione. Se c'è un importo residuo dopo il pagamento del documento
+    di destinazione, l'azienda B lo riceverà.
+
+
+    In questo modo, l'automazione dei pagamenti assicura che tutti i documenti coinvolti siano regolati
+    in modo sequenziale, utilizzando i fondi ricevuti da un documento attivo per pagare un altro documento
+    in sospeso, riducendo al minimo l'intervento manuale e semplificando la gestione dei flussi di cassa
+    tra le aziende coinvolte.
+
+
+    ### Utilizzo della catena di pagamento per il pagamento frazionato
+
+
+    In uno scenario di pagamento frazionato, la catena di pagamento può essere utilizzata per distribuire
+    automaticamente i fondi tra più parti, anche trattenendo una parte del pagamento per il partner prima
+    di inoltrare l'importo rimanente al creditore. Ad esempio, supponiamo che l'azienda A debba pagare
+    l'azienda B, ma che una parte del pagamento sia trattenuta dall'azienda C (che agisce come partner
+    o intermediario). L'azienda A crea un documento di attivazione che rappresenta il pagamento che deve
+    all'azienda B. Viene quindi creato un documento ring che collega questo documento di attivazione a
+    due documenti di destinazione: uno per l'azienda B e uno per l'azienda C.
+
+
+    Quando l'azienda A effettua il pagamento, la catena di pagamento assicura che i fondi vengano prima
+    instradati attraverso l'azienda C. La parte a cui l'azienda C ha diritto (come concordato) viene trattenuta,
+    mentre il resto del pagamento viene automaticamente inoltrato all'azienda B. Questa configurazione
+    assicura che il pagamento frazionato venga gestito senza problemi, con un intervento manuale minimo,
+    e che tutte le parti ricevano gli importi dovuti secondo le regole predefinite della catena di pagamento.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Chain
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-chain-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-checkout-api
+  name: Bancomat Checkout API
+  description: This endpoint allows managing checkout sessions any document client has access to
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Checkout
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-checkout-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-consent-api
+  name: Bancomat Consent API
+  description: Gestione del consenso per l'accesso ai dati bancari
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Consent
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-consent-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-construction-api
+  name: Bancomat Construction API
+  description: Manage construction sites and related entities lifecycle
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Construction
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-construction-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-constructions-api
+  name: Bancomat Constructions API
+  description: The Constructions API from Bancomat — 1 operation(s) for constructions.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Constructions
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-constructions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-conti-api
+  name: Bancomat Conti API
+  description: The Conti API from Bancomat — 1 operation(s) for conti.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Conti
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-conti-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-documents-api
+  name: Bancomat Documents API
+  description: CRUD operations on documents
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-documents-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-fatture-api
+  name: Bancomat Fatture API
+  description: The Fatture API from Bancomat — 3 operation(s) for fatture.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Fatture
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-fatture-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-fee-api
+  name: Bancomat Fee API
+  description: '{''$ref'': ''docs/fee_description.md''}'
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Fee
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-fee-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-invoices-api
+  name: Bancomat Invoices API
+  description: '{''$ref'': ''docs/invoice_lifecycle.md''}'
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-kyc-api
+  name: Bancomat KYC API
+  description: '{''$ref'': ''docs/kyc_description.md''}'
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - KYC
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-kyc-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-pagamenti-api
+  name: Bancomat Pagamenti API
+  description: >-
+    I pagamenti generati dall'approvazione di uno o più termini di pagamento relativi a una fattura
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Pagamenti
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-pagamenti-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-pagopa-api
+  name: Bancomat Pago PA API
+  description: >-
+    pagoPA è il sistema nazionale italiano che permette ai cittadini di pagare la pubblica amministrazione.
+    FlowPay partecipa a pagoPA e consente agli utenti di pagare con l'open banking.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - pagoPA
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-pagopa-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-payments-api
+  name: Bancomat Payments API
+  description: Access to payments initiated by FlowPay
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-payments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-saldo-api
+  name: Bancomat Saldo API
+  description: >-
+    Saldo conto corrente
+
+
+    ## Balance Type
+
+    The balance types given by this endpoint can be any of the following:
+
+
+    | name | description |
+
+    |---|---|
+
+    | expected | Balance composed of booked entries and pending items known at the time of calculation,
+    which projects the end of day balance if everything is booked on the account and no other entry is
+    posted. |
+
+    | authorised | The expected balance together with the value of a pre-approved credit line the ASPSP
+    makes permanently available to the user. |
+
+    | openingBooked | Book balance of the account at the beginning of the account reporting period. It
+    always equals the closing book balance from the previous report. |
+
+    | interimAvailable | Available balance calculated in the course of the account 'servicer's business
+    day, at the time specified, and subject to further changes during the business day. The interim balance
+    is calculated on the basis of booked credit and debit items during the calculation time/period specified.
+    |
+
+    | closingBooked | Balance of the account at the end of the pre-agreed account reporting period. It
+    is the sum of the opening booked balance at the beginning of the period and all entries booked to
+    the account during the pre-agreed account reporting period. |
+
+    | forwardAvailable | Forward available balance of money that is at the disposal of the account owner
+    on the date specified. |
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Saldo
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-saldo-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-sessioni-di-checkout-api
+  name: Bancomat Sessioni di checkout API
+  description: >-
+    Gestione e creazione di un codici di checkout
+
+
+    Il codice di checkout permette di far pagare un documento caricato su FlowPay attraverso il nostro
+    flusso di checkout.
+
+
+    Il flusso per il checkout passa dall'ottenere il codice di checkout e redirezionare il proprio utente
+    verso la pagina
+
+    * `https://checkout.flowpay.it/{code}` in produzione
+
+    * `https://checkout.sandbox-new.flowpay.it/{code}` in sandbox
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Sessioni di checkout
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-sessioni-di-checkout-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-stipendi-api
+  name: Bancomat Stipendi API
+  description: The Stipendi API from Bancomat — 2 operation(s) for stipendi.
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Stipendi
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-stipendi-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-transactions-api
+  name: Bancomat Transactions API
+  description: Endpoint for retrieving transactions collected with AIS consent
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-transazioni-api
+  name: Bancomat Transazioni API
+  description: >-
+    Transazioni conto corrente
+
+
+    Le transazioni possono essere filtrate per data e iban. utilizzando i seguenti parametri:
+
+    - `dateFrom`: data di inizio del filtro in formato ISO8601
+
+    - `dateTo`: data di fine del filtro in formato ISO8601
+
+    - `iban`: iban del conto corrente
+
+
+    ad esempio: `/<tenant-id>/transactions?dateFrom=2022-07-19T19:29:48Z&dateTo=2022-10-19T19:29:48Z&iban=IT00A0000000000000000000000`
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Transazioni
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-transazioni-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-transfer-api
+  name: Bancomat Transfer API
+  description: Documenti senza Lifecycle
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Transfer
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-transfer-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-transfers-api
+  name: Bancomat Transfers API
+  description: Lifecycle-free documents
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-transfers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-webhook-api
+  name: Bancomat Webhook API
+  description: Endpoint di gestione dei webhook
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Webhook
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-webhook-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
+- aid: bancomat:bancomat-webhooks-api
+  name: Bancomat Webhooks API
+  description: Manage webhooks
+  humanURL: https://bancomat.it/en/bancomat-pay
+  baseURL: https://app.flowpay.it/api
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/bancomat-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flowpay.it/
+  - type: APIReference
+    url: https://docs.flowpay.it/
+  - type: DeveloperPortal
+    url: https://developer.flowpay.it/
+  - type: Webhooks
+    url: asyncapi/bancomat-flowpay-webhooks.yml
+  - type: Sandbox
+    url: sandbox/bancomat-sandbox.yml
+  - type: Documentation
+    url: https://github.com/FlowPay/client-openapi/tree/main/docs
+  - type: SourceCode
+    url: https://github.com/FlowPay/client-openapi
 common:
+  - type: Overlay
+    url: overlays/bancomat-flowpay-api-v1-overlay.yaml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Overlay
+    url: overlays/bancomat-flowpay-api-v2-overlay.yaml
+  - type: MCPServer
+    url: mcp/bancomat-mcp.yml
   - type: Website
     url: https://flowpay.it/
     name: FlowPay (a Bancomat company)

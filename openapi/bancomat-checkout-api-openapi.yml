@@ -1,0 +1,500 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Checkout API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Checkout across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Checkout
+  description: This endpoint allows managing checkout sessions any document client has access to
+paths:
+  /checkout:
+    post:
+      summary: Create checkout
+      description: 'This endpoint allows to create a new checkout specifying the document to be paid.
+
+        If the payment needs to be authorized by the user, the response will contain a link to be used to redirect the user to FlowPay payment page.'
+      operationId: createCheckout
+      security:
+      - oAuth2: []
+      requestBody:
+        description: Checkout details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kind:
+                  $ref: '#/components/schemas/DocumentKindEnum'
+                fingerprint:
+                  $ref: '#/components/schemas/Fingerprint'
+                locked:
+                  type: boolean
+                  default: false
+                  description: If true funds will be directed to FlowPay technical account and will not be available to the beneficiary until the payment is confirmed or revoked via API. <br> <b>See locked payments paragraph for more details.</b>
+                scaExempt:
+                  type: boolean
+                  default: false
+                  description: If true, the payment will be exempted from SCA. <br> <b>Only some use cases are eligible for SCA exemption, see SCA exemption paragraph for more details.</b><br> In case of SCA exemption, if a supported payment method is specified, the payment will be instantly processed.
+                okRedirectUrl:
+                  type: string
+                  format: uri
+                  description: URL to be used to redirect the user to the client application after the payment has been successfully processed. <br> If not specified, the user will be redirected to the default FlowPay payment page.
+                koRedirectUrl:
+                  type: string
+                  format: uri
+                  description: URL to be used to redirect the user to the client application in case of payment failure. <br> If not specified, the user will be redirected to the default FlowPay payment page.
+                preferences:
+                  type: object
+                  description: Useful to customize payer user experience on payment page
+                  properties:
+                    paymentMethod:
+                      type: string
+                      format: uuid
+                      description: Payer payment method to be used to pay the document. <br> If not specified, the user will be able to choose the payment method from a list of supported payment methods.
+                    canEditRemittance:
+                      type: boolean
+                      default: true
+                      description: If true, the user will be able to edit the remittance information from the payment page.
+                    allowedMethods:
+                      type: array
+                      items:
+                        type: string
+                        enum:
+                        - sct
+                        - sctInst
+                        - card
+                        - sdd
+                        - wallet
+                      description: List of allowed payment methods. <br> If not specified, all supported payment methods will be allowed.
+              required:
+              - kind
+              - fingerprint
+        required: true
+      responses:
+        '200':
+          description: Payment processed.<br> This response is returned only if the payment has been processed without requiring user authorization, i.e. in the case of a checkout created with SCA exemption (`scaExempt`) and consistent payment method (`preferences.paymentMethod`)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '201':
+          description: Checkout created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checkout'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Checkout
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /checkout/{code}:
+    get:
+      summary: Get checkout details
+      description: Retrieve details of a specific checkout
+      operationId: getCheckout
+      security:
+      - oAuth2:
+        - checkout:read
+      parameters:
+      - name: code
+        in: path
+        description: Checkout code
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Checkout details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checkout'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Checkout
+    delete:
+      summary: Delete checkout
+      description: 'Allows to delete a checkout.
+
+        This endpoint can be used to delete a checkout that has not been paid yet.
+
+        If the checkout has been paid, it cannot be deleted and this endpoint will return an error.'
+      operationId: deleteCheckout
+      security:
+      - oAuth2: []
+      tags:
+      - Checkout
+      parameters:
+      - name: code
+        in: path
+        description: Checkout code
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Checkout deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
+    PaymentStatusEnum:
+      type: string
+      enum:
+      - authorized
+      - arrived_to_technical_account
+      - outgoing_from_technical_account
+      - completed
+      - rejected
+      - revoked
+      description: 'Status of the payment.<br/> - `authorized`: payment authorized by the user<br> - `arrived_to_technical_account`: payment arrived to the FlowPay technical account. t<br> - `outgoing_from_technical_account`: payment outgoing from the technical account<br> - `completed`: funds has been transferred to the beneficiary<br> - `rejected`: payment rejected by the bank<br> - `revoked`: payment revoked by the user or by the client in case of conditional payment'
+    Checkout:
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[a-zA-Z\d]{8}$
+          description: Unique identifier of the checkout session. This code is secret and should never be shared with anyone who is not the payer.
+        fingerprint:
+          $ref: '#/components/schemas/Fingerprint'
+        type:
+          $ref: '#/components/schemas/DocumentKindEnum'
+        creditor:
+          type: string
+          format: uuid
+          description: Identifier of the creditor
+          x-faker: datatype.uuid
+        debtor:
+          type: string
+          format: uuid
+          description: Identifier of the debtor
+          x-faker: datatype.uuid
+        collectionMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionMethodEnum'
+          description: Collection methods enabled for the payment.<br>Note that collection methods are the intersection of the collection methods techologies enabled for the creditor and the collection methods allowed by the client for checkout.
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+          description: List of payments related to the checkout
+      required:
+      - code
+      - fingerprint
+      - type
+      - creditor
+      - debtor
+      - collectionMethods
+    CollectionMethodEnum:
+      type: string
+      enum:
+      - sct
+      - sct-inst
+      - sdd
+      - card
+      - custom/<label>
+      description: 'Collection method enabled for the payment. <br> - `sct`: SEPA Credit Transfer (SCT)<br> - `sct-inst`: SEPA Credit Transfer Instant (SCT-INST)<br> - `sdd`: SEPA Direct Debit (SDD)<br> - `card`: Credit Card<br> - `custom/label`: Custom collection method, enabled by the client who created the checkout. Please see the `custom` section for more details: https://docs.flowpay.it/docs/custom-collection-method'
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the payment assigned by FlowPay.
+          x-faker: random.uuid
+        sessionID:
+          type: string
+          format: uuid
+          description: Unique identifier of the checkout session
+          x-faker: random.uuid
+        amount:
+          type: number
+          description: Amount of the payment
+          example: 100.0
+        currency:
+          type: string
+          description: Currency of the payment
+          example: EUR
+        remittance:
+          type: string
+          description: Remittance information of the payment
+          example: Payment for invoice 1234
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        createdAt:
+          type: string
+          format: iso8601
+          description: Date and time of the payment creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        updatedAt:
+          type: string
+          format: iso8601
+          description: Date and time of the last payment update
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        debtorIBAN:
+          type: string
+          description: IBAN of the debtor
+          example: IT60X0542811101000000123456
+          x-faker: finance.iban
+    DocumentKindEnum:
+      type: string
+      enum:
+      - bill
+      - bulk
+      - chain
+      - construction
+      - invoice
+      - pagopa
+      - transfer
+      description:
+        $ref: types/DocumentKind.md
+  responses:
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

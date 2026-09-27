@@ -1,0 +1,1062 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Invoices API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Invoices across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Invoices
+  description:
+    $ref: docs/invoice_lifecycle.md
+paths:
+  /creditNotes:
+    post:
+      summary: Create credit note
+      description: Create a credit note to be paid by a customer
+      operationId: createCreditNote
+      security:
+      - oAuth2:
+        - invoice:read
+      requestBody:
+        description: Credit note details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                number:
+                  type: string
+                  description: Credit note number
+                  example: CN-123456
+                  x-faker: lorem.sentence
+                invoice:
+                  $ref: '#/components/schemas/Invoice'
+                  description: Invoice to which this credit note refers to.
+                amount:
+                  type: number
+                  description: Credit note amount. Amount must be equal or less than the invoice amount. If the credit note amount is less than the invoice amount, the remaining amount will be payable by the customer. Multiple credit notes can be created for the same invoice and the total amount of all credit notes must be equal or less than the invoice amount.
+                  example: 100.0
+                  x-faker: finance.amount
+              required:
+              - number
+              - invoice
+              - amount
+        required: true
+      responses:
+        '201':
+          description: Credit note created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    get:
+      summary: List credit notes
+      description: Retrieve a list of credit notes
+      operationId: getCreditNotes
+      security:
+      - oAuth2:
+        - invoice:read
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+      - name: sort
+        in: query
+        description: Sort order
+        required: false
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Credit notes list
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /creditNotes/{fingerprint}:
+    get:
+      summary: Get credit note details
+      description: Retrieve a credit note details by its fingerprint
+      operationId: getCreditNote
+      security:
+      - oAuth2:
+        - invoice:read
+      parameters:
+      - name: fingerprint
+        in: path
+        description: Credit note fingerprint
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Credit note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    delete:
+      summary: Delete credit note
+      description: Delete a credit note by its fingerprint
+      operationId: deleteCreditNote
+      security:
+      - oAuth2:
+        - invoice:write
+      parameters:
+      - name: fingerprint
+        in: path
+        description: Credit note fingerprint
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Credit note deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /invoices:
+    post:
+      summary: Create invoice
+      description: Create an invoice to be paid by a customer
+      operationId: createInvoice
+      security:
+      - oAuth2:
+        - invoices:write
+      requestBody:
+        description: Invoice details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                number:
+                  type: string
+                  description: Invoice number
+                  example: INV-123456
+                  x-faker: lorem.sentence
+                creditor:
+                  description: Creditor VAT number, must be a company
+                  oneOf:
+                  - $ref: '#/components/schemas/CompanyVATNumber'
+                debtor:
+                  description: Debtor VAT number, could be a company or a person
+                  oneOf:
+                  - $ref: '#/components/schemas/CompanyVATNumber'
+                  - $ref: '#/components/schemas/ConsumerNationalID'
+                terms:
+                  type: array
+                  description: Payment terms used to generate payment requests
+                  items:
+                    $ref: '#/components/schemas/DocumentTerm'
+                items:
+                  type: array
+                  description: Invoice items
+                  items:
+                    $ref: '#/components/schemas/DocumentItem'
+                attachments:
+                  type: array
+                  description: Invoice attachments
+                  items:
+                    $ref: '#/components/schemas/DocumentAttachment'
+              required:
+              - creditor
+              - debtor
+              - terms
+              - number
+          application/xml; charset=utf-8:
+            schema:
+              type: string
+              format: base64
+              description: Italian FatturaPA XML file encoded in base64. Both plain text invoice and .p7m signed invoice are supported.
+              example:
+                $ref: ./examples/xmlpa.txt
+        required: true
+      responses:
+        '201':
+          description: Invoice created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    get:
+      summary: List invoices
+      description: Retrieve invoices list according to the specified filters
+      operationId: getInvoices
+      security:
+      - oAuth2:
+        - invoices:read
+      parameters:
+      - name: from
+        in: query
+        description: Start date of the invoices to retrieve. If not specified, the default value is the first day of the current month
+        required: false
+        schema:
+          type: string
+          format: iso8601
+        x-faker: date.past
+      - name: to
+        in: query
+        description: End date of the invoices to retrieve. If not specified, the default value is the current date
+        required: false
+        schema:
+          type: string
+          format: iso8601
+        x-faker: date.future
+      - name: status
+        in: query
+        description: Invoice status
+        required: false
+        schema:
+          type: string
+          enum:
+          - draft
+          - sent
+          - paid
+          - overdue
+          - canceled
+        x-faker: random.arrayElement
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          format: int32
+        x-faker: random.number
+      - name: size
+        in: query
+        description: Page size
+        required: false
+        schema:
+          type: integer
+          format: int32
+        x-faker: random.number
+      responses:
+        '200':
+          description: Invoices retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /invoices/{fingerprint}:
+    get:
+      summary: Get invoice details
+      description: Retrieve invoice details by fingerprint
+      operationId: getInvoice
+      security:
+      - oAuth2:
+        - invoices:read
+      parameters:
+      - name: fingerprint
+        in: path
+        description: Invoice fingerprint
+        required: true
+        schema:
+          $ref: '#/components/schemas/Fingerprint'
+      responses:
+        '200':
+          description: Invoice retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /proforma:
+    post:
+      summary: Create proforma invoice
+      description: Create a proforma invoice to be paid by a customer
+      operationId: createProformaInvoice
+      security:
+      - oAuth2:
+        - invoice:write
+      requestBody:
+        description: Proforma invoice to create
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                number:
+                  type: string
+                  description: Proforma number. This field is optional, if not provided, FlowPay will generate a unique uuid
+                  example: PINV-123456
+                  x-faker: lorem.sentence
+                invoice:
+                  $ref: '#/components/schemas/Fingerprint'
+                  description: Invoice fingerprint to which the proforma invoice is related. Note that the invoice must be in a state that allows the creation of a proforma invoice (e.g. not already paid). If the invoice already has a proforma invoice, the request will fail
+                creditor:
+                  description: Creditor VAT number, must be a company
+                  oneOf:
+                  - $ref: '#/components/schemas/CompanyVATNumber'
+                debtor:
+                  description: Debtor VAT number, could be a company or a person
+                  oneOf:
+                  - $ref: '#/components/schemas/CompanyVATNumber'
+                  - $ref: '#/components/schemas/ConsumerNationalID'
+                terms:
+                  type: array
+                  description: Payment terms used to generate payment requests
+                  items:
+                    $ref: '#/components/schemas/DocumentTerm'
+                items:
+                  type: array
+                  description: Invoice items
+                  items:
+                    $ref: '#/components/schemas/DocumentItem'
+                attachments:
+                  type: array
+                  description: Invoice attachments
+                  items:
+                    $ref: '#/components/schemas/DocumentAttachment'
+              required:
+              - creditor
+              - debtor
+              - terms
+      responses:
+        '201':
+          description: Proforma invoice created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Proforma invoice already exists for invoice
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    $ref: '#/components/schemas/StatusCode'
+                  requestID:
+                    $ref: '#/components/schemas/RequestID'
+                  message:
+                    type: string
+                    description: Error message
+                    example: Proforma invoice already exists for invoice 123456
+                  additionalInfo:
+                    type: object
+                    description: Additional information about the error
+                    properties:
+                      existingProforma:
+                        $ref: '#/components/schemas/Fingerprint'
+                required:
+                - statusCode
+                - requestID
+                - message
+                - additionalInfo
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    get:
+      summary: List proforma invoices
+      description: Retrieve proforma invoices list according to the specified filters
+      operationId: getProformaInvoices
+      security:
+      - oAuth2:
+        - invoice:read
+      parameters:
+      - name: from
+        in: query
+        description: Start date of the proforma invoices to retrieve. If not specified, the default value is the first day of the current month
+        required: false
+        schema:
+          type: string
+          format: iso8601
+        x-faker: date.past
+      - name: to
+        in: query
+        description: End date of the proforma invoices to retrieve. If not specified, the default value is the last day of the current month
+        required: false
+        schema:
+          type: string
+          format: iso8601
+        x-faker: date.future
+      responses:
+        '200':
+          description: Proforma invoices
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /proforma/{fingerprint}:
+    get:
+      summary: Get proforma details
+      description: Retrieve a proforma invoice details
+      operationId: getProformaInvoice
+      security:
+      - oAuth2:
+        - invoice:read
+      parameters:
+      - name: fingerprint
+        in: path
+        description: Proforma invoice fingerprint
+        required: true
+        schema:
+          $ref: '#/components/schemas/Fingerprint'
+      responses:
+        '200':
+          description: Proforma invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    delete:
+      summary: Delete proforma invoice
+      description: Delete a proforma invoice. This operation is allowed only if the proforma invoice is not yet paid
+      operationId: deleteProformaInvoice
+      security:
+      - oAuth2:
+        - invoice:write
+      parameters:
+      - name: fingerprint
+        in: path
+        description: Proforma invoice fingerprint
+        required: true
+        schema:
+          type: string
+        x-faker: finance.iban
+      responses:
+        '204':
+          description: Proforma invoice deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Invoices
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    DocumentTerm:
+      type: object
+      description: A payment term of the document, it will be used to generate the payment schedule.
+      properties:
+        dueDate:
+          type: string
+          format: iso8601
+          example: '2020-01-01T00:00:00Z'
+          description: Due date of the payment
+          x-faker: date.future
+        amount:
+          type: number
+          format: double
+          example: 100.01
+          description: Amount to be paid
+          x-faker: finance.amount
+        currency:
+          type: string
+          description: 'Currency of the payment. <br> <b>Note: All payments must be in the same currency.</b>'
+          example: EUR
+          default: EUR
+          x-faker: finance.currencyCode
+        description:
+          type: string
+          description: Description of the payment. This will be shown to the customer when paying the invoice through the FlowPay checkout page.
+          example: Subscription to the premium plan
+          x-faker: lorem.sentence
+        remittance:
+          type: string
+          description: 'Remittance information. This will be shown to the customer during the payment process and will be included in the bank statement.<br> <b>Notes:</b> - This field is optional and will be automatically generated if not provided with the format: Invoice #<invoice_number> - <invoiceDate> - Remittance will also contain a FlowPay identifier'
+          maxLength: 100
+          example: 'Invoice #1234 - subscription to the premium plan'
+          x-faker: lorem.sentence
+      required:
+      - dueDate
+      - amount
+      - currency
+    Invoice:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Invoice number
+          x-faker: finance.account
+        date:
+          type: string
+          format: iso8601
+          example: '2019-01-01T00:00:00Z'
+          description: Invoice date of issue
+          x-faker: date.past
+        amount:
+          type: number
+          description: Invoice amount
+          x-faker: finance.amount
+        currency:
+          type: string
+          description: Invoice currency
+          default: EUR
+          x-faker: finance.currencyCode
+        stage:
+          type: string
+          enum:
+          - proforma
+          - invoice
+          - creditNote
+          default: invoice
+          description: Invoice stage
+        type:
+          type: string
+          enum:
+          - b2b
+          - b2c
+          description: 'Invoice relations with the debtor. <br> - `b2b`: invoice issued to a business<br> - `b2c`: invoice issued to a private person. <br> Note:. Invoice relations with Public Administrations are not directly supported by FlowPay. However, you can use the `b2b` type to represent the invoice issued to a Public Administration.'
+        creditor:
+          type: string
+          format: uuid
+          description: Identifier of the creditor
+          x-faker: datatype.uuid
+        debtor:
+          type: string
+          format: uuid
+          description: Identifier of the debtor
+          x-faker: datatype.uuid
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentAttachment'
+          description: Attachments of the invoice
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentItem'
+          description: Items of the invoice
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTerm'
+          description: Terms of the invoice
+        invoice:
+          $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprint of the invoice related to the proforma invoice or credit note, if any
+        proforma:
+          $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprint of the proforma invoice related to the invoice, if any
+        creditNotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprints of the credit notes related to the invoice, if any
+      description: Document representing an invoice at any stage.
+      required:
+      - number
+      - date
+      - amount
+      - currency
+      - stage
+      - type
+      - creditor
+      - debtor
+      - terms
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
+    ConsumerNationalID:
+      type: string
+      description: National ID of the consumer, currently only italian format is supported
+      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
+      example: RSSMRA80A01H501T
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    CompanyVATNumber:
+      type: string
+      description: VAT number of the company, full european format
+      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
+      example: IT12345678901
+      x-faker: finance.vat
+    DocumentAttachment:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attachment
+          example: ITAAABBB99T99X999W_00003.xml.p7m
+          x-faker: system.fileName
+        description:
+          type: string
+          description: Description of the attachment
+          example: Electronic invoice signed with P7M format
+          x-faker: lorem.sentence
+        id:
+          type: string
+          format: uuid
+          description: Identifier of the attachment
+          example: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+          x-faker: datatype.uuid
+      description: Attachment of the document.
+      required:
+      - name
+      - id
+    DocumentItem:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the item
+          example: Super energy drink
+          x-faker: lorem.sentence
+        quantity:
+          type: number
+          format: double
+          example: 8
+          description: Quantity of the item
+          x-faker: random.number
+        measureUnit:
+          type: string
+          description: Measure unit of the item
+          example: L
+          maxLength: 10
+          x-faker: commerce.productAdjective
+        unitPrice:
+          type: number
+          format: double
+          example: 1.5
+          description: Unit price of the item
+          x-faker: finance.amount
+        tax:
+          type: number
+          format: double
+          example: 0.23
+          description: Tax rate of the item
+          x-faker: finance.amount
+        discount:
+          type: number
+          format: double
+          example: 0.0
+          description: Discount rate of the item
+          x-faker: finance.amount
+      description: Billing item. This is used only for UX and utility purposes and will not be used for the payment process.
+      required:
+      - description
+      - quantity
+      - unitPrice
+  responses:
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

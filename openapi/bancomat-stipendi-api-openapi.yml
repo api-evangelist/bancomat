@@ -1,0 +1,1091 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Stipendi API
+  version: 1.0.0
+  contact:
+    email: federico.giuntoli@flowpay.it
+    name: Federico Giuntoli
+  termsOfService: https://www.flowpay.it/tos
+  description: 'Operations tagged Stipendi across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://app.flowpay.it/api
+  variables: {}
+tags:
+- description: ''
+  name: Stipendi
+paths:
+  /{tenantID}/salaries:
+    get:
+      description: Questa richiesta recupera i dati relativi agli stipendi dei dipendenti, inclusi importi, date di pagamento, e informazioni sul datore di lavoro.
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+              - amount: 311.39
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employee:
+                  name: KHLLBN19B01B838K
+                  surname: ''
+                  tin: KHLLBN19B01B838K
+                employeeIBAN: VRPRZO74E41C446S
+                employeeTIN: KHLLBN19B01B838K
+                employerTIN: IT12345678901
+                fingerprint: 6171a600917ee119cfca1e8fef358755438456d19717b14202e3c3a649ea471f
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              - amount: 919.94
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employee:
+                  name: Crplns72B01F965I
+                  surname: ''
+                  tin: CRPLNS72B01F965I
+                employeeIBAN: LT050077900322650701
+                employeeTIN: CRPLNS72B01F965I
+                employerTIN: IT12345678901
+                fingerprint: 446ae8258aeb13096a06e76eb7497693f9538304b85de0301856d0ce08aa506c
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              schema:
+                items:
+                  $ref: '#/components/schemas/SalaryResponse'
+                type: array
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - salary:read
+      - ThirdPartyAuthorizationCode:
+        - salary:read
+      summary: Recupera le buste paga
+      tags:
+      - Stipendi
+      operationId: getByTenantIDSalaries
+      x-operation-id-source: derived
+    patch:
+      description: Modifica gli stipendi in batch, aggiornando informazioni come IBAN, remittance e data di pagamento.
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json; charset=utf-8:
+            example:
+              b23a5d95-8492-43ff-89c9-e38da3512ac5:
+                iban: IT44U0300203280423537939792
+                paymentDate: '2024-05-21T09:00:00Z'
+                remittance: stipendio aggiornato 2
+              dde00def-29c9-4fed-ac20-88da52dce45c:
+                iban: IT45S0300203280877589174726
+                paymentDate: '2024-05-20T14:59:00Z'
+                remittance: stipendio aggiornato
+            schema:
+              $ref: '#/components/schemas/SalaryBatchUpdate'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+              - amount: 311.39
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employeeIBAN: VRPRZO74E41C446S
+                fingerprint: 6171a600917ee119cfca1e8fef358755438456d19717b14202e3c3a649ea471f
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              - amount: 919.94
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employeeIBAN: LT050077900322650701
+                fingerprint: 446ae8258aeb13096a06e76eb7497693f9538304b85de0301856d0ce08aa506c
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              schema:
+                items:
+                  $ref: '#/components/schemas/SalaryResponseTemp'
+                type: array
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - salary:write
+      - ThirdPartyAuthorizationCode:
+        - salary:write
+      summary: Aggiorna i dati delle buste paga (precedentemente caricate)
+      tags:
+      - Stipendi
+      operationId: patchByTenantIDSalaries
+      x-operation-id-source: derived
+    post:
+      description: Effettua l'upload delle buste paga dei dipendenti, includendo le informazioni del datore di lavoro, dei dipendenti e dei relativi pagamenti.
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json; charset=utf-8:
+            example:
+              data:
+              - amount: 311.39
+                employeeIBAN: VRPRZO74E41C446S
+                employeeTIN: KHLLBN19B01B838K
+                payslip: dde00def-29c9-4fed-ac20-88da52dce45c
+              - amount: 919.94
+                employeeIBAN: LT050077900322650701
+                employeeTIN: CRPLNS72B01F965I
+                payslip: b23a5d95-8492-43ff-89c9-e38da3512ac5
+              employerTIN: IT12345678901
+              month: 11
+              paymentDate: '2024-05-20T14:59:00Z'
+              remittance: stipendio
+              year: 2024
+            schema:
+              properties:
+                currency:
+                  description: Valuta in cui è espresso l'importo della busta paga (es. EUR)
+                  example: EUR
+                  type: string
+                data:
+                  description: Elenco dei dipendenti con le relative informazioni sulla busta paga, tra cui TIN, IBAN, importo, e cedolino
+                  items:
+                    properties:
+                      amount:
+                        description: Importo totale della busta paga (o cedolino)
+                        type: number
+                      employeeIBAN:
+                        description: Codice IBAN del dipendente
+                        type: string
+                      employeeTIN:
+                        description: Codice fiscale del dipendente
+                        type: string
+                      metadata:
+                        additionalProperties:
+                          type: string
+                        description: Metadati aggiuntivi relativi alla transazione o alla busta paga
+                        type: object
+                      payslip:
+                        description: Identificativo univoco del cedolino associato alla busta paga
+                        format: uuid
+                        type: string
+                      remittance:
+                        description: Dettagli del pagamento o bonifico specifico per il dipendente
+                        type: string
+                    type: object
+                  required:
+                  - employeeTIN
+                  - amount
+                  type: array
+                employerTIN:
+                  description: Codice fiscale o Partita IVA del datore di lavoro
+                  type: string
+                month:
+                  description: Mese di riferimento della busta paga (o cedolino)
+                  type: integer
+                paymentDate:
+                  description: Data in cui viene effettuato il pagamento della busta paga (o cedolino)
+                  example: '2024-10-10T17:32:28Z'
+                  format: iso8601
+                  type: string
+                remittance:
+                  description: Descrizione dell'oggetto del pagamento o del bonifico effettuato, es. 'stipendio'
+                  type: string
+                year:
+                  description: Anno di riferimento della busta paga (o cedolino)
+                  type: integer
+              required:
+              - employerTIN
+              - year
+              - month
+              - paymentDate
+              - data
+        required: true
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              example:
+              - amount: 311.39
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employee:
+                  name: KHLLBN19B01B838K
+                  surname: ''
+                  tin: KHLLBN19B01B838K
+                employeeIBAN: VRPRZO74E41C446S
+                employeeTIN: KHLLBN19B01B838K
+                employerTIN: IT12345678901
+                fingerprint: 6171a600917ee119cfca1e8fef358755438456d19717b14202e3c3a649ea471f
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              - amount: 919.94
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employee:
+                  name: Crplns72B01F965I
+                  surname: ''
+                  tin: CRPLNS72B01F965I
+                employeeIBAN: LT050077900322650701
+                employeeTIN: CRPLNS72B01F965I
+                employerTIN: IT12345678901
+                fingerprint: 446ae8258aeb13096a06e76eb7497693f9538304b85de0301856d0ce08aa506c
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              schema:
+                items:
+                  $ref: '#/components/schemas/SalaryResponse'
+                type: array
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - salary:write
+      - ThirdPartyAuthorizationCode:
+        - salary:write
+      summary: Carica le buste paga dei dipendenti
+      tags:
+      - Stipendi
+      operationId: postByTenantIDSalaries
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+  /{tenantID}/salaries/{fingerprint}:
+    delete:
+      description: Elimina il documento salary identificato dalla `fingerprint`.
+      responses:
+        '204':
+          content:
+            application/json; charset=utf-8: {}
+          description: Salary document deleted
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - salary:write
+      - ThirdPartyAuthorizationCode:
+        - salary:write
+      summary: Elimina uno stipendio specifico
+      tags:
+      - Stipendi
+      operationId: deleteByTenantIDSalariesByFingerprint
+      x-operation-id-source: derived
+    get:
+      description: Recupera il documento salary identificato dalla `fingerprint`. Questa richiesta restituisce i dettagli dello stipendio, inclusi importi, data di pagamento, informazioni sul dipendente e sul datore di lavoro.
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                amount: 919.94
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employee:
+                  name: Crplns72B01F965I
+                  surname: ''
+                  tin: CRPLNS72B01F965I
+                employeeIBAN: LT050077900322650701
+                employeeTIN: CRPLNS72B01F965I
+                employerTIN: IT12345678901
+                fingerprint: 446ae8258aeb13096a06e76eb7497693f9538304b85de0301856d0ce08aa506c
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              schema:
+                items:
+                  $ref: '#/components/schemas/SalaryResponse'
+                type: array
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - salary:read
+      - ThirdPartyAuthorizationCode:
+        - salary:read
+      summary: Recupera i dettagli di una busta paga specifica
+      tags:
+      - Stipendi
+      operationId: getByTenantIDSalariesByFingerprint
+      x-operation-id-source: derived
+    patch:
+      description: Modifica il documento salary identificato dalla `fingerprint`. Consente di aggiornare dettagli come l'IBAN, la causale del pagamento e la data di pagamento dello stipendio
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      requestBody:
+        content:
+          application/vnd.api+json; charset=utf-8:
+            example:
+              iban: null
+              paymentDate: '2024-10-10T17:32:28Z'
+              remittance: null
+            schema:
+              $ref: '#/components/schemas/SalaryUpdate'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                amount: 311.39
+                batchID: E047A2F8-718E-4D4D-A1B6-61C596191F55
+                currency: EUR
+                employeeIBAN: VRPRZO74E41C446S
+                fingerprint: 6171a600917ee119cfca1e8fef358755438456d19717b14202e3c3a649ea471f
+                month: 11
+                paymentDate: '2024-05-20T14:59:00Z'
+                year: 2024
+              schema:
+                items:
+                  $ref: '#/components/schemas/SalaryResponseTemp'
+                type: array
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - salary:write
+      - ThirdPartyAuthorizationCode:
+        - salary:write
+      summary: Aggiorna i dati di una busta paga (precedentemente caricata)
+      tags:
+      - Stipendi
+      operationId: patchByTenantIDSalariesByFingerprint
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+components:
+  schemas:
+    SalaryEmployee:
+      properties:
+        name:
+          description: Nome del dipendente
+          type: string
+        surname:
+          description: Cognome del dipendente
+          type: string
+        tin:
+          description: Codice fiscale del dipendente
+          type: string
+      required:
+      - tim
+      - name
+      - surname
+      type: object
+    ErrorDTO:
+      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+      properties:
+        code:
+          description: Codice errore
+          example: '12345678'
+          format: int64
+          type: integer
+        errorDescription:
+          description: Descrizione errore
+          example: string
+          type: string
+        errorURI:
+          description: URI dell'errore se presente
+          example: string
+          type: string
+        expectedType:
+          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+          example: string
+          type: string
+        field:
+          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
+          example: string
+          type: string
+        requestID:
+          description: ID della richiesta da comunicare per poter fornire un supporto
+          example: string
+          type: string
+        service:
+          description: ID interno del servizio
+          example: '12345678'
+          format: int64
+          type: integer
+        statusCode:
+          description: Codice di stato HTTP
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - service
+      - code
+      - errorDescription
+      - statusCode
+      type: object
+    SalaryResponseTemp:
+      properties:
+        amount:
+          description: Importo totale della busta paga (o cedolino)
+          type: number
+        batchID:
+          description: ''
+          format: uuid
+          type: string
+        currency:
+          description: Valuta in cui è espresso l'importo della busta paga (es. EUR)
+          example: EUR
+          type: string
+        employeeIBAN:
+          description: Codice IBAN del dipendente per l'accredito della busta paga
+          type: string
+        fingerprint:
+          description: Fingerprint del documento salary
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        month:
+          description: Mese di riferimento della busta paga (o cedolino)
+          type: integer
+        paymentDate:
+          description: Data in cui viene effettuato il pagamento della busta paga (o cedolino)
+          example: '2024-10-10T17:32:28Z'
+          format: iso8601
+          type: string
+        payslip:
+          description: Identificativo univoco del cedolino associato alla busta paga
+          format: uuid
+          type: string
+        year:
+          description: Anno di riferimento della busta paga (o cedolino)
+          type: integer
+      required:
+      - batchID
+      - month
+      - year
+      - amount
+      - currency
+      - paymentDate
+      - fingerprint
+    SalaryBatchUpdate:
+      additionalProperties:
+        $ref: '#/components/schemas/SalaryUpdate'
+        description: Gli attributi dell'oggetto (o chiavi) sono le fingerprint dei documenti di tipo salary. Ciascuna fingerprint è associata a un aggiornamento delle informazioni relative al pagamento o bonifico.
+      description: Gli attributi dell'oggetto (o chiavi) sono le fingerprint dei documenti di tipo salary. Ciascuna fingerprint è associata a un aggiornamento delle informazioni relative al pagamento o bonifico.
+      type: object
+    SalaryResponse:
+      properties:
+        amount:
+          description: Importo totale della busta paga (o cedolino)
+          type: number
+        batchID:
+          description: ''
+          format: uuid
+          type: string
+        currency:
+          description: Valuta in cui è espresso l'importo della busta paga (es. EUR)
+          example: EUR
+          type: string
+        employee:
+          $ref: '#/components/schemas/SalaryEmployee'
+          description: Informazioni relative al dipendente destinatario della busta paga
+        employeeIBAN:
+          description: Codice IBAN del dipendente per l'accredito della busta paga
+          type: string
+        employeeTIN:
+          description: Codice fiscale del dipendente destinatario
+          type: string
+        employerTIN:
+          description: Codice fiscale o Partita IVA del datore di lavoro
+          type: string
+        fingerprint:
+          description: Fingerprint del documento salary
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        month:
+          description: Mese di riferimento della busta paga (o cedolino)
+          type: integer
+        paymentDate:
+          description: Data in cui viene effettuato il pagamento della busta paga (o cedolino)
+          example: '2024-10-10T17:32:28Z'
+          format: iso8601
+          type: string
+        payslip:
+          description: Identificativo univoco del cedolino associato alla busta paga
+          format: uuid
+          type: string
+        year:
+          description: Anno di riferimento della busta paga (o cedolino)
+          type: integer
+      required:
+      - batchID
+      - employee
+      - employeeTIN
+      - employerTIN
+      - month
+      - year
+      - amount
+      - currency
+      - paymentDate
+      - fingerprint
+    SalaryUpdate:
+      properties:
+        iban:
+          description: Codice IBAN aggiornato del dipendente per l'accredito della busta paga
+          type: string
+        paymentDate:
+          description: Data in cui viene effettuato il pagamento della busta paga (o cedolino)
+          example: '2024-10-10T17:32:28Z'
+          format: iso8601
+          type: string
+        remittance:
+          description: Informazioni aggiornate relative al pagamento o al bonifico
+          type: string
+      type: object
+  securitySchemes:
+    ThirdPartyAuthorizationCode:
+      description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            bill:write: Creazione e gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            contacts:read: Operazioni di lettura sulla rete aziendale
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: Operazioni di lettura sui trasferimenti
+            transfer:write: Operazioni di scrittura sui trasferimenti
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+    ThirdPartyClientCredential:
+      description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+      flows:
+        clientCredentials:
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            account:write: Operazione di modifica sui conti
+            authorization_intent: Creazione di intenti a consensi relativi a risorse di un utente
+            bill: Gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            pagopa: ''
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: ''
+            transfer:write: ''
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+x-refined-from:
+- bancomat-flowpay-api-v1-openapi.json
+- bancomat-flowpay-api-v1-openapi.yml

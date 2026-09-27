@@ -1,0 +1,1670 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Fatture API
+  version: 1.0.0
+  contact:
+    email: federico.giuntoli@flowpay.it
+    name: Federico Giuntoli
+  termsOfService: https://www.flowpay.it/tos
+  description: 'Operations tagged Fatture across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://app.flowpay.it/api
+  variables: {}
+tags:
+- name: Fatture
+paths:
+  /{tenantID}/invoices:
+    get:
+      description: Ottiene la lista delle fatture
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+              - amount: 123.45
+                attachments: null
+                date: '2020-03-03T17:32:28Z'
+                example: EUR
+                fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                id: null
+                items:
+                - amount: 123.45
+                  description: hello
+                  id: null
+                  quantity: 123.45
+                number: hello
+                recipientIban: null
+                recipientVat: hello
+                rootSubstitutedBy: null
+                senderIban: null
+                senderVat: hello
+                substitutedBy: null
+                terms:
+                - amount: 123.45
+                  description: hello
+                  expire: '2020-03-03T17:32:28Z'
+                  fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                  id: null
+                  information: hello
+                  method: null
+                  recurringInfo: null
+                  useFlowpay: null
+              schema:
+                $ref: '#/components/schemas/Invoices'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - invoice:read
+      - ThirdPartyAuthorizationCode:
+        - invoice:read
+      summary: Get by tenant id invoices
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: getByTenantIDInvoices
+      x-operation-id-source: derived
+    post:
+      description: Effettua l'upload di una nuova fattura
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json; charset=utf-8:
+            example:
+              attachments: null
+              date: '2020-03-03T17:32:28Z'
+              example: EUR
+              items:
+              - amount: 123.45
+                description: hello
+                quantity: 123.45
+              number: hello
+              recipientIban: null
+              recipientVat: hello
+              senderIban: null
+              senderVat: hello
+              terms:
+              - amount: 123.45
+                description: hello
+                expire: '2020-03-03T17:32:28Z'
+                information: hello
+                method: null
+                recurringInfo: null
+            schema:
+              $ref: '#/components/schemas/NewInvoice'
+          application/xml; charset=utf-8:
+            example: {}
+            schema:
+              $ref: '#/components/schemas/XML'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              example:
+                amount: 123.45
+                attachments: null
+                date: '2020-03-03T17:32:28Z'
+                example: EUR
+                fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                id: null
+                items:
+                - amount: 123.45
+                  description: hello
+                  id: null
+                  quantity: 123.45
+                number: hello
+                recipientIban: null
+                recipientVat: hello
+                rootSubstitutedBy: null
+                senderIban: null
+                senderVat: hello
+                substitutedBy: null
+                terms:
+                - amount: 123.45
+                  description: hello
+                  expire: '2020-03-03T17:32:28Z'
+                  fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                  id: null
+                  information: hello
+                  method: null
+                  recurringInfo: null
+                  useFlowpay: null
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - invoice:write
+      - ThirdPartyAuthorizationCode:
+        - invoice:write
+      summary: Create by tenant id invoices
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: postByTenantIDInvoices
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+  /{tenantID}/invoices/preferences:
+    get:
+      description: Ottiene le preferenze relative alle fatture
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                incomingAccount: null
+                outgoingAccount: null
+                warnings: null
+              schema:
+                $ref: '#/components/schemas/InvoicePreference'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security: []
+      summary: Get by tenant id invoices preferences
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: getByTenantIDInvoicesPreferences
+      x-operation-id-source: derived
+    put:
+      description: Modifica le preferenze relative alle fatture
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/vnd.api+json; charset=utf-8:
+            example:
+              incomingAccount: null
+              outgoingAccount: null
+              warnings: null
+            schema:
+              $ref: '#/components/schemas/InvoicePreference'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              example:
+                incomingAccount: null
+                outgoingAccount: null
+                warnings: null
+              schema:
+                $ref: '#/components/schemas/InvoicePreference'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security: []
+      summary: Replace by tenant id invoices preferences
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: putByTenantIDInvoicesPreferences
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+  /{tenantID}/invoices/{fingerprint}:
+    delete:
+      description: 'Elimina il documento identificato da `fingerprint`,
+
+        L''eliminazione è consentita finché non esiste un pagamento per il documento.
+
+        Inoltre l''eliminazione è consentita allo stesso client che ha caricato il documento'
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8: {}
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyAuthorizationCode:
+        - invoice:write
+      - ThirdPartyClientCredential:
+        - invoice:write
+      summary: Delete by tenant id invoices by fingerprint
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: deleteByTenantIDInvoicesByFingerprint
+      x-operation-id-source: derived
+    get:
+      description: Ottiene il documento identificato dal `fingerprint`
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                amount: 123.45
+                attachments: null
+                date: '2020-03-03T17:32:28Z'
+                example: EUR
+                fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                id: null
+                items:
+                - amount: 123.45
+                  description: hello
+                  id: null
+                  quantity: 123.45
+                number: hello
+                recipientIban: null
+                recipientVat: hello
+                rootSubstitutedBy: null
+                senderIban: null
+                senderVat: hello
+                substitutedBy: null
+                terms:
+                - amount: 123.45
+                  description: hello
+                  expire: '2020-03-03T17:32:28Z'
+                  fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                  id: null
+                  information: hello
+                  method: null
+                  recurringInfo: null
+                  useFlowpay: null
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - invoice:read
+      - ThirdPartyAuthorizationCode:
+        - invoice:read
+      summary: Get by tenant id invoices by fingerprint
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: getByTenantIDInvoicesByFingerprint
+      x-operation-id-source: derived
+    patch:
+      description: Modifica il documento identificato da `fingerprint`. Il ruolo (creditore/debitore) di chi effettua la chiamata è rilevante ai fini di ciò che è modificabile, più dettagli nella definizione del body
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      requestBody:
+        content:
+          application/vnd.api+json; charset=utf-8:
+            example:
+              creditorIban: null
+              debtorIban: null
+              terms: null
+            schema:
+              $ref: '#/components/schemas/EditInvoiceRequest'
+        required: true
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              example:
+                amount: 123.45
+                attachments: null
+                date: '2020-03-03T17:32:28Z'
+                example: EUR
+                fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                id: null
+                items:
+                - amount: 123.45
+                  description: hello
+                  id: null
+                  quantity: 123.45
+                number: hello
+                recipientIban: null
+                recipientVat: hello
+                rootSubstitutedBy: null
+                senderIban: null
+                senderVat: hello
+                substitutedBy: null
+                terms:
+                - amount: 123.45
+                  description: hello
+                  expire: '2020-03-03T17:32:28Z'
+                  fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                  id: null
+                  information: hello
+                  method: null
+                  recurringInfo: null
+                  useFlowpay: null
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - invoice:write
+      - ThirdPartyAuthorizationCode:
+        - invoice:write
+      summary: Update by tenant id invoices by fingerprint
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: patchByTenantIDInvoicesByFingerprint
+      x-operation-id-source: derived
+    put:
+      description: 'Setta pagati all''esterno di FlowPay i termini del documento identificato da `fingerprint`.
+
+        Il ruolo di chi effettua la chiamata è rilevante ai fini di ciò che è possibile segnalare come già pagato.
+
+        Un termine per il quale esiste un pagamento non è settabile a già pagato.
+
+        Il debitore ha la facoltà di segnalare già pagato un termine per il quale non esiste un pagamento, oppure di settare a da pagare un termine precedentemente segnato già pagato dallo stesso debitore.
+
+        Il creditore ha la facoltà di segnare già pagato un termine per il quale non esiste un pagamento,
+
+        settare egli stesso un termine già pagato già settato dal debitore (questo può essere visto come il fatto che il creditore conferma l''operato del debitore),
+
+        settare a da pagare un termine settato pagato sia da se stesso o dal debitore (in questo caso il creditore non conferma l''indicazione del debitore sul fatto che tale termine è già stato pagato per altre vie)'
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      requestBody:
+        content:
+          application/vnd.api+json; charset=utf-8:
+            example:
+            - id: cb15b52a-91db-41ed-81a0-764a0cc4795d
+              paid: false
+            schema:
+              $ref: '#/components/schemas/PaidOutsideFlowPayTermList'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              example:
+                amount: 123.45
+                attachments: null
+                date: '2020-03-03T17:32:28Z'
+                example: EUR
+                fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                id: null
+                items:
+                - amount: 123.45
+                  description: hello
+                  id: null
+                  quantity: 123.45
+                number: hello
+                recipientIban: null
+                recipientVat: hello
+                rootSubstitutedBy: null
+                senderIban: null
+                senderVat: hello
+                substitutedBy: null
+                terms:
+                - amount: 123.45
+                  description: hello
+                  expire: '2020-03-03T17:32:28Z'
+                  fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                  id: null
+                  information: hello
+                  method: null
+                  recurringInfo: null
+                  useFlowpay: null
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - invoice:write
+      - ThirdPartyAuthorizationCode:
+        - invoice:write
+      summary: Replace by tenant id invoices by fingerprint
+      tags:
+      - Fatture
+      x-summary-source: derived
+      operationId: putByTenantIDInvoicesByFingerprint
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+components:
+  schemas:
+    Term:
+      properties:
+        amount:
+          description: Importo del termine di pagamento
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Descrizione del termine di pagamento
+          example: string
+          type: string
+        expire:
+          description: Data di scadenza del termine di pagamento
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        fingerprint:
+          description: 'Identificativo univoco di un documento calcolato come `HEX(SHA256([numero][anno][partita_iva_mittente]))`
+
+
+            Come esempio: `[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49`'
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        id:
+          description: Identificativo univoco del termine di pagamento
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        information:
+          description: Causale del termine di pagamento
+          example: string
+          type: string
+        method:
+          description: Indica la tipologia di pagamento scelta per il termine
+          example: string
+          type: string
+        recurringInfo:
+          properties:
+            executionRule:
+              $ref: '#/components/schemas/ExecutionRule'
+            frequency:
+              $ref: '#/components/schemas/FrequencyEnum'
+            installments:
+              example: '12345678'
+              format: int64
+              type: integer
+          required:
+          - frequency
+          - installments
+          type: object
+        useFlowpay:
+          example: 'true'
+          type: boolean
+      required:
+      - expire
+      - amount
+      - description
+      - information
+      type: object
+    Invoice:
+      properties:
+        amount:
+          description: Totale del documento
+          example: '123.45'
+          format: double
+          type: number
+        attachments:
+          description: Allegati al documento
+          items:
+            $ref: '#/components/schemas/Attachment'
+          type: array
+        currency:
+          description: Valuta del documento (e.g. EUR)
+          example: EUR
+          type: string
+        date:
+          description: Data di emissione del documento
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        fingerprint:
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        id:
+          description: Identificativo univoco del documento
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        items:
+          description: Lista di oggetti a cui il documento fa riferimento
+          items:
+            $ref: '#/components/schemas/Item'
+          type: array
+        number:
+          description: Numero del documento
+          example: string
+          type: string
+        recipientIban:
+          description: IBAN del ricevente documento e quindi del debitore
+          example: string
+          type: string
+        recipientVat:
+          description: Codice fiscale/Partita iva del ricevente compreso il country code (e.g. IT12345678901)
+          example: string
+          type: string
+        rootSubstitutedBy:
+          properties:
+            fingerprint:
+              example: d41d8cd98f00b204e9800998ecf8427e
+              type: string
+            type:
+              example: string
+              type: string
+          required:
+          - fingerprint
+          - type
+          type: object
+        senderIban:
+          description: 'IBAN del mittente del documento e quindi creditore,
+
+            tale valore deve essere valorizzato prima di poter generare un link di checkout. Il sistema lo valorizza automaticamente nel caso l''azienda abbia definito una preferenza per l''incasso sulla nostra piattaforma.
+
+            Altrimenti è necessario che tale valore venga aggiunto dal client.'
+          example: string
+          type: string
+        senderVat:
+          description: Codice fiscale/Partita iva del mittente compreso il country code (e.g. IT12345678901)
+          example: string
+          type: string
+        substitutedBy:
+          properties:
+            fingerprint:
+              example: d41d8cd98f00b204e9800998ecf8427e
+              type: string
+            type:
+              example: string
+              type: string
+          required:
+          - fingerprint
+          - type
+          type: object
+        terms:
+          description: Lista di termini di pagamento per il documento
+          items:
+            $ref: '#/components/schemas/Term'
+          type: array
+      required:
+      - senderVat
+      - recipientVat
+      - terms
+      - items
+      - date
+      - amount
+      - number
+      - currency
+      type: object
+    ExecutionRule:
+      enum:
+      - following
+      - preceeding
+      type: string
+    ErrorDTO:
+      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+      properties:
+        code:
+          description: Codice errore
+          example: '12345678'
+          format: int64
+          type: integer
+        errorDescription:
+          description: Descrizione errore
+          example: string
+          type: string
+        errorURI:
+          description: URI dell'errore se presente
+          example: string
+          type: string
+        expectedType:
+          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+          example: string
+          type: string
+        field:
+          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
+          example: string
+          type: string
+        requestID:
+          description: ID della richiesta da comunicare per poter fornire un supporto
+          example: string
+          type: string
+        service:
+          description: ID interno del servizio
+          example: '12345678'
+          format: int64
+          type: integer
+        statusCode:
+          description: Codice di stato HTTP
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - service
+      - code
+      - errorDescription
+      - statusCode
+      type: object
+    NewItem:
+      properties:
+        amount:
+          description: Numero di unità dell'oggetto
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Descrizione dell'oggetto del documento
+          example: string
+          type: string
+        quantity:
+          description: Quantità dell'oggetto
+          example: '123.45'
+          format: double
+          type: number
+      required:
+      - description
+      - quantity
+      - amount
+      type: object
+    EditInvoiceRequest:
+      properties:
+        creditorIban:
+          description: Iban del creditore, modificabile dal creditore o dal debitore nel caso il creditore non abbia già modificato l'iban.
+          example: string
+          type: string
+        debtorIban:
+          description: Iban del debitore, modificabile dal debitore
+          example: string
+          type: string
+        terms:
+          description: 'Lista di termini da aggiornare, a seconda della parte che richiede la modifica (creditore o debitore) tale modifica potrebbe essere rifiutata.
+
+            Inoltre un termine è modificabile fintanto che non esiste un pagamento relativo a tale termine.'
+          items:
+            $ref: '#/components/schemas/EditTerm'
+          type: array
+      type: object
+    PaidOutsideFlowPayTerm:
+      items:
+        $ref: '#/components/schemas/PaidOutsideFlowPayTerm'
+      type: array
+    EditTerm:
+      properties:
+        amount:
+          description: Nuovo importo del termine, modificabile dal creditore
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Nuova descrizione del termine, modificabile dal creditore
+          example: string
+          type: string
+        expire:
+          description: Nuova data di scadenza del termine, modificabile dal creditore
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        id:
+          description: Identificativo univoco del termine da modificare
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        information:
+          description: Nuova causale del termine, modificabile dal creditore, (max 100 caraterri)
+          example: string
+          type: string
+        method:
+          description: Indica la tipologia di pagamento scelta per il termine, modificabile da creditore
+          example: string
+          type: string
+        recurringinfo:
+          description: Modifica o rende il termine pagabile a rate, modificabile dal creditore
+          properties:
+            executionRule:
+              $ref: '#/components/schemas/ExecutionRule'
+            frequency:
+              $ref: '#/components/schemas/FrequencyEnum'
+            installments:
+              example: '12345678'
+              format: int64
+              type: integer
+          required:
+          - frequency
+          - installments
+          type: object
+      required:
+      - id
+      type: object
+    NewTerm:
+      properties:
+        amount:
+          description: Importo del termine di pagamento viene controllato che il valore abbia al massimo due cifre decimali
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Descrizione del termine di pagamento
+          example: string
+          type: string
+        expire:
+          description: Data di scadenza del termine di pagamento. Indica la data nel quale il termine di pagamento deve essere incassato
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        information:
+          description: Causale del termine di pagamento
+          example: string
+          type: string
+        method:
+          description: Indica la tipologia di pagamento scelta per il termine
+          example: string
+          type: string
+        recurringInfo:
+          properties:
+            executionRule:
+              $ref: '#/components/schemas/ExecutionRule'
+            frequency:
+              $ref: '#/components/schemas/FrequencyEnum'
+            installments:
+              example: '12345678'
+              format: int64
+              type: integer
+          required:
+          - frequency
+          - installments
+          type: object
+      required:
+      - expire
+      - amount
+      - description
+      - information
+      type: object
+    Invoices:
+      items:
+        $ref: '#/components/schemas/Invoice'
+      type: array
+    XML:
+      description: 'Fattura elettronica in formato standard codificata in base64 oppure direttamente nel formato xml
+
+        La documentazione sul formato della fattura elettronica si puo'' trovare a https://www.fatturapa.gov.it/it/norme-e-regole/documentazione-fattura-elettronica/formato-fatturapa/'
+      properties: {}
+      type: object
+    NewInvoice:
+      properties:
+        attachments:
+          description: Allegati al documento
+          items:
+            $ref: '#/components/schemas/Attachment'
+          type: array
+        currency:
+          description: Valuta del documento (e.g. EUR)
+          example: EUR
+          type: string
+        date:
+          description: Data di emissione del documento
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        items:
+          description: Lista di oggetti a cui il documento fa riferimento
+          items:
+            $ref: '#/components/schemas/NewItem'
+          type: array
+        number:
+          description: Numero del documento
+          example: string
+          type: string
+        recipientIban:
+          description: IBAN del ricevente documento e quindi del debitore
+          example: string
+          type: string
+        recipientVat:
+          description: Codice fiscale/Partita iva del ricevente compreso il country code (e.g. IT12345678901)
+          example: string
+          type: string
+        senderIban:
+          description: 'IBAN del mittente del documento e quindi creditore,
+
+            tale valore deve essere valorizzato prima di poter generare un link di checkout. Il sistema lo valorizza automaticamente nel caso l''azienda abbia definito una preferenza per l''incasso sulla nostra piattaforma.
+
+            Altrimenti è necessario che tale valore venga aggiunto dal client.'
+          example: string
+          type: string
+        senderVat:
+          description: Codice fiscale/Partita iva del mittente compreso il country code (e.g. IT12345678901)
+          example: string
+          type: string
+        terms:
+          description: Lista di termini di pagamento per il documento
+          items:
+            $ref: '#/components/schemas/NewTerm'
+          type: array
+      required:
+      - senderVat
+      - recipientVat
+      - terms
+      - items
+      - date
+      - number
+      - currency
+      type: object
+    Item:
+      properties:
+        amount:
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          example: string
+          type: string
+        id:
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        quantity:
+          example: '123.45'
+          format: double
+          type: number
+      required:
+      - description
+      - quantity
+      - amount
+      type: object
+    Attachment:
+      properties:
+        file:
+          description: Contenuto dell'allegato codificato in base64
+          example: null
+          format: binary
+          type: string
+        id:
+          description: Identificativo univoco dell'allegato
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        name:
+          description: Nome dell'allegato
+          example: allegato.pdf
+          type: string
+        type:
+          example: pdf
+          type: string
+      required:
+      - name
+      - type
+      type: object
+    FrequencyEnum:
+      enum:
+      - monthly
+      type: string
+    PaidOutsideFlowPayTermList:
+      items:
+        $ref: '#/components/schemas/PaidOutsideFlowPayTerm'
+      type: array
+    InvoicePreference:
+      properties:
+        incomingAccount:
+          description: Account di default sul quale incassare le fatture
+          properties:
+            bankID:
+              example: string
+              type: string
+            currency:
+              example: EUR
+              type: string
+            iban:
+              example: IT59Q0300203280162876621571
+              type: string
+          required:
+          - iban
+          - currency
+          - bankID
+          type: object
+        outgoingAccount:
+          description: Account di default dal quale pagare le fatture
+          properties:
+            bankID:
+              example: string
+              type: string
+            currency:
+              example: EUR
+              type: string
+            iban:
+              example: IT59Q0300203280162876621571
+              type: string
+          required:
+          - iban
+          - currency
+          - bankID
+          type: object
+        warnings:
+          description: Identificativi dei messaggi silenziati
+          items:
+            example: string
+            type: string
+          type: array
+      type: object
+  securitySchemes:
+    ThirdPartyAuthorizationCode:
+      description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            bill:write: Creazione e gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            contacts:read: Operazioni di lettura sulla rete aziendale
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: Operazioni di lettura sui trasferimenti
+            transfer:write: Operazioni di scrittura sui trasferimenti
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+    ThirdPartyClientCredential:
+      description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+      flows:
+        clientCredentials:
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            account:write: Operazione di modifica sui conti
+            authorization_intent: Creazione di intenti a consensi relativi a risorse di un utente
+            bill: Gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            pagopa: ''
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: ''
+            transfer:write: ''
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+x-refined-from:
+- bancomat-flowpay-api-v1-openapi.json
+- bancomat-flowpay-api-v1-openapi.yml

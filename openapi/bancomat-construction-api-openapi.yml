@@ -1,0 +1,1106 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Construction API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Construction across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Construction
+  description: Manage construction sites and related entities lifecycle
+paths:
+  /constructions/contracts:
+    post:
+      tags:
+      - Construction
+      operationId: addSiteWorker
+      summary: Add worker to site
+      description: This endpoint manages the association between a site and a worker. Is not mandatory for the worker to be registered on FlowPay. This request must be authorized by the site owner, then the worker will be able to call the [PATCH] `/constructions/contracts/{identifier}` endpoint to complete the handshake.
+      requestBody:
+        description: Worker details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                site:
+                  type: string
+                  format: uuid
+                  description: Site identifier
+                  x-faker: datatype.uuid
+                attachments:
+                  type: array
+                  description: List of files FlowPay will use to verify worker
+                  minItems: 1
+                  items:
+                    type: string
+                    format: uuid
+                    description: Identifier of the file uploaded to FlowPay using the `/files` endpoint
+                    x-faker: datatype.uuid
+      security:
+      - oAuth2:
+        - construction:write
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteWorkerContractCreation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Construction
+      operationId: getWorkers
+      summary: List workers
+      description: Allows to retrieve a list of workers associated to the customer.
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+      security:
+      - oAuth2:
+        - construction:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SiteWorkerContract'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /constructions/contracts/{identifier}:
+    patch:
+      summary: Accept assignment
+      description: This endpoint allows workers to accept the assignment to a site. The request must be authorized by the worker.
+      operationId: acceptSiteAssignment
+      security:
+      - oAuth2:
+        - construction:write
+      tags:
+      - Construction
+      parameters:
+      - name: identifier
+        in: path
+        description: Site identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Empty body
+        content:
+          application/json: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteWorkerContract'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Forbidden'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Contract withdrawal
+      description: This endpoint allows workers and site owners to withdraw from a contract. The request must be authorized by the worker or the site owner.
+      operationId: withdrawFromSite
+      security:
+      - oAuth2:
+        - construction:write
+      tags:
+      - Construction
+      parameters:
+      - name: identifier
+        in: path
+        description: Site identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Forbidden'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /constructions/sites:
+    post:
+      tags:
+      - Construction
+      operationId: createConstructionSite
+      summary: Open a new site
+      description: Allows to define a new site to be managed with FlowPay
+      requestBody:
+        description: Information needed to create and verify a new site
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: User friendly name to identify the site
+                  example: Cantiere di via Roma famiglia Verdi
+                  x-faker: lorem.word
+                description:
+                  type: string
+                  description: Information about the site and planned activities. Details are not mandatory but an exhaustive description is recommended to help during the verification process and to avoid delays or more information requests.
+                  example: Lavori di ristrutturazione completa dell'immobile, comprensivi di rifacimento tetti, creazione di un ulteriore vano e lavori al giardino
+                  x-faker: lorem.paragraph
+                address:
+                  type: string
+                  description: Address of the site in free format
+                  example: Via Roma -1, 50041 Calenzano, Italia
+                  x-faker: address.streetAddress
+                expectedEndDate:
+                  type: string
+                  format: date-time
+                  description: Estimated end date of the site
+                attachments:
+                  type: array
+                  description: List of files FlowPay will use to verify site operations
+                  minItems: 1
+                  items:
+                    type: string
+                    format: uuid
+                    description: Identifier of the file uploaded to FlowPay using the `/files` endpoint
+                    x-faker: datatype.uuid
+              required:
+              - name
+              - description
+              - address
+              - expectedEndDate
+              - attachments
+      security:
+      - oAuth2:
+        - authorization_code
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionSite'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Construction
+      operationId: getConstructionSites
+      summary: List sites
+      description: Allows to retrieve a list of sites managed by the customer
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+      security:
+      - oAuth2:
+        - construction:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ConstructionSite'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /constructions/sites/{identifier}:
+    get:
+      tags:
+      - Construction
+      operationId: getConstructionSite
+      summary: Get site details
+      description: Allows to retrieve details of a specific site
+      parameters:
+      - name: identifier
+        in: path
+        description: Site identifier
+        required: true
+        schema:
+          type: string
+      security:
+      - oAuth2:
+        - construction:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionSite'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /constructions/sites/{identifier}/quote:
+    post:
+      tags:
+      - Construction
+      operationId: createQuote
+      summary: Create quote
+      description: 'Allows to create a new quote for a specific site, useful to credit site owner wallet with the amount needed to start the site operations.
+
+        The request must be authorized by the site owner.'
+      parameters:
+      - name: identifier
+        in: path
+        description: Site identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Quote details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  example: 75500.01
+                  description: Estimated amount for the site. If the token has `wallet:construction` scope, this amount will be used to generate a document to be paid in order to transfer initial amount to the wallet.
+                expectedEndDate:
+                  type: string
+                  format: date-time
+                  description: Estimated end date of the site
+                description:
+                  type: string
+                  description: Information about the site and planned activities. Details are not mandatory but an exhaustive description is recommended to help during the verification process and to avoid delays or more information requests.
+                  example: 'Giardino posteriore: rifacimento pavimentazione, installazione impianto di irrigazione, installazione impianto di illuminazione'
+                  x-faker: lorem.paragraph
+                reference:
+                  type: string
+                  description: Reference number of the quote
+                  example: Q-123456
+                  x-faker: lorem.sentence
+                attachments:
+                  type: array
+                  description: List of files FlowPay will use to verify site operations
+                  minItems: 1
+                  items:
+                    type: string
+                    format: uuid
+                    description: Identifier of the file uploaded to FlowPay using the `/files` endpoint
+                    x-faker: datatype.uuid
+              required:
+              - site
+              - amount
+              - description
+              - expectedEndDate
+              - attachments
+      security:
+      - oAuth2:
+        - construction:write
+        - wallet:construction
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteQuote'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Forbidden'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Construction
+      operationId: getQuotes
+      summary: List quotes
+      description: Allows to retrieve a list of quotes for a specific site
+      parameters:
+      - name: identifier
+        in: path
+        description: Site identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SiteQuote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - oAuth2:
+        - construction:read
+        - wallet:construction
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /constructions/progress:
+    post:
+      summary: Register work progress
+      description: 'You can register work progress by passing a list of the invoices previously uploaded using the `/invoices` endpoint.
+
+        The request must be authorized by the worker.
+
+        Each invoice between site owner and worker will be linked to a new site-related document.
+
+        Each invoice between the worker and their suppliers will be linked to a new document.
+
+        Note: The sum of the worker-to-customer invoices must be at least equal to the sum of the supplier-to-worker invoices.'
+      operationId: registerWorkProgress
+      security:
+      - oAuth2:
+        - construction:write
+      tags:
+      - Construction
+      requestBody:
+        description: List of invoices's fingerprints
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                site:
+                  type: string
+                  format: uuid
+                  description: Site identifier
+                  x-faker: datatype.uuid
+                invoice:
+                  type: array
+                  description: List of invoices's fingerprints
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/Fingerprint'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionProgress'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Forbidden'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      summary: List work progress
+      description: Allows to retrieve a list of work progress registered by the worker
+      operationId: getWorkProgress
+      security:
+      - oAuth2:
+        - construction:read
+      tags:
+      - Construction
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedResult'
+                - type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ConstructionProgress'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /constructions/progress/{identifier}:
+    get:
+      summary: Get work progress details
+      description: Allows to retrieve details of a specific work progress
+      operationId: getWorkProgressDetails
+      security:
+      - oAuth2:
+        - construction:read
+      tags:
+      - Construction
+      parameters:
+      - name: identifier
+        in: path
+        description: Work progress identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionProgress'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    ConstructionSite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the construction site
+          x-faker: datatype.uuid
+        name:
+          type: string
+          description: Name of the construction site
+          example: Calenzano Payments Museum
+          x-faker: lorem.word
+        address:
+          $ref: '#/components/schemas/Address'
+        initialCreditFingerprint:
+          $ref: '#/components/schemas/Fingerprint'
+          description: Fingerprint of the initial credit document, used to transfer money to the wallet
+        availableBalance: {}
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
+    Address:
+      type: object
+      properties:
+        city:
+          type: string
+          description: Name of the city where the property is located.
+        street:
+          type: string
+          description: This field contains the name of the street where the property is located. It must include the name with a type (e.g., Avenue, Street, Road, etc.) but not the number or any other information.
+        number:
+          type: string
+          description: This field refers to the numeric or alphanumeric value assigned to a property on a street.
+        unitNumber:
+          type: string
+          description: his field is used when a single property has multiple units, such as apartments or office suites. It differentiates one unit from another within the same property.
+        postalCode:
+          type: string
+          description: Also known as ZIP code (or CAP in Italy)
+        province:
+          type: string
+          description: It refers to the name of the state or province where the property is located.
+        country:
+          type: string
+          description: The name of the country where the property is located.
+      required:
+      - city
+      - street
+      - postalCode
+      - province
+      - country
+    ConstructionProgress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the construction progress
+          x-faker: datatype.uuid
+        site:
+          type: string
+          format: uuid
+          description: Identifier of the construction site
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the construction progress creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        amount:
+          type: number
+          format: float
+          example: 45050.23
+          description: Total amount of the construction progress
+          x-faker: finance.amount
+        invoices:
+          type: object
+          description: Array of invoices related to each supplier for the worker. Keys are the creditor identifiers.
+          additionalProperties:
+            $ref: '#/components/schemas/Fingerprint'
+    ConsumerNationalID:
+      type: string
+      description: National ID of the consumer, currently only italian format is supported
+      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
+      example: RSSMRA80A01H501T
+    CompanyVATNumber:
+      type: string
+      description: VAT number of the company, full european format
+      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
+      example: IT12345678901
+      x-faker: finance.vat
+    SiteQuote:
+      description: Quote for a construction site
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Unique identifier of the quote '
+          x-faker: datatype.uuid
+        site:
+          type: string
+          format: uuid
+          description: Identifier of the construction site
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the quote creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        amount:
+          type: number
+          format: float
+          example: 45050.23
+          description: Total amount of the quote
+          x-faker: finance.amount
+        description:
+          type: string
+          description: Description of the quote
+          example: Construction of the new museum
+        reference:
+          type: string
+          description: Reference of the quote
+          example: 123AF-4654Z
+        fingerprint:
+          type: string
+          example: d41d8cd98f00b204e9800998ecf8427e
+          description: Fingerprint of the document accounting for the quote
+        files:
+          type: array
+          description: List of files related to the quote
+          items:
+            type: string
+            format: uuid
+      required:
+      - id
+      - site
+      - createdAt
+      - amount
+      - fingerprint
+      - files
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    SiteWorkerContractCreation:
+      description: Request to create a new contract between a construction site and a worker
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Unique identifier of the contract '
+          x-faker: datatype.uuid
+        site:
+          type: string
+          format: uuid
+          description: Identifier of the construction site
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the contract creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+    Contact:
+      type: object
+      properties:
+        fullName:
+          description: Full name of the contact, contains the concatenation of the name and surname of a consumer, or the name of a company.
+          oneOf:
+          - type: string
+            description: Full name of the consumer
+            example: Mario Rossi
+            x-faker: person.fullName
+          - type: string
+            description: Company name
+            example: Illustrious Company S.p.A.
+            x-faker: company.companyName
+        fullVat:
+          type: string
+          description: 'VAT number of the company in full european format or national ID of the consumer '
+          oneOf:
+          - $ref: '#/components/schemas/ConsumerNationalID'
+          - $ref: '#/components/schemas/CompanyVATNumber'
+        type:
+          type: string
+          enum:
+          - consumer
+          - company
+          description: Type of the contact
+    SiteWorkerContract:
+      description: Contract between a company and a worker for a construction site
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Unique identifier of the contract '
+          x-faker: datatype.uuid
+        site:
+          type: string
+          format: uuid
+          description: Identifier of the construction site
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the contract creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        company:
+          $ref: '#/components/schemas/Contact'
+  responses:
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    Conflict:
+      description: The requested resource is in conflict with the current state of the server
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice already paid
+            required:
+            - statusCode
+            - requestID
+            - message
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

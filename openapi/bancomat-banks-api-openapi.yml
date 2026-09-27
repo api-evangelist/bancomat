@@ -1,0 +1,330 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Banks API
+  version: 2.0.0-alpha.4
+  contact:
+    name: API Support
+    url: https://developer.flowpay.it
+    email: api-support@flowpay.it
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  termsOfService: https://developer.flowpay.it/tos
+  x-json-schema-faker:
+    locale: it-IT
+    omitNulls: true
+    fillProperties: true
+    reuseProperties: true
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
+  description: 'Operations tagged Banks across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.flowpay.it/v2
+  description: Production server (Not implementend)
+- url: https://mock.flowpay.it/v2
+  description: Mock server
+- url: https://sandbox.{customerID}.flowpay.it/v2
+  description: Customer-assigned sandbox server
+  variables:
+    customerID:
+      default: 00000000-00000000-00000000-00000000
+      description: Unique customer identifier assigned after contract signature
+- url: http://localhost:5002
+  description: Debug
+tags:
+- name: Banks
+  description: Banks informations
+paths:
+  /banks:
+    get:
+      summary: Get banks
+      description: Retrieve the list of banks supported by FlowPay
+      operationId: getBanks
+      security: []
+      tags:
+      - Banks
+      parameters:
+      - name: country
+        in: query
+        description: Country code (ISO 3166-1 alpha-2) to filter banks by country
+        required: false
+        schema:
+          type: string
+        x-faker: address.countryCode
+        example: IT
+      - name: recurring
+        in: query
+        description: Filter banks by support at least one recurring payment type
+        required: false
+        schema:
+          type: boolean
+      - name: recurringFrequency
+        in: query
+        description: Filter banks by support specified recurring payment frequency
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - monthly
+            - everyTwoMonths
+            - quarterly
+            - semiAnnual
+            - daily
+            - everyFourMonths
+            - weekly
+            - everyTwoWeeks
+            - annual
+      - name: sctType
+        in: query
+        description: Filter banks by support specified SCT type
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - standard
+            - instant
+      responses:
+        '200':
+          description: List of banks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+  /banks/{id}:
+    get:
+      summary: Get bank details
+      description: Retrieve details of a specific bank
+      operationId: getBank
+      security: []
+      tags:
+      - Banks
+      parameters:
+      - name: id
+        in: path
+        description: Bank identifier
+        required: true
+        schema:
+          type: string
+        example: cassa_di_risparmio_di_orvieto
+      responses:
+        '200':
+          description: Bank details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    servers:
+    - url: https://api.flowpay.it/v2
+      description: Production server (Not implementend)
+    - url: https://mock.flowpay.it/v2
+      description: Mock server
+    - url: https://sandbox.{customerID}.flowpay.it/v2
+      description: Customer-assigned sandbox server
+      variables:
+        customerID:
+          default: 00000000-00000000-00000000-00000000
+          description: Unique customer identifier assigned after contract signature
+    - url: http://localhost:5002
+      description: Debug
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    Bank:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the bank
+          example: Intesa Sanpaolo
+          x-faker: Company.companyName
+        nationalID:
+          type: string
+          description: National identifier of the bank
+          example: 03999
+          x-faker: finance.bic
+        id:
+          type: string
+          description: Unique identifier of the bank
+          example: intesa_sanpaolo
+        countries:
+          type: array
+          items:
+            type: string
+            description: Countries where the bank operates in ISO 3166-1 alpha-2 format
+            example: IT
+            x-faker: address.countryCode
+        logo:
+          type: string
+          description: URL of the bank logo
+          example: https://flowpayproduction.blob.core.windows.net/img/84036981-d004-40c4-a872-c81dd37e4acc.png
+          x-faker: image.imageUrl
+        features:
+          type: object
+          description: Features supported by the bank
+          properties:
+            futurePayments:
+              type: boolean
+              description: True if the bank supports future payments
+              example: true
+            sct:
+              type: array
+              description: List of SCT payment types supported by the bank
+              items:
+                type: string
+                enum:
+                - standard
+                - instant
+                description: SCT payment type
+            recurringPayments:
+              type: array
+              description: List of recurring payment types supported by the bank
+              items:
+                type: string
+                enum:
+                - monthly
+                - everyTwoMonths
+                - quarterly
+                - semiAnnual
+                - daily
+                - everyFourMonths
+                - weekly
+                - everyTwoWeeks
+                - annual
+                description: Recurring payment frequency
+  responses:
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+  securitySchemes:
+    oAuth2:
+      type: oauth2
+      description: OAuth2 flow
+      flows:
+        authorizationCode:
+          authorizationUrl: /openid/authenticate
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            ade: Allow to interact with Agenzia delle Entrate services
+            accounts:read: Allow to read accounts
+            accounts:write: Allow to mediate accounts creation and open banking consent renewal
+            invoices:read: Allow to read invoices
+            invoices:write: Allow to create invoices and manage lifecycle
+            bills:read: Allow to read bills
+            bills:write: Allow to create bills and manage lifecycle
+            constructions:read: Allow to read information about construction sites
+            constructions:write: Allow to create construction sites and manage the lifecycle
+            openid: Allow to read user profile
+            pagopa:read: Allow to retrieve users' PagoPA payment notices
+            pagopa:write: Allow to create PagoPA payment notices
+            transfers:read: Allow to read transfers
+            transfers:write: Allow to create transfers and manage lifecycle
+            wallet:`document_type`: Allow to manage wallet for the specified use case
+x-refined-from:
+- bancomat-flowpay-api-v2-openapi.json
+- bancomat-flowpay-api-v2-openapi.yml

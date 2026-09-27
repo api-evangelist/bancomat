@@ -1,0 +1,310 @@
+openapi: 3.2.0
+info:
+  title: Bancomat Pagamenti API
+  version: 1.0.0
+  contact:
+    email: federico.giuntoli@flowpay.it
+    name: Federico Giuntoli
+  termsOfService: https://www.flowpay.it/tos
+  description: 'Operations tagged Pagamenti across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://app.flowpay.it/api
+  variables: {}
+tags:
+- description: I pagamenti generati dall'approvazione di uno o più termini di pagamento relativi a una fattura
+  name: Pagamenti
+paths:
+  /{tenantID}/payments/{service}/{fingerprint}:
+    get:
+      description: Ritorna i pagamenti esistenti per il documento identificato da `fingerprint`
+      parameters:
+      - description: ID dell'owner della richiesta
+        example: 84461172-4326-4D6B-AEA7-840ED1372200
+        in: path
+        name: tenantID
+        required: true
+        schema:
+          example: 84461172-4326-4D6B-AEA7-840ED1372200
+          format: uuid
+          type: string
+      - description: Nome del servizio, nel contesto Core, da contattare
+        example: invoice, salary, bill
+        in: path
+        name: service
+        required: true
+        schema:
+          example: invoice, salary, bill
+          format: enum
+          type: string
+      - description: Identificativo univoco della fattura definito come HEX SHA256 di [numero][anno][partita_iva_mittente]
+        example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+        in: path
+        name: fingerprint
+        required: true
+        schema:
+          example: '[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49'
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+              - createdAt: null
+                creditor: hello
+                debtor: hello
+                fingerprint: d41d8cd98f00b204e9800998ecf8427e
+                identifier: cb15b52a-91db-41ed-81a0-764a0cc4795d
+                method: null
+                status: concluded
+                termID: cb15b52a-91db-41ed-81a0-764a0cc4795d
+                type: null
+              schema:
+                $ref: '#/components/schemas/Payments'
+          description: ''
+        '400':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta sintatticamente, body, headers, path o query params non conformi alla documentazione
+        '401':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Le credenziali fornite non sono sufficienti a completare la richiesta
+        '403':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è autorizzata a procedere con le credenziali fornite
+        '404':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta fa riferimento ad una risorsa inesistente
+        '417':
+          content:
+            application/json; charset=utf-8:
+              example:
+                code: 12345678
+                errorDescription: hello
+                errorURI: null
+                expectedType: null
+                field: null
+                requestID: null
+                service: 12345678
+                statusCode: 12345678
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: La richiesta non è corretta semanticamente
+      security:
+      - ThirdPartyClientCredential:
+        - payment:read
+      - ThirdPartyAuthorizationCode:
+        - payment:read
+      summary: Get by tenant id payments by service by fingerprint
+      tags:
+      - Pagamenti
+      x-summary-source: derived
+      operationId: getByTenantIDPaymentsByServiceByFingerprint
+      x-operation-id-source: derived
+    servers:
+    - url: https://app.flowpay.it/api
+      variables: {}
+components:
+  schemas:
+    Payments:
+      items:
+        $ref: '#/components/schemas/Payment'
+      type: array
+    ErrorDTO:
+      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+      properties:
+        code:
+          description: Codice errore
+          example: '12345678'
+          format: int64
+          type: integer
+        errorDescription:
+          description: Descrizione errore
+          example: string
+          type: string
+        errorURI:
+          description: URI dell'errore se presente
+          example: string
+          type: string
+        expectedType:
+          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+          example: string
+          type: string
+        field:
+          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
+          example: string
+          type: string
+        requestID:
+          description: ID della richiesta da comunicare per poter fornire un supporto
+          example: string
+          type: string
+        service:
+          description: ID interno del servizio
+          example: '12345678'
+          format: int64
+          type: integer
+        statusCode:
+          description: Codice di stato HTTP
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - service
+      - code
+      - errorDescription
+      - statusCode
+      type: object
+    PaymentStatusEnum:
+      description: "Stato di un pagamento:\n * `concluded` - Indica che il pagamento è stato addebitato sul conto del debitore\n * `not_concluded` - Indica che il pagamento è stato autorizzato ma ancora non è stato addebitato (ad esempio per un pagamento a data futura)\n * `rejected` - Indica che il pagamento è stato rifiutato (ad esempio il pagamento è stato annullato dal debitore oppure non erano presenti i fondi nel momento di eseguire il pagamento)\n * `not_available` - Indica che è avvenuto un errore di comunicazione con la banca per controllare lo stato del pagamento, riprovando dovrebbe risolversi\n * `outside_flowpay_creditor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal creditore\n * `outside_flowpay_debtor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal debitore\n\nGli stati `concluded`, `rejected`, `outside_flowpay_creditor`, `outside_flowpay_debtor` sono stati finali per un pagamento"
+      enum:
+      - concluded
+      - not_concluded
+      - rejected
+      - not_available
+      - outsideFlowPay
+      - outside_flowpay_creditor
+      - outside_flowpay_debtor
+      - forwarded
+      type: string
+    Payment:
+      properties:
+        createdAt:
+          description: Data di creazione del pagamento, corrisponde al momento in cui il pagamento è stato autorizzato dal debitore
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        creditor:
+          description: Codice fiscale del creditore (vat code in caso di azienda, codice fiscale in caso di privato)
+          example: string
+          type: string
+        debtor:
+          description: Codice fiscale del debitore (vat code in caso di azienda, codice fiscale in caso di privato)
+          example: string
+          type: string
+        fingerprint:
+          description: fingerprint del documento per il quale è stato creato il pagamento
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        identifier:
+          description: ID univoco del pagamento
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        method:
+          $ref: '#/components/schemas/PaymentMethodInfo'
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        termID:
+          description: ID univoco del termine di pagamento del documento al quale questo pagamento si riferisce
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        type:
+          description: Tipo di documento per il quale è stato creato il pagamento
+          example: string
+          type: string
+      required:
+      - identifier
+      - fingerprint
+      - termID
+      - creditor
+      - debtor
+      - status
+      type: object
+    PaymentMethodInfo:
+      enum:
+      - card
+      type: string
+  securitySchemes:
+    ThirdPartyAuthorizationCode:
+      description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://core.flowpay.it/api/openid/authenticate
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            bill:write: Creazione e gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            contacts:read: Operazioni di lettura sulla rete aziendale
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: Operazioni di lettura sui trasferimenti
+            transfer:write: Operazioni di scrittura sui trasferimenti
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+    ThirdPartyClientCredential:
+      description: Autorizzazione oauth ottenuta da terze parti con client credential flow
+      flows:
+        clientCredentials:
+          refreshUrl: https://core.flowpay.it/api/oauth/token
+          scopes:
+            account:read: Operazioni di lettura sui conti
+            account:write: Operazione di modifica sui conti
+            authorization_intent: Creazione di intenti a consensi relativi a risorse di un utente
+            bill: Gestione di ricevute
+            business:read: Operazioni di lettura sulle informazioni della azienda
+            invoice:read: Operazioni di lettura sulle fatture
+            invoice:write: Operazioni di scrittura sulle fatture
+            pagopa: ''
+            payment:read: Operazioni di lettura sui pagamenti
+            salary:read: Operazioni di lettura sulle buste paga
+            salary:write: Operazioni di scrittura sui salary
+            statistic:read: Lettura dei dati statistici raggruppati
+            transfer:read: ''
+            transfer:write: ''
+          tokenUrl: https://core.flowpay.it/api/oauth/token
+      type: oauth2
+x-refined-from:
+- bancomat-flowpay-api-v1-openapi.json
+- bancomat-flowpay-api-v1-openapi.yml
