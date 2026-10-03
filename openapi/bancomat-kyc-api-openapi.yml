@@ -1,24 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Bancomat KYC API
+  title: FlowPay KYC API
   version: 2.0.0-alpha.4
+  description:
+    $ref: docs/general.md
+  termsOfService: https://developer.flowpay.it/tos
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
   contact:
     name: API Support
     url: https://developer.flowpay.it
     email: api-support@flowpay.it
-  license:
-    name: FlowPay SRL
-    url: https://developer.flowpay.it/tos
-  termsOfService: https://developer.flowpay.it/tos
   x-json-schema-faker:
     locale: it-IT
     omitNulls: true
     fillProperties: true
     reuseProperties: true
-  x-logo:
-    url: https://images.flowpay.it/logo
-    altText: FlowPay
-  description: 'Operations tagged KYC across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flowpay.it/v2
   description: Production server (Not implementend)
@@ -170,19 +171,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /kyc/{identifier}:
     get:
       summary: Get KYC data
@@ -212,172 +200,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
       - KYC
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 components:
   schemas:
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
-    KYCFlow:
-      type: string
-      description: KYC flow
-      enum:
-      - consumer
-      - company
-      - business
-    ConsumerNationalID:
-      type: string
-      description: National ID of the consumer, currently only italian format is supported
-      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
-      example: RSSMRA80A01H501T
-    KYCBankAccountDossier:
-      type: object
-      properties:
-        iban:
-          type: string
-          description: IBAN of the bank account
-          x-faker: finance.iban
-        label:
-          type: string
-          description: Label of the bank account
-          example: My bank account
-        verified:
-          type: boolean
-          description: True if the ownership of the bank account has been verified
-        consentExpiresAt:
-          type: string
-          format: date-time
-          description: Date and time of the bank account PSD2 consent expiration
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.future
-    CompanyVATNumber:
-      type: string
-      description: VAT number of the company, full european format
-      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
-      example: IT12345678901
-      x-faker: finance.vat
-    KYCDossier:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the KYC session
-          x-faker: datatype.uuid
-        createdAt:
-          type: string
-          format: date-time
-          description: Date and time of the KYC session creation
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.past
-        updatedAt:
-          type: string
-          format: date-time
-          description: Date and time of the last KYC session update
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.past
-        lastAccessAt:
-          type: string
-          format: date-time
-          description: Date and time of the last KYC session access
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.past
-        kind:
-          $ref: '#/components/schemas/KYCFlow'
-        canLogin:
-          type: boolean
-          description: True if the user can login to the KYC session. If true, the user can retrieve data verified in previous sessions and can skip some steps of the KYC flow.
-          default: false
-        consumer:
-          $ref: '#/components/schemas/KYCConsumerDossier'
-          description: Consumer information
-        company:
-          $ref: '#/components/schemas/KYCCompanyDossier'
-          description: Company information
-    KYCCompanyDossier:
-      type: object
-      description: Company information
-      properties:
-        name:
-          type: string
-          description: Name of the company
-          example: Illustrious Company S.p.A.
-          x-faker: company.companyName
-        vat:
-          $ref: '#/components/schemas/CompanyVATNumber'
-          description: VAT number of the company
-        address:
-          $ref: '#/components/schemas/Address'
-          description: Address of the company
-        email:
-          type: string
-          format: email
-          description: Email of the company
-          x-faker: internet.email
-        phone:
-          type: string
-          description: Phone number of the company
-          example: '+393331234567'
-          x-faker: phone.phoneNumber
-        sanctioned:
-          type: boolean
-          description: True if the company is present in the list of sanctioned subjects
-        verified:
-          type: boolean
-          description: True if the company information has been verified
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/KYCBankAccountDossier'
-          description: List of bank accounts of the company
-    Address:
-      type: object
-      properties:
-        city:
-          type: string
-          description: Name of the city where the property is located.
-        street:
-          type: string
-          description: This field contains the name of the street where the property is located. It must include the name with a type (e.g., Avenue, Street, Road, etc.) but not the number or any other information.
-        number:
-          type: string
-          description: This field refers to the numeric or alphanumeric value assigned to a property on a street.
-        unitNumber:
-          type: string
-          description: his field is used when a single property has multiple units, such as apartments or office suites. It differentiates one unit from another within the same property.
-        postalCode:
-          type: string
-          description: Also known as ZIP code (or CAP in Italy)
-        province:
-          type: string
-          description: It refers to the name of the state or province where the property is located.
-        country:
-          type: string
-          description: The name of the country where the property is located.
-      required:
-      - city
-      - street
-      - postalCode
-      - province
-      - country
     KYCConsumerDossier:
       type: object
       properties:
@@ -434,26 +258,158 @@ components:
           items:
             $ref: '#/components/schemas/KYCBankAccountDossier'
           description: List of bank accounts of the consumer
+    KYCDossier:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the KYC session
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the KYC session creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time of the last KYC session update
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        lastAccessAt:
+          type: string
+          format: date-time
+          description: Date and time of the last KYC session access
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        kind:
+          $ref: '#/components/schemas/KYCFlow'
+        canLogin:
+          type: boolean
+          description: True if the user can login to the KYC session. If true, the user can retrieve data verified in previous sessions and can skip some steps of the KYC flow.
+          default: false
+        consumer:
+          $ref: '#/components/schemas/KYCConsumerDossier'
+          description: Consumer information
+        company:
+          $ref: '#/components/schemas/KYCCompanyDossier'
+          description: Company information
+    ConsumerNationalID:
+      type: string
+      description: National ID of the consumer, currently only italian format is supported
+      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
+      example: RSSMRA80A01H501T
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    Address:
+      type: object
+      properties:
+        city:
+          type: string
+          description: Name of the city where the property is located.
+        street:
+          type: string
+          description: This field contains the name of the street where the property is located. It must include the name with a type (e.g., Avenue, Street, Road, etc.) but not the number or any other information.
+        number:
+          type: string
+          description: This field refers to the numeric or alphanumeric value assigned to a property on a street.
+        unitNumber:
+          type: string
+          description: his field is used when a single property has multiple units, such as apartments or office suites. It differentiates one unit from another within the same property.
+        postalCode:
+          type: string
+          description: Also known as ZIP code (or CAP in Italy)
+        province:
+          type: string
+          description: It refers to the name of the state or province where the property is located.
+        country:
+          type: string
+          description: The name of the country where the property is located.
+      required:
+      - city
+      - street
+      - postalCode
+      - province
+      - country
+    CompanyVATNumber:
+      type: string
+      description: VAT number of the company, full european format
+      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
+      example: IT12345678901
+      x-faker: finance.vat
+    KYCFlow:
+      type: string
+      description: KYC flow
+      enum:
+      - consumer
+      - company
+      - business
+    KYCCompanyDossier:
+      type: object
+      description: Company information
+      properties:
+        name:
+          type: string
+          description: Name of the company
+          example: Illustrious Company S.p.A.
+          x-faker: company.companyName
+        vat:
+          $ref: '#/components/schemas/CompanyVATNumber'
+          description: VAT number of the company
+        address:
+          $ref: '#/components/schemas/Address'
+          description: Address of the company
+        email:
+          type: string
+          format: email
+          description: Email of the company
+          x-faker: internet.email
+        phone:
+          type: string
+          description: Phone number of the company
+          example: '+393331234567'
+          x-faker: phone.phoneNumber
+        sanctioned:
+          type: boolean
+          description: True if the company is present in the list of sanctioned subjects
+        verified:
+          type: boolean
+          description: True if the company information has been verified
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/KYCBankAccountDossier'
+          description: List of bank accounts of the company
+    KYCBankAccountDossier:
+      type: object
+      properties:
+        iban:
+          type: string
+          description: IBAN of the bank account
+          x-faker: finance.iban
+        label:
+          type: string
+          description: Label of the bank account
+          example: My bank account
+        verified:
+          type: boolean
+          description: True if the ownership of the bank account has been verified
+        consentExpiresAt:
+          type: string
+          format: date-time
+          description: Date and time of the bank account PSD2 consent expiration
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.future
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
   responses:
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -511,6 +467,25 @@ components:
             - requestID
             - message
             - additionalInfo
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
   securitySchemes:
     oAuth2:
       type: oauth2
@@ -553,6 +528,3 @@ components:
             transfers:read: Allow to read transfers
             transfers:write: Allow to create transfers and manage lifecycle
             wallet:`document_type`: Allow to manage wallet for the specified use case
-x-refined-from:
-- bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v2-openapi.yml

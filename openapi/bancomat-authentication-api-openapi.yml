@@ -1,24 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Authentication API
+  title: FlowPay Authentication API
   version: 2.0.0-alpha.4
+  description:
+    $ref: docs/general.md
+  termsOfService: https://developer.flowpay.it/tos
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
   contact:
     name: API Support
     url: https://developer.flowpay.it
     email: api-support@flowpay.it
-  license:
-    name: FlowPay SRL
-    url: https://developer.flowpay.it/tos
-  termsOfService: https://developer.flowpay.it/tos
   x-json-schema-faker:
     locale: it-IT
     omitNulls: true
     fillProperties: true
     reuseProperties: true
-  x-logo:
-    url: https://images.flowpay.it/logo
-    altText: FlowPay
-  description: 'Operations tagged Authentication across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flowpay.it/v2
   description: Production server (Not implementend)
@@ -111,19 +112,6 @@ paths:
       tags:
       - Authentication
       security: []
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /oauth/token/info:
     post:
       summary: Get information about the token
@@ -194,40 +182,8 @@ paths:
                     description: List of companies for which consumer has access to
         '401':
           $ref: '#/components/responses/Unauthorized'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 components:
   responses:
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
     InternalServerError:
       description: Server encountered an unexpected condition that prevented it from fulfilling the request
       content:
@@ -299,6 +255,25 @@ components:
             - requestID
             - message
             - additionalInfo
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
   schemas:
     RequestID:
       type: string
@@ -351,6 +326,3 @@ components:
             transfers:read: Allow to read transfers
             transfers:write: Allow to create transfers and manage lifecycle
             wallet:`document_type`: Allow to manage wallet for the specified use case
-x-refined-from:
-- bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v2-openapi.yml

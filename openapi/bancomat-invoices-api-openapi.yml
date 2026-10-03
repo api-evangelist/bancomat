@@ -1,24 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Invoices API
+  title: FlowPay Invoices API
   version: 2.0.0-alpha.4
+  description:
+    $ref: docs/general.md
+  termsOfService: https://developer.flowpay.it/tos
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
   contact:
     name: API Support
     url: https://developer.flowpay.it
     email: api-support@flowpay.it
-  license:
-    name: FlowPay SRL
-    url: https://developer.flowpay.it/tos
-  termsOfService: https://developer.flowpay.it/tos
   x-json-schema-faker:
     locale: it-IT
     omitNulls: true
     fillProperties: true
     reuseProperties: true
-  x-logo:
-    url: https://images.flowpay.it/logo
-    altText: FlowPay
-  description: 'Operations tagged Invoices across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flowpay.it/v2
   description: Production server (Not implementend)
@@ -145,19 +146,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Invoices
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /creditNotes/{fingerprint}:
     get:
       summary: Get credit note details
@@ -221,19 +209,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Invoices
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /invoices:
     post:
       summary: Create invoice
@@ -385,19 +360,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Invoices
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /invoices/{fingerprint}:
     get:
       summary: Get invoice details
@@ -432,19 +394,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Invoices
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /proforma:
     post:
       summary: Create proforma invoice
@@ -587,19 +536,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Invoices
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /proforma/{fingerprint}:
     get:
       summary: Get proforma details
@@ -664,30 +600,118 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Invoices
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 components:
+  responses:
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
   schemas:
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
     DocumentTerm:
       type: object
       description: A payment term of the document, it will be used to generate the payment schedule.
@@ -725,6 +749,65 @@ components:
       - dueDate
       - amount
       - currency
+    DocumentItem:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the item
+          example: Super energy drink
+          x-faker: lorem.sentence
+        quantity:
+          type: number
+          format: double
+          example: 8
+          description: Quantity of the item
+          x-faker: random.number
+        measureUnit:
+          type: string
+          description: Measure unit of the item
+          example: L
+          maxLength: 10
+          x-faker: commerce.productAdjective
+        unitPrice:
+          type: number
+          format: double
+          example: 1.5
+          description: Unit price of the item
+          x-faker: finance.amount
+        tax:
+          type: number
+          format: double
+          example: 0.23
+          description: Tax rate of the item
+          x-faker: finance.amount
+        discount:
+          type: number
+          format: double
+          example: 0.0
+          description: Discount rate of the item
+          x-faker: finance.amount
+      description: Billing item. This is used only for UX and utility purposes and will not be used for the payment process.
+      required:
+      - description
+      - quantity
+      - unitPrice
+    ConsumerNationalID:
+      type: string
+      description: National ID of the consumer, currently only italian format is supported
+      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
+      example: RSSMRA80A01H501T
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    CompanyVATNumber:
+      type: string
+      description: VAT number of the company, full european format
+      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
+      example: IT12345678901
+      x-faker: finance.vat
     Invoice:
       type: object
       properties:
@@ -808,15 +891,6 @@ components:
       - creditor
       - debtor
       - terms
-    Fingerprint:
-      type: string
-      description: Fingerprint of the document
-      example: d41d8cd98f00b204e9800998ecf8427e
-    ConsumerNationalID:
-      type: string
-      description: National ID of the consumer, currently only italian format is supported
-      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
-      example: RSSMRA80A01H501T
     PaginatedResult:
       type: object
       properties:
@@ -833,12 +907,6 @@ components:
           type: array
           description: List of items
           items: {}
-    CompanyVATNumber:
-      type: string
-      description: VAT number of the company, full european format
-      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
-      example: IT12345678901
-      x-faker: finance.vat
     DocumentAttachment:
       type: object
       properties:
@@ -862,159 +930,14 @@ components:
       required:
       - name
       - id
-    DocumentItem:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the item
-          example: Super energy drink
-          x-faker: lorem.sentence
-        quantity:
-          type: number
-          format: double
-          example: 8
-          description: Quantity of the item
-          x-faker: random.number
-        measureUnit:
-          type: string
-          description: Measure unit of the item
-          example: L
-          maxLength: 10
-          x-faker: commerce.productAdjective
-        unitPrice:
-          type: number
-          format: double
-          example: 1.5
-          description: Unit price of the item
-          x-faker: finance.amount
-        tax:
-          type: number
-          format: double
-          example: 0.23
-          description: Tax rate of the item
-          x-faker: finance.amount
-        discount:
-          type: number
-          format: double
-          example: 0.0
-          description: Discount rate of the item
-          x-faker: finance.amount
-      description: Billing item. This is used only for UX and utility purposes and will not be used for the payment process.
-      required:
-      - description
-      - quantity
-      - unitPrice
-  responses:
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
-    NotFound:
-      description: The requested resource was not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Invoice not found
-            required:
-            - statusCode
-            - requestID
-            - message
-    Unauthorized:
-      description: Client has not provided valid credentials to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You must provide a valid access token
-            required:
-            - statusCode
-            - requestID
-            - message
-    BadRequest:
-      description: Client has provided invalid data
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Proforma invoice can not have a due date later than the invoice date
-              additionalInfo:
-                type: object
-                description: Additional information about the error
-                properties:
-                  path:
-                    type: string
-                    description: JSON path of the field that caused the error
-                    example: .dueDate
-                  key:
-                    type: string
-                    description: JSON key of the field that caused the error
-                    example: dueDate
-                  type:
-                    type: string
-                    description: Expected type of the field that caused the error
-                    example: string
-                required:
-                - path
-            required:
-            - statusCode
-            - requestID
-            - message
-            - additionalInfo
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
   securitySchemes:
     oAuth2:
       type: oauth2
@@ -1057,6 +980,3 @@ components:
             transfers:read: Allow to read transfers
             transfers:write: Allow to create transfers and manage lifecycle
             wallet:`document_type`: Allow to manage wallet for the specified use case
-x-refined-from:
-- bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v2-openapi.yml

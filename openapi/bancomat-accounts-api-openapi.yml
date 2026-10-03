@@ -1,24 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Accounts API
+  title: FlowPay Accounts API
   version: 2.0.0-alpha.4
+  description:
+    $ref: docs/general.md
+  termsOfService: https://developer.flowpay.it/tos
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
   contact:
     name: API Support
     url: https://developer.flowpay.it
     email: api-support@flowpay.it
-  license:
-    name: FlowPay SRL
-    url: https://developer.flowpay.it/tos
-  termsOfService: https://developer.flowpay.it/tos
   x-json-schema-faker:
     locale: it-IT
     omitNulls: true
     fillProperties: true
     reuseProperties: true
-  x-logo:
-    url: https://images.flowpay.it/logo
-    altText: FlowPay
-  description: 'Operations tagged Accounts across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flowpay.it/v2
   description: Production server (Not implementend)
@@ -184,19 +185,6 @@ paths:
               security: []
       tags:
       - Accounts
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /accounts/{accountID}:
     get:
       summary: Get account details
@@ -233,19 +221,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Accounts
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 webhooks:
   AIS consent status:
     post:
@@ -283,128 +258,8 @@ webhooks:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Accounts
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 components:
-  schemas:
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
-    BankAccount:
-      type: object
-      properties:
-        owner:
-          type: string
-          format: uuid
-          description: Identifier of the owner of the bank account
-        iban:
-          type: string
-          description: International Bank Account Number
-          x-faker: finance.iban
-          example: IT60X0542811101000000123456
-        currencies:
-          type: array
-          items:
-            type: string
-            description: Currencies supported by the bank account
-            x-faker: finance.currencyCode
-          example:
-          - EUR
-          - CHF
-          - GBP
-        bankName:
-          type: string
-          description: Identifier of the bank
-          example: intesa_sanpaolo
-        owners:
-          type: array
-          description: List of owners of the bank account
-          items:
-            type: string
-            description: Name of the owner of the bank account
-            x-faker: person.fullName
-          example:
-          - Maria Fumagalli
-          - Luigi Verdi
-        consentStatus:
-          $ref: '#/components/schemas/ConsentStatusEnum'
-    ConsentStatusEnum:
-      type: string
-      enum:
-      - not_granted
-      - granted
-      - revoked
-      - expired
-      - all
-      default: all
-      description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
-    PaginatedResult:
-      type: object
-      properties:
-        page:
-          type: integer
-          description: Current page number
-        pageSize:
-          type: integer
-          description: Number of items per page
-        total:
-          type: integer
-          description: Total number of items
-        items:
-          type: array
-          description: List of items
-          items: {}
   responses:
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
     NotFound:
       description: The requested resource was not found
       content:
@@ -424,6 +279,20 @@ components:
             - statusCode
             - requestID
             - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -481,6 +350,99 @@ components:
             - requestID
             - message
             - additionalInfo
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
+  schemas:
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    ConsentStatusEnum:
+      type: string
+      enum:
+      - not_granted
+      - granted
+      - revoked
+      - expired
+      - all
+      default: all
+      description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
+    BankAccount:
+      type: object
+      properties:
+        owner:
+          type: string
+          format: uuid
+          description: Identifier of the owner of the bank account
+        iban:
+          type: string
+          description: International Bank Account Number
+          x-faker: finance.iban
+          example: IT60X0542811101000000123456
+        currencies:
+          type: array
+          items:
+            type: string
+            description: Currencies supported by the bank account
+            x-faker: finance.currencyCode
+          example:
+          - EUR
+          - CHF
+          - GBP
+        bankName:
+          type: string
+          description: Identifier of the bank
+          example: intesa_sanpaolo
+        owners:
+          type: array
+          description: List of owners of the bank account
+          items:
+            type: string
+            description: Name of the owner of the bank account
+            x-faker: person.fullName
+          example:
+          - Maria Fumagalli
+          - Luigi Verdi
+        consentStatus:
+          $ref: '#/components/schemas/ConsentStatusEnum'
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
   securitySchemes:
     oAuth2:
       type: oauth2
@@ -523,6 +485,3 @@ components:
             transfers:read: Allow to read transfers
             transfers:write: Allow to create transfers and manage lifecycle
             wallet:`document_type`: Allow to manage wallet for the specified use case
-x-refined-from:
-- bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v2-openapi.yml

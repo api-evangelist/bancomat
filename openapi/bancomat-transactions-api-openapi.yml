@@ -1,24 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Transactions API
+  title: FlowPay Transactions API
   version: 2.0.0-alpha.4
+  description:
+    $ref: docs/general.md
+  termsOfService: https://developer.flowpay.it/tos
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
   contact:
     name: API Support
     url: https://developer.flowpay.it
     email: api-support@flowpay.it
-  license:
-    name: FlowPay SRL
-    url: https://developer.flowpay.it/tos
-  termsOfService: https://developer.flowpay.it/tos
   x-json-schema-faker:
     locale: it-IT
     omitNulls: true
     fillProperties: true
     reuseProperties: true
-  x-logo:
-    url: https://images.flowpay.it/logo
-    altText: FlowPay
-  description: 'Operations tagged Transactions across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flowpay.it/v2
   description: Production server (Not implementend)
@@ -115,19 +116,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /transactions/{transactionID}:
     get:
       summary: Get transaction details
@@ -172,56 +160,118 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Transactions
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 components:
+  responses:
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    Unauthorized:
+      description: Client has not provided valid credentials to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
   schemas:
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
-    PaymentStatusEnum:
-      type: string
-      enum:
-      - authorized
-      - arrived_to_technical_account
-      - outgoing_from_technical_account
-      - completed
-      - rejected
-      - revoked
-      description: 'Status of the payment.<br/> - `authorized`: payment authorized by the user<br> - `arrived_to_technical_account`: payment arrived to the FlowPay technical account. t<br> - `outgoing_from_technical_account`: payment outgoing from the technical account<br> - `completed`: funds has been transferred to the beneficiary<br> - `rejected`: payment rejected by the bank<br> - `revoked`: payment revoked by the user or by the client in case of conditional payment'
-    PaginatedResult:
-      type: object
-      properties:
-        page:
-          type: integer
-          description: Current page number
-        pageSize:
-          type: integer
-          description: Number of items per page
-        total:
-          type: integer
-          description: Total number of items
-        items:
-          type: array
-          description: List of items
-          items: {}
     Payment:
       type: object
       properties:
@@ -266,6 +316,37 @@ components:
           description: IBAN of the debtor
           example: IT60X0542811101000000123456
           x-faker: finance.iban
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    PaymentStatusEnum:
+      type: string
+      enum:
+      - authorized
+      - arrived_to_technical_account
+      - outgoing_from_technical_account
+      - completed
+      - rejected
+      - revoked
+      description: 'Status of the payment.<br/> - `authorized`: payment authorized by the user<br> - `arrived_to_technical_account`: payment arrived to the FlowPay technical account. t<br> - `outgoing_from_technical_account`: payment outgoing from the technical account<br> - `completed`: funds has been transferred to the beneficiary<br> - `rejected`: payment rejected by the bank<br> - `revoked`: payment revoked by the user or by the client in case of conditional payment'
     Transaction:
       type: object
       description: Transaction
@@ -327,116 +408,10 @@ components:
       - amount
       - currency
       - remittance
-  responses:
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
-    NotFound:
-      description: The requested resource was not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Invoice not found
-            required:
-            - statusCode
-            - requestID
-            - message
-    Unauthorized:
-      description: Client has not provided valid credentials to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You must provide a valid access token
-            required:
-            - statusCode
-            - requestID
-            - message
-    BadRequest:
-      description: Client has provided invalid data
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Proforma invoice can not have a due date later than the invoice date
-              additionalInfo:
-                type: object
-                description: Additional information about the error
-                properties:
-                  path:
-                    type: string
-                    description: JSON path of the field that caused the error
-                    example: .dueDate
-                  key:
-                    type: string
-                    description: JSON key of the field that caused the error
-                    example: dueDate
-                  type:
-                    type: string
-                    description: Expected type of the field that caused the error
-                    example: string
-                required:
-                - path
-            required:
-            - statusCode
-            - requestID
-            - message
-            - additionalInfo
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
   securitySchemes:
     oAuth2:
       type: oauth2
@@ -479,6 +454,3 @@ components:
             transfers:read: Allow to read transfers
             transfers:write: Allow to create transfers and manage lifecycle
             wallet:`document_type`: Allow to manage wallet for the specified use case
-x-refined-from:
-- bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v2-openapi.yml

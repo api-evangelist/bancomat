@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Transazioni API
-  version: 1.0.0
   contact:
     email: federico.giuntoli@flowpay.it
     name: Federico Giuntoli
+  description: Hai uno use case di pagamento complesso come pagamenti massivi, split o pagopa?
   termsOfService: https://www.flowpay.it/tos
-  description: 'Operations tagged Transazioni across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+  title: FlowPay Transazioni API
+  version: 1.0.0
 servers:
 - url: https://app.flowpay.it/api
   variables: {}
@@ -146,9 +146,6 @@ paths:
       - Transazioni
       operationId: getByTenantIDTransactions
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/transactions/{transactionID}:
     get:
       description: Restituisce la transazione del tenant corrispondente all'identificativo
@@ -278,15 +275,8 @@ paths:
       - Transazioni
       operationId: getByTenantIDTransactionsByTransactionID
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
 components:
   schemas:
-    Transactions:
-      items:
-        $ref: '#/components/schemas/Transaction'
-      type: array
     Transaction:
       properties:
         amount:
@@ -384,6 +374,10 @@ components:
       - errorDescription
       - statusCode
       type: object
+    Transactions:
+      items:
+        $ref: '#/components/schemas/Transaction'
+      type: array
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
@@ -428,6 +422,3 @@ components:
             transfer:write: ''
           tokenUrl: https://core.flowpay.it/api/oauth/token
       type: oauth2
-x-refined-from:
-- bancomat-flowpay-api-v1-openapi.json
-- bancomat-flowpay-api-v1-openapi.yml

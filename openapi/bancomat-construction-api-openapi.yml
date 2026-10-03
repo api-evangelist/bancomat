@@ -1,24 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Construction API
+  title: FlowPay Construction API
   version: 2.0.0-alpha.4
+  description:
+    $ref: docs/general.md
+  termsOfService: https://developer.flowpay.it/tos
+  license:
+    name: FlowPay SRL
+    url: https://developer.flowpay.it/tos
+  x-logo:
+    url: https://images.flowpay.it/logo
+    altText: FlowPay
   contact:
     name: API Support
     url: https://developer.flowpay.it
     email: api-support@flowpay.it
-  license:
-    name: FlowPay SRL
-    url: https://developer.flowpay.it/tos
-  termsOfService: https://developer.flowpay.it/tos
   x-json-schema-faker:
     locale: it-IT
     omitNulls: true
     fillProperties: true
     reuseProperties: true
-  x-logo:
-    url: https://images.flowpay.it/logo
-    altText: FlowPay
-  description: 'Operations tagged Construction across 2 of this provider''s published API definitions: bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flowpay.it/v2
   description: Production server (Not implementend)
@@ -124,19 +125,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /constructions/contracts/{identifier}:
     patch:
       summary: Accept assignment
@@ -206,19 +194,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /constructions/sites:
     post:
       tags:
@@ -329,19 +304,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /constructions/sites/{identifier}:
     get:
       tags:
@@ -376,19 +338,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /constructions/sites/{identifier}/quote:
     post:
       tags:
@@ -520,19 +469,6 @@ paths:
       - oAuth2:
         - construction:read
         - wallet:construction
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /constructions/progress:
     post:
       summary: Register work progress
@@ -631,19 +567,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
   /constructions/progress/{identifier}:
     get:
       summary: Get work progress details
@@ -677,19 +600,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - url: https://api.flowpay.it/v2
-      description: Production server (Not implementend)
-    - url: https://mock.flowpay.it/v2
-      description: Mock server
-    - url: https://sandbox.{customerID}.flowpay.it/v2
-      description: Customer-assigned sandbox server
-      variables:
-        customerID:
-          default: 00000000-00000000-00000000-00000000
-          description: Unique customer identifier assigned after contract signature
-    - url: http://localhost:5002
-      description: Debug
 components:
   schemas:
     ConstructionSite:
@@ -711,31 +621,82 @@ components:
           $ref: '#/components/schemas/Fingerprint'
           description: Fingerprint of the initial credit document, used to transfer money to the wallet
         availableBalance: {}
-    PaginatedResult:
+    SiteWorkerContractCreation:
+      description: Request to create a new contract between a construction site and a worker
       type: object
       properties:
-        page:
-          type: integer
-          description: Current page number
-        pageSize:
-          type: integer
-          description: Number of items per page
-        total:
-          type: integer
-          description: Total number of items
-        items:
+        id:
+          type: string
+          format: uuid
+          description: 'Unique identifier of the contract '
+          x-faker: datatype.uuid
+        site:
+          type: string
+          format: uuid
+          description: Identifier of the construction site
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the contract creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+    SiteQuote:
+      description: Quote for a construction site
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Unique identifier of the quote '
+          x-faker: datatype.uuid
+        site:
+          type: string
+          format: uuid
+          description: Identifier of the construction site
+          x-faker: datatype.uuid
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of the quote creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+        amount:
+          type: number
+          format: float
+          example: 45050.23
+          description: Total amount of the quote
+          x-faker: finance.amount
+        description:
+          type: string
+          description: Description of the quote
+          example: Construction of the new museum
+        reference:
+          type: string
+          description: Reference of the quote
+          example: 123AF-4654Z
+        fingerprint:
+          type: string
+          example: d41d8cd98f00b204e9800998ecf8427e
+          description: Fingerprint of the document accounting for the quote
+        files:
           type: array
-          description: List of items
-          items: {}
-    RequestID:
+          description: List of files related to the quote
+          items:
+            type: string
+            format: uuid
+      required:
+      - id
+      - site
+      - createdAt
+      - amount
+      - fingerprint
+      - files
+    ConsumerNationalID:
       type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
-    Fingerprint:
-      type: string
-      description: Fingerprint of the document
-      example: d41d8cd98f00b204e9800998ecf8427e
+      description: National ID of the consumer, currently only italian format is supported
+      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
+      example: RSSMRA80A01H501T
     Address:
       type: object
       properties:
@@ -796,74 +757,24 @@ components:
           description: Array of invoices related to each supplier for the worker. Keys are the creditor identifiers.
           additionalProperties:
             $ref: '#/components/schemas/Fingerprint'
-    ConsumerNationalID:
-      type: string
-      description: National ID of the consumer, currently only italian format is supported
-      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
-      example: RSSMRA80A01H501T
-    CompanyVATNumber:
-      type: string
-      description: VAT number of the company, full european format
-      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
-      example: IT12345678901
-      x-faker: finance.vat
-    SiteQuote:
-      description: Quote for a construction site
+    PaginatedResult:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          description: 'Unique identifier of the quote '
-          x-faker: datatype.uuid
-        site:
-          type: string
-          format: uuid
-          description: Identifier of the construction site
-          x-faker: datatype.uuid
-        createdAt:
-          type: string
-          format: date-time
-          description: Date and time of the quote creation
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.past
-        amount:
-          type: number
-          format: float
-          example: 45050.23
-          description: Total amount of the quote
-          x-faker: finance.amount
-        description:
-          type: string
-          description: Description of the quote
-          example: Construction of the new museum
-        reference:
-          type: string
-          description: Reference of the quote
-          example: 123AF-4654Z
-        fingerprint:
-          type: string
-          example: d41d8cd98f00b204e9800998ecf8427e
-          description: Fingerprint of the document accounting for the quote
-        files:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
           type: array
-          description: List of files related to the quote
-          items:
-            type: string
-            format: uuid
-      required:
-      - id
-      - site
-      - createdAt
-      - amount
-      - fingerprint
-      - files
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
-    SiteWorkerContractCreation:
-      description: Request to create a new contract between a construction site and a worker
+          description: List of items
+          items: {}
+    SiteWorkerContract:
+      description: Contract between a company and a worker for a construction site
       type: object
       properties:
         id:
@@ -882,6 +793,12 @@ components:
           description: Date and time of the contract creation
           example: '2020-01-01T00:00:00Z'
           x-faker: date.past
+        company:
+          $ref: '#/components/schemas/Contact'
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
     Contact:
       type: object
       properties:
@@ -908,100 +825,22 @@ components:
           - consumer
           - company
           description: Type of the contact
-    SiteWorkerContract:
-      description: Contract between a company and a worker for a construction site
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: 'Unique identifier of the contract '
-          x-faker: datatype.uuid
-        site:
-          type: string
-          format: uuid
-          description: Identifier of the construction site
-          x-faker: datatype.uuid
-        createdAt:
-          type: string
-          format: date-time
-          description: Date and time of the contract creation
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.past
-        company:
-          $ref: '#/components/schemas/Contact'
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    CompanyVATNumber:
+      type: string
+      description: VAT number of the company, full european format
+      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
+      example: IT12345678901
+      x-faker: finance.vat
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
   responses:
-    BadRequest:
-      description: Client has provided invalid data
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Proforma invoice can not have a due date later than the invoice date
-              additionalInfo:
-                type: object
-                description: Additional information about the error
-                properties:
-                  path:
-                    type: string
-                    description: JSON path of the field that caused the error
-                    example: .dueDate
-                  key:
-                    type: string
-                    description: JSON key of the field that caused the error
-                    example: dueDate
-                  type:
-                    type: string
-                    description: Expected type of the field that caused the error
-                    example: string
-                required:
-                - path
-            required:
-            - statusCode
-            - requestID
-            - message
-            - additionalInfo
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -1017,6 +856,25 @@ components:
                 type: string
                 description: Error message
                 example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
             required:
             - statusCode
             - requestID
@@ -1059,6 +917,58 @@ components:
             - statusCode
             - requestID
             - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
   securitySchemes:
     oAuth2:
       type: oauth2
@@ -1101,6 +1011,3 @@ components:
             transfers:read: Allow to read transfers
             transfers:write: Allow to create transfers and manage lifecycle
             wallet:`document_type`: Allow to manage wallet for the specified use case
-x-refined-from:
-- bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v2-openapi.yml

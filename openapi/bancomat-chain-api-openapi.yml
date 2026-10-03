@@ -5,7 +5,7 @@ info:
   - x-json-schema-faker differs across the merged source definitions and was not carried
   - x-logo differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Chain across 4 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v2-openapi.json, bancomat-flowpay-api-v1-openapi.yml, bancomat-flowpay-api-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Chain across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v2-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://app.flowpay.it/api
   variables: {}
@@ -485,6 +485,16 @@ paths:
       description: Debug
 components:
   schemas:
+    DocumentKindEnum:
+      enum:
+      - bill
+      - bulk
+      - chain
+      - construction
+      - invoice
+      - pagopa
+      - transfer
+      type: string
     Fingerprint:
       description: Fingerprint del documento
       example: d41d8cd98f00b204e9800998ecf8427e
@@ -547,7 +557,8 @@ components:
       - errorDescription
       - statusCode
       type: object
-    DocumentKindEnum:
+    DocumentKindEnum_2:
+      type: string
       enum:
       - bill
       - bulk
@@ -556,20 +567,13 @@ components:
       - invoice
       - pagopa
       - transfer
-      type: string
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
+      description:
+        $ref: types/DocumentKind.md
     RequestID:
       type: string
       description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
       format: uuid
       x-faker: random.uuid
-    Fingerprint_2:
-      type: string
-      description: Fingerprint of the document
-      example: d41d8cd98f00b204e9800998ecf8427e
     PaginatedResult:
       type: object
       properties:
@@ -586,68 +590,15 @@ components:
           type: array
           description: List of items
           items: {}
-    DocumentKindEnum_2:
-      type: string
-      enum:
-      - bill
-      - bulk
-      - chain
-      - construction
-      - invoice
-      - pagopa
-      - transfer
-      description:
-        $ref: types/DocumentKind.md
-    Fingerprint_3:
+    Fingerprint_2:
       type: string
       description: Fingerprint of the document
       example: d41d8cd98f00b204e9800998ecf8427e
-    DocumentKindEnum_3:
-      type: string
-      enum:
-      - bill
-      - bulk
-      - chain
-      - construction
-      - invoice
-      - pagopa
-      - transfer
-      description:
-        $ref: types/DocumentKind.md
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
   responses:
-    Forbidden:
-      description: Client is not authorized to access the requested resource
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: You can't create a new invoice for this tenant
-            required:
-            - statusCode
-            - requestID
-            - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
     NotFound:
       description: The requested resource was not found
       content:
@@ -667,6 +618,20 @@ components:
             - statusCode
             - requestID
             - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -724,6 +689,25 @@ components:
             - requestID
             - message
             - additionalInfo
+    Forbidden:
+      description: Client is not authorized to access the requested resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: You can't create a new invoice for this tenant
+            required:
+            - statusCode
+            - requestID
+            - message
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
@@ -812,5 +796,3 @@ components:
 x-refined-from:
 - bancomat-flowpay-api-v1-openapi.json
 - bancomat-flowpay-api-v2-openapi.json
-- bancomat-flowpay-api-v1-openapi.yml
-- bancomat-flowpay-api-v2-openapi.yml

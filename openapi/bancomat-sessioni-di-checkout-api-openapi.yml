@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Sessioni di checkout API
-  version: 1.0.0
   contact:
     email: federico.giuntoli@flowpay.it
     name: Federico Giuntoli
+  description: Hai uno use case di pagamento complesso come pagamenti massivi, split o pagopa?
   termsOfService: https://www.flowpay.it/tos
-  description: 'Operations tagged Sessioni di checkout across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+  title: FlowPay Sessioni di checkout API
+  version: 1.0.0
 servers:
 - url: https://app.flowpay.it/api
   variables: {}
@@ -160,9 +160,6 @@ paths:
       x-summary-source: derived
       operationId: postByTenantIDCheckout
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/checkout/intents:
     post:
       description: ''
@@ -272,9 +269,6 @@ paths:
       x-summary-source: derived
       operationId: postByTenantIDCheckoutIntents
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/checkout/{code}:
     delete:
       description: Elimina un checkout esistente.
@@ -397,9 +391,6 @@ paths:
       x-summary-source: derived
       operationId: deleteByTenantIDCheckoutByCode
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/checkout/{code}/preferences:
     put:
       summary: Update checkout preferences
@@ -533,9 +524,6 @@ paths:
       - Sessioni di checkout
       operationId: putByTenantIDCheckoutByCodePreferences
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/checkout/{type}/{fingerprint}:
     get:
       description: Restituisce le informazioni sullo stato del checkout identificato da tipo e fingerprint.
@@ -676,66 +664,8 @@ paths:
       x-summary-source: derived
       operationId: getByTenantIDCheckoutByTypeByFingerprint
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
 components:
   schemas:
-    CheckoutPreferences:
-      type: object
-      properties:
-        strict:
-          type: boolean
-          default: false
-        terms:
-          type: array
-          items:
-            type: string
-            format: uuid
-        paymentMethodID:
-          type: string
-          format: uuid
-        connectorMethodID:
-          type: string
-          format: uuid
-        allowedMethods:
-          description: Lista di metodi di pagamento che il debitore puó selezionare, in caso non sia stato indicato un metodo di pagamento specifico
-          type: array
-          items:
-            $ref: '#/components/schemas/CollectionMethodEnum'
-          default:
-          - sct
-          - sctInst
-          - card
-          - ssd
-        canEditRemittance:
-          type: boolean
-          default: true
-      required:
-      - allowedMethods
-    CheckoutPreferencesResponse:
-      type: object
-      properties:
-        strict:
-          type: boolean
-          default: false
-        allowedMethods:
-          description: Lista di metodi di pagamento che il debitore puó selezionare, in caso non sia stato indicato un metodo di pagamento specifico
-          type: array
-          items:
-            $ref: '#/components/schemas/CollectionMethodEnum'
-          default:
-          - sct
-          - sctInst
-          - card
-          - ssd
-        canEditRemittance:
-          type: boolean
-          default: true
-      required:
-      - strict
-      - allowedMethods
-      - canEditRemittance
     ErrorDTO:
       description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
       properties:
@@ -780,6 +710,133 @@ components:
       - errorDescription
       - statusCode
       type: object
+    CheckoutResponse:
+      properties:
+        code:
+          description: Codice univoco del checkout
+          example: LjJ5imbL
+          type: string
+        expire:
+          description: Data di scadenza del codice di checkout
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        payments:
+          items:
+            $ref: '#/components/schemas/PaymentDTO'
+          type: array
+      required:
+      - code
+      - expire
+      - payments
+      type: object
+    DocumentType:
+      description: Tipo di documento del checkout
+      enum:
+      - invoice
+      - bill
+      type: string
+    PaymentMethodInfo:
+      enum:
+      - card
+      type: string
+    CheckoutRequest:
+      properties:
+        fingerprint:
+          description: Fingerprint del documento per il quale si sta creando il checkout
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        nokRedirect:
+          description: 'URL di reindirizzamento in caso di checkout fallito.
+
+            Poiché questa URL deve essere pubblica e raggiungibile dal browser dell''utente si consiglia di inserire al suo interno qualcosa che possa provare la correttezza del redirect.
+
+            Ad esempio un jwt firmato dall''integratore con al suo interno un id univoco riconoscibile nel momento del redirect.'
+          example: https://www.google.com/search?q=nok
+          type: string
+        okRedirect:
+          description: 'URL di reindirizzamento in caso di checkout andato a buon fine.
+
+            Poiché questa URL deve essere pubblica e raggiungibile dal browser dell''utente si consiglia di inserire al suo interno qualcosa che possa provare la correttezza del redirect.
+
+            Ad esempio un jwt firmato dall''integratore con al suo interno un id univoco riconoscibile nel momento del redirect.'
+          example: https://www.google.com/search?q=ok
+          type: string
+        type:
+          $ref: '#/components/schemas/DocumentType'
+      required:
+      - type
+      - fingerprint
+      type: object
+    GetCheckoutResponse:
+      properties:
+        code:
+          description: Codice univoco del checkout
+          example: LjJ5imbL
+          type: string
+        expire:
+          description: Data di scadenza del codice di checkout
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+      required:
+      - code
+      type: object
+    CheckoutPreferencesResponse:
+      type: object
+      properties:
+        strict:
+          type: boolean
+          default: false
+        allowedMethods:
+          description: Lista di metodi di pagamento che il debitore puó selezionare, in caso non sia stato indicato un metodo di pagamento specifico
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionMethodEnum'
+          default:
+          - sct
+          - sctInst
+          - card
+          - ssd
+        canEditRemittance:
+          type: boolean
+          default: true
+      required:
+      - strict
+      - allowedMethods
+      - canEditRemittance
+    CheckoutPreferences:
+      type: object
+      properties:
+        strict:
+          type: boolean
+          default: false
+        terms:
+          type: array
+          items:
+            type: string
+            format: uuid
+        paymentMethodID:
+          type: string
+          format: uuid
+        connectorMethodID:
+          type: string
+          format: uuid
+        allowedMethods:
+          description: Lista di metodi di pagamento che il debitore puó selezionare, in caso non sia stato indicato un metodo di pagamento specifico
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionMethodEnum'
+          default:
+          - sct
+          - sctInst
+          - card
+          - ssd
+        canEditRemittance:
+          type: boolean
+          default: true
+      required:
+      - allowedMethods
     PaymentDTO:
       properties:
         createdAt:
@@ -831,81 +888,6 @@ components:
       - status
       - method
       type: object
-    CheckoutRequest:
-      properties:
-        fingerprint:
-          description: Fingerprint del documento per il quale si sta creando il checkout
-          example: d41d8cd98f00b204e9800998ecf8427e
-          type: string
-        nokRedirect:
-          description: 'URL di reindirizzamento in caso di checkout fallito.
-
-            Poiché questa URL deve essere pubblica e raggiungibile dal browser dell''utente si consiglia di inserire al suo interno qualcosa che possa provare la correttezza del redirect.
-
-            Ad esempio un jwt firmato dall''integratore con al suo interno un id univoco riconoscibile nel momento del redirect.'
-          example: https://www.google.com/search?q=nok
-          type: string
-        okRedirect:
-          description: 'URL di reindirizzamento in caso di checkout andato a buon fine.
-
-            Poiché questa URL deve essere pubblica e raggiungibile dal browser dell''utente si consiglia di inserire al suo interno qualcosa che possa provare la correttezza del redirect.
-
-            Ad esempio un jwt firmato dall''integratore con al suo interno un id univoco riconoscibile nel momento del redirect.'
-          example: https://www.google.com/search?q=ok
-          type: string
-        type:
-          $ref: '#/components/schemas/DocumentType'
-      required:
-      - type
-      - fingerprint
-      type: object
-    GetCheckoutResponse:
-      properties:
-        code:
-          description: Codice univoco del checkout
-          example: LjJ5imbL
-          type: string
-        expire:
-          description: Data di scadenza del codice di checkout
-          example: '2020-03-03T17:32:28Z'
-          format: date-time
-          type: string
-      required:
-      - code
-      type: object
-    CollectionMethodEnum:
-      type: string
-      enum:
-      - sct
-      - sctInst
-      - card
-      - ssd
-    CheckoutResponse:
-      properties:
-        code:
-          description: Codice univoco del checkout
-          example: LjJ5imbL
-          type: string
-        expire:
-          description: Data di scadenza del codice di checkout
-          example: '2020-03-03T17:32:28Z'
-          format: date-time
-          type: string
-        payments:
-          items:
-            $ref: '#/components/schemas/PaymentDTO'
-          type: array
-      required:
-      - code
-      - expire
-      - payments
-      type: object
-    DocumentType:
-      description: Tipo di documento del checkout
-      enum:
-      - invoice
-      - bill
-      type: string
     PaymentStatusEnum:
       description: "Stato di un pagamento:\n * `concluded` - Indica che il pagamento è stato addebitato sul conto del debitore\n * `not_concluded` - Indica che il pagamento è stato autorizzato ma ancora non è stato addebitato (ad esempio per un pagamento a data futura)\n * `rejected` - Indica che il pagamento è stato rifiutato (ad esempio il pagamento è stato annullato dal debitore oppure non erano presenti i fondi nel momento di eseguire il pagamento)\n * `not_available` - Indica che è avvenuto un errore di comunicazione con la banca per controllare lo stato del pagamento, riprovando dovrebbe risolversi\n * `outside_flowpay_creditor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal creditore\n * `outside_flowpay_debtor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal debitore\n\nGli stati `concluded`, `rejected`, `outside_flowpay_creditor`, `outside_flowpay_debtor` sono stati finali per un pagamento"
       enum:
@@ -918,10 +900,13 @@ components:
       - outside_flowpay_debtor
       - forwarded
       type: string
-    PaymentMethodInfo:
-      enum:
-      - card
+    CollectionMethodEnum:
       type: string
+      enum:
+      - sct
+      - sctInst
+      - card
+      - ssd
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
@@ -966,6 +951,3 @@ components:
             transfer:write: ''
           tokenUrl: https://core.flowpay.it/api/oauth/token
       type: oauth2
-x-refined-from:
-- bancomat-flowpay-api-v1-openapi.json
-- bancomat-flowpay-api-v1-openapi.yml

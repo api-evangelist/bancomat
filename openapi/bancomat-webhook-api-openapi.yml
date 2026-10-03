@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Bancomat Webhook API
-  version: 1.0.0
   contact:
     email: federico.giuntoli@flowpay.it
     name: Federico Giuntoli
+  description: Hai uno use case di pagamento complesso come pagamenti massivi, split o pagopa?
   termsOfService: https://www.flowpay.it/tos
-  description: 'Operations tagged Webhook across 2 of this provider''s published API definitions: bancomat-flowpay-api-v1-openapi.json, bancomat-flowpay-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+  title: FlowPay Webhook API
+  version: 1.0.0
 servers:
 - url: https://app.flowpay.it/api
   variables: {}
@@ -114,9 +114,6 @@ paths:
       x-summary-source: derived
       operationId: getWebhooks
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /webhooks/types:
     get:
       description: Ottiene la lista dei webhook disponibili
@@ -216,9 +213,6 @@ paths:
       x-summary-source: derived
       operationId: getWebhooksTypes
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /webhooks/{id}:
     delete:
       description: Elimina un webhook oppure elimina degli eventi associati ad un webhook.
@@ -443,9 +437,6 @@ paths:
       x-summary-source: derived
       operationId: getWebhooksById
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /webhooks/{id}/renew:
     put:
       description: Rinnova un webhook per altri 7 giorni rispetto al momento della chiamata
@@ -562,9 +553,6 @@ paths:
       x-summary-source: derived
       operationId: putWebhooksByIdRenew
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/webhooks:
     get:
       description: Ottiene la lista dei webhook attivi per lo specifico tenant.
@@ -802,9 +790,6 @@ paths:
       x-summary-source: derived
       operationId: postByTenantIDWebhooks
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
   /{tenantID}/webhooks/{id}:
     delete:
       description: Elimina gli eventi dello specifico tenant associati ad un webhook oppure parte di essi
@@ -1183,46 +1168,8 @@ paths:
       x-summary-source: derived
       operationId: putByTenantIDWebhooksById
       x-operation-id-source: derived
-    servers:
-    - url: https://app.flowpay.it/api
-      variables: {}
 components:
   schemas:
-    Detail:
-      properties:
-        eventName:
-          description: Nome dell'evento registrato
-          example: string
-          type: string
-        lastCalledAt:
-          description: Data dell'ultima chiamata (ISO 8601)
-          example: '2020-03-03T17:32:28Z'
-          format: date-time
-          type: string
-        lastError:
-          description: Descrizione sull'ultimo errore
-          example: string
-          type: string
-        lastErroredAt:
-          description: Data dell'ultima chiamata fallita (ISO 8601)
-          example: '2020-03-03T17:32:28Z'
-          format: date-time
-          type: string
-        numberOfErroredCalls:
-          description: Numero di chiamate fallite
-          example: '12345678'
-          format: int64
-          type: integer
-        numberOfSuccessfulCalls:
-          description: Numero di chiamate riuscite
-          example: '12345678'
-          format: int64
-          type: integer
-      required:
-      - eventName
-      - numberOfErroredCalls
-      - numberOfSuccessfulCalls
-      type: object
     ErrorDTO:
       description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
       properties:
@@ -1309,38 +1256,10 @@ components:
       - eventDescription
       - needsAccounts
       type: object
-    WebHook:
+    PutWebHook:
       properties:
         events:
-          additionalProperties:
-            items:
-              example: string
-              type: string
-            type: array
-          description: 'Dizionario,
-
-            le chiavi sono i tenantID,
-
-            i valori sono gli eventi registrati per tale tenant su questo webhook'
-          type: object
-        id:
-          description: Identificativo univoco del webhook
-          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
-          format: uuid
-          type: string
-        url:
-          description: Url del webhook
-          example: string
-          type: string
-      required:
-      - id
-      - url
-      - events
-      type: object
-    PostWebHook:
-      properties:
-        events:
-          description: Lista di eventi da registrare sul webhook
+          description: Nuovi eventi da collegare al webhook.
           items:
             example: string
             type: string
@@ -1350,14 +1269,15 @@ components:
           example: '2020-03-03T17:32:28Z'
           format: date-time
           type: string
-        url:
-          description: Url alla quale si vuole essere contattati
-          example: string
-          type: string
-      required:
-      - events
-      - url
-      - expiresAt
+      type: object
+    WebHookDeleteRequest:
+      properties:
+        events:
+          description: Lista di eventi da eliminare per tale webhook. Se non presente vengono eliminati tutti
+          items:
+            example: string
+            type: string
+          type: array
       type: object
     WebHookDetail:
       properties:
@@ -1398,10 +1318,49 @@ components:
       - expiresAt
       - events
       type: object
-    PutWebHook:
+    Detail:
+      properties:
+        eventName:
+          description: Nome dell'evento registrato
+          example: string
+          type: string
+        lastCalledAt:
+          description: Data dell'ultima chiamata (ISO 8601)
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        lastError:
+          description: Descrizione sull'ultimo errore
+          example: string
+          type: string
+        lastErroredAt:
+          description: Data dell'ultima chiamata fallita (ISO 8601)
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        numberOfErroredCalls:
+          description: Numero di chiamate fallite
+          example: '12345678'
+          format: int64
+          type: integer
+        numberOfSuccessfulCalls:
+          description: Numero di chiamate riuscite
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - eventName
+      - numberOfErroredCalls
+      - numberOfSuccessfulCalls
+      type: object
+    WebHooks:
+      items:
+        $ref: '#/components/schemas/WebHook'
+      type: array
+    PostWebHook:
       properties:
         events:
-          description: Nuovi eventi da collegare al webhook.
+          description: Lista di eventi da registrare sul webhook
           items:
             example: string
             type: string
@@ -1411,24 +1370,47 @@ components:
           example: '2020-03-03T17:32:28Z'
           format: date-time
           type: string
+        url:
+          description: Url alla quale si vuole essere contattati
+          example: string
+          type: string
+      required:
+      - events
+      - url
+      - expiresAt
       type: object
-    WebHookDeleteRequest:
-      properties:
-        events:
-          description: Lista di eventi da eliminare per tale webhook. Se non presente vengono eliminati tutti
-          items:
-            example: string
-            type: string
-          type: array
-      type: object
-    WebHooks:
-      items:
-        $ref: '#/components/schemas/WebHook'
-      type: array
     WebHookTypes:
       items:
         $ref: '#/components/schemas/WebHookType'
       type: array
+    WebHook:
+      properties:
+        events:
+          additionalProperties:
+            items:
+              example: string
+              type: string
+            type: array
+          description: 'Dizionario,
+
+            le chiavi sono i tenantID,
+
+            i valori sono gli eventi registrati per tale tenant su questo webhook'
+          type: object
+        id:
+          description: Identificativo univoco del webhook
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        url:
+          description: Url del webhook
+          example: string
+          type: string
+      required:
+      - id
+      - url
+      - events
+      type: object
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
@@ -1473,6 +1455,3 @@ components:
             transfer:write: ''
           tokenUrl: https://core.flowpay.it/api/oauth/token
       type: oauth2
-x-refined-from:
-- bancomat-flowpay-api-v1-openapi.json
-- bancomat-flowpay-api-v1-openapi.yml
