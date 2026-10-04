@@ -102,6 +102,8 @@ apis:
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -808,6 +810,8 @@ apis:
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
@@ -941,6 +945,8 @@ apis:
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -960,6 +966,9 @@ apis:
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
 common:
+  - type: CapabilityMap
+    url: capabilities/bancomat-capability-edges.yml
+    name: Bancomat Business Capability Map
   - type: Overlay
     url: overlays/bancomat-flowpay-api-v1-overlay.yaml
   - type: AgentSkill
