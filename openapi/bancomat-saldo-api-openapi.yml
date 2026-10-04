@@ -297,14 +297,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    LatestBalances:
-      additionalProperties:
-        additionalProperties:
-          additionalProperties:
-            $ref: '#/components/schemas/Balance'
-          type: object
-        type: object
-      type: object
     Balance:
       properties:
         balance:
@@ -331,13 +323,11 @@ components:
       - currency
       - balanceType
       type: object
-    Balances:
+    LatestBalances:
       additionalProperties:
         additionalProperties:
           additionalProperties:
-            items:
-              $ref: '#/components/schemas/Balance'
-            type: array
+            $ref: '#/components/schemas/Balance'
           type: object
         type: object
       type: object
@@ -384,6 +374,16 @@ components:
       - code
       - errorDescription
       - statusCode
+      type: object
+    Balances:
+      additionalProperties:
+        additionalProperties:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/Balance'
+            type: array
+          type: object
+        type: object
       type: object
   securitySchemes:
     ThirdPartyAuthorizationCode:

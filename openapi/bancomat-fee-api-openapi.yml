@@ -217,6 +217,20 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
     NotFound:
       description: The requested resource was not found
       content:
@@ -236,20 +250,6 @@ components:
             - statusCode
             - requestID
             - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -327,43 +327,17 @@ components:
             - requestID
             - message
   schemas:
-    FeeRuleMethods:
-      type: string
-      enum:
-      - pis
-      - card
-      - sdd
-      description: 'Payment methods applicable for fee rules.
-
-
-        - **pis**: Used for bank transfers, including standard bank transfers and instant transfers (bonifico istantaneo).
-
-        - **card**: Used for card payments, including mobile wallet transactions.
-
-        - **sdd**: Used for direct debit payments.'
-    DocumentKindEnum:
-      type: string
-      enum:
-      - bill
-      - bulk
-      - chain
-      - construction
-      - invoice
-      - pagopa
-      - transfer
-      description:
-        $ref: types/DocumentKind.md
-    FeeRulePayer:
-      type: string
-      enum:
-      - debtor
-      - creditor
-      description: 'Payer types applicable for fee rules.
-
-
-        - **debtor**: The fees are paid by the debtor via a bulk payment.
-
-        - **creditor**: The fees are paid by the creditor via a split payment.'
+    FeeRuleAmountMap:
+      type: object
+      description: A dictionary mapping payment methods to payment amounts including fees for a specific document
+      propertyNames:
+        $ref: '#/components/schemas/FeeRuleMethods'
+      additionalProperties:
+        type: number
+        format: double
+      example:
+        pis: 0.05
+        card: 0.1
     FeeRule:
       type: object
       properties:
@@ -422,11 +396,32 @@ components:
       example:
         d41d8cd98f00b204e9800998ecf8427e: 0.05
         e56d7ef1234567890abcde1234567890: 0.1
-    RequestID:
+    DocumentKindEnum:
       type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
+      enum:
+      - bill
+      - bulk
+      - chain
+      - construction
+      - invoice
+      - pagopa
+      - transfer
+      description:
+        $ref: types/DocumentKind.md
+    FeeRuleMethods:
+      type: string
+      enum:
+      - pis
+      - card
+      - sdd
+      description: 'Payment methods applicable for fee rules.
+
+
+        - **pis**: Used for bank transfers, including standard bank transfers and instant transfers (bonifico istantaneo).
+
+        - **card**: Used for card payments, including mobile wallet transactions.
+
+        - **sdd**: Used for direct debit payments.'
     Fee:
       type: object
       properties:
@@ -452,17 +447,6 @@ components:
         linkedFingerprint:
           $ref: '#/components/schemas/Fingerprint'
           description: Fingerprint of the document the fee is linked to. Can be related to a `bulk` if the payer is the debtor of the target or to a `chain` if the payer is the creditor of the target.
-    FeeRuleAmountMap:
-      type: object
-      description: A dictionary mapping payment methods to payment amounts including fees for a specific document
-      propertyNames:
-        $ref: '#/components/schemas/FeeRuleMethods'
-      additionalProperties:
-        type: number
-        format: double
-      example:
-        pis: 0.05
-        card: 0.1
     PaginatedResult:
       type: object
       properties:
@@ -479,14 +463,30 @@ components:
           type: array
           description: List of items
           items: {}
-    Fingerprint:
+    RequestID:
       type: string
-      description: Fingerprint of the document
-      example: d41d8cd98f00b204e9800998ecf8427e
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    FeeRulePayer:
+      type: string
+      enum:
+      - debtor
+      - creditor
+      description: 'Payer types applicable for fee rules.
+
+
+        - **debtor**: The fees are paid by the debtor via a bulk payment.
+
+        - **creditor**: The fees are paid by the creditor via a split payment.'
     StatusCode:
       type: integer
       description: HTTP status code
       example: 404
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
   securitySchemes:
     oAuth2:
       type: oauth2

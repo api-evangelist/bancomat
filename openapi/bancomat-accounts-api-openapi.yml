@@ -260,6 +260,20 @@ webhooks:
       - Accounts
 components:
   responses:
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
     NotFound:
       description: The requested resource was not found
       content:
@@ -279,20 +293,6 @@ components:
             - statusCode
             - requestID
             - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -370,11 +370,6 @@ components:
             - requestID
             - message
   schemas:
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
     ConsentStatusEnum:
       type: string
       enum:
@@ -439,6 +434,11 @@ components:
           type: array
           description: List of items
           items: {}
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
     StatusCode:
       type: integer
       description: HTTP status code

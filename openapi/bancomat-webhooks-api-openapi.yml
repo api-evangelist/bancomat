@@ -91,21 +91,6 @@ components:
             - statusCode
             - requestID
   schemas:
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
-    ConsentStatusEnum:
-      type: string
-      enum:
-      - not_granted
-      - granted
-      - revoked
-      - expired
-      - all
-      default: all
-      description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
     BankAccount:
       type: object
       properties:
@@ -144,6 +129,21 @@ components:
           - Luigi Verdi
         consentStatus:
           $ref: '#/components/schemas/ConsentStatusEnum'
+    ConsentStatusEnum:
+      type: string
+      enum:
+      - not_granted
+      - granted
+      - revoked
+      - expired
+      - all
+      default: all
+      description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
     StatusCode:
       type: integer
       description: HTTP status code

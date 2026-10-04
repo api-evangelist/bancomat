@@ -722,11 +722,6 @@ components:
       - transfer
       description:
         $ref: types/DocumentKind.md
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
     Bulk_2:
       type: object
       properties:
@@ -764,15 +759,34 @@ components:
           type: array
           description: List of items
           items: {}
-    Fingerprint_2:
+    RequestID:
       type: string
-      description: Fingerprint of the document
-      example: d41d8cd98f00b204e9800998ecf8427e
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
     StatusCode:
       type: integer
       description: HTTP status code
       example: 404
+    Fingerprint_2:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
   responses:
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
     NotFound:
       description: The requested resource was not found
       content:
@@ -792,20 +806,6 @@ components:
             - statusCode
             - requestID
             - message
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:

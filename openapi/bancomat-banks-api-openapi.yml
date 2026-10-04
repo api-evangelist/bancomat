@@ -187,11 +187,6 @@ components:
             - message
             - additionalInfo
   schemas:
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
     Bank:
       type: object
       properties:
@@ -254,6 +249,11 @@ components:
                 - everyTwoWeeks
                 - annual
                 description: Recurring payment frequency
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
     StatusCode:
       type: integer
       description: HTTP status code

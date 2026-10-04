@@ -227,6 +227,13 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ConsentType:
+      type: string
+      enum:
+      - account
+      - balance
+      - transaction
+      description: 'Tipi di consenso disponibili: account, balance, transaction'
     ErrorDTO:
       description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
       properties:
@@ -309,13 +316,6 @@ components:
       - createdAt
       - recurring
       - usableFor
-    ConsentType:
-      type: string
-      enum:
-      - account
-      - balance
-      - transaction
-      description: 'Tipi di consenso disponibili: account, balance, transaction'
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow

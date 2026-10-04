@@ -193,6 +193,22 @@ components:
       - errorDescription
       - statusCode
       type: object
+    Payments:
+      items:
+        $ref: '#/components/schemas/Payment'
+      type: array
+    PaymentStatusEnum:
+      description: "Stato di un pagamento:\n * `concluded` - Indica che il pagamento è stato addebitato sul conto del debitore\n * `not_concluded` - Indica che il pagamento è stato autorizzato ma ancora non è stato addebitato (ad esempio per un pagamento a data futura)\n * `rejected` - Indica che il pagamento è stato rifiutato (ad esempio il pagamento è stato annullato dal debitore oppure non erano presenti i fondi nel momento di eseguire il pagamento)\n * `not_available` - Indica che è avvenuto un errore di comunicazione con la banca per controllare lo stato del pagamento, riprovando dovrebbe risolversi\n * `outside_flowpay_creditor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal creditore\n * `outside_flowpay_debtor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal debitore\n\nGli stati `concluded`, `rejected`, `outside_flowpay_creditor`, `outside_flowpay_debtor` sono stati finali per un pagamento"
+      enum:
+      - concluded
+      - not_concluded
+      - rejected
+      - not_available
+      - outsideFlowPay
+      - outside_flowpay_creditor
+      - outside_flowpay_debtor
+      - forwarded
+      type: string
     Payment:
       properties:
         createdAt:
@@ -242,22 +258,6 @@ components:
       enum:
       - card
       type: string
-    PaymentStatusEnum:
-      description: "Stato di un pagamento:\n * `concluded` - Indica che il pagamento è stato addebitato sul conto del debitore\n * `not_concluded` - Indica che il pagamento è stato autorizzato ma ancora non è stato addebitato (ad esempio per un pagamento a data futura)\n * `rejected` - Indica che il pagamento è stato rifiutato (ad esempio il pagamento è stato annullato dal debitore oppure non erano presenti i fondi nel momento di eseguire il pagamento)\n * `not_available` - Indica che è avvenuto un errore di comunicazione con la banca per controllare lo stato del pagamento, riprovando dovrebbe risolversi\n * `outside_flowpay_creditor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal creditore\n * `outside_flowpay_debtor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal debitore\n\nGli stati `concluded`, `rejected`, `outside_flowpay_creditor`, `outside_flowpay_debtor` sono stati finali per un pagamento"
-      enum:
-      - concluded
-      - not_concluded
-      - rejected
-      - not_available
-      - outsideFlowPay
-      - outside_flowpay_creditor
-      - outside_flowpay_debtor
-      - forwarded
-      type: string
-    Payments:
-      items:
-        $ref: '#/components/schemas/Payment'
-      type: array
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow

@@ -231,126 +231,7 @@ paths:
       tags:
       - Transfers
 components:
-  schemas:
-    Contact:
-      type: object
-      properties:
-        fullName:
-          description: Full name of the contact, contains the concatenation of the name and surname of a consumer, or the name of a company.
-          oneOf:
-          - type: string
-            description: Full name of the consumer
-            example: Mario Rossi
-            x-faker: person.fullName
-          - type: string
-            description: Company name
-            example: Illustrious Company S.p.A.
-            x-faker: company.companyName
-        fullVat:
-          type: string
-          description: 'VAT number of the company in full european format or national ID of the consumer '
-          oneOf:
-          - $ref: '#/components/schemas/ConsumerNationalID'
-          - $ref: '#/components/schemas/CompanyVATNumber'
-        type:
-          type: string
-          enum:
-          - consumer
-          - company
-          description: Type of the contact
-    ConsumerNationalID:
-      type: string
-      description: National ID of the consumer, currently only italian format is supported
-      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
-      example: RSSMRA80A01H501T
-    RequestID:
-      type: string
-      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
-      format: uuid
-      x-faker: random.uuid
-    Transfer:
-      type: object
-      description: 'Kind of document that allow clients to manage payment requests with low constraints. <br> Clients can use transfers to fast prototyping payment initiation use cases or to avoid specific document''s lifecycle managment. <br><b>Note: </b> In order to use transfers in production, a more in-depth due diligence is required.'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the transfer
-          x-faker: random.uuid
-        fingerprint:
-          $ref: '#/components/schemas/Fingerprint'
-        amount:
-          type: number
-          description: Amount of the transfer
-          example: 100.34
-          x-faker: finance.amount
-        remittance:
-          type: string
-          description: Remittance information of the transfer
-          example: Payment for invoice 123
-          x-faker: lorem.sentence
-        creditor:
-          description: Creditor of this transfer
-          $ref: '#/components/schemas/Contact'
-        debtor:
-          description: Debtor of this transfer
-          $ref: '#/components/schemas/Contact'
-        createdAt:
-          type: string
-          format: iso8601
-          description: Date and time of the transfer creation
-          example: '2020-01-01T00:00:00Z'
-          x-faker: date.past
-    CompanyVATNumber:
-      type: string
-      description: VAT number of the company, full european format
-      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
-      example: IT12345678901
-      x-faker: finance.vat
-    PaginatedResult:
-      type: object
-      properties:
-        page:
-          type: integer
-          description: Current page number
-        pageSize:
-          type: integer
-          description: Number of items per page
-        total:
-          type: integer
-          description: Total number of items
-        items:
-          type: array
-          description: List of items
-          items: {}
-    Fingerprint:
-      type: string
-      description: Fingerprint of the document
-      example: d41d8cd98f00b204e9800998ecf8427e
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
   responses:
-    NotFound:
-      description: The requested resource was not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Invoice not found
-            required:
-            - statusCode
-            - requestID
-            - message
     InternalServerError:
       description: Server encountered an unexpected condition that prevented it from fulfilling the request
       content:
@@ -380,6 +261,25 @@ components:
                 type: string
                 description: Error message
                 example: You must provide a valid access token
+            required:
+            - statusCode
+            - requestID
+            - message
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
             required:
             - statusCode
             - requestID
@@ -441,6 +341,106 @@ components:
             - statusCode
             - requestID
             - message
+  schemas:
+    Contact:
+      type: object
+      properties:
+        fullName:
+          description: Full name of the contact, contains the concatenation of the name and surname of a consumer, or the name of a company.
+          oneOf:
+          - type: string
+            description: Full name of the consumer
+            example: Mario Rossi
+            x-faker: person.fullName
+          - type: string
+            description: Company name
+            example: Illustrious Company S.p.A.
+            x-faker: company.companyName
+        fullVat:
+          type: string
+          description: 'VAT number of the company in full european format or national ID of the consumer '
+          oneOf:
+          - $ref: '#/components/schemas/ConsumerNationalID'
+          - $ref: '#/components/schemas/CompanyVATNumber'
+        type:
+          type: string
+          enum:
+          - consumer
+          - company
+          description: Type of the contact
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
+    RequestID:
+      type: string
+      description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
+      format: uuid
+      x-faker: random.uuid
+    ConsumerNationalID:
+      type: string
+      description: National ID of the consumer, currently only italian format is supported
+      pattern: /^([A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z])$
+      example: RSSMRA80A01H501T
+    CompanyVATNumber:
+      type: string
+      description: VAT number of the company, full european format
+      pattern: /^((AT)(U\d{8})|(BE)(0\d{9})|(BG)(\d{9,10})|(CY)(\d{8}[LX])|(CZ)(\d{8,10})|(DE)(\d{9})|(DK)(\d{8})|(EE)(\d{9})|(EL|GR)(\d{9})|(ES)([\dA-Z]\d{7}[\dA-Z])|(FI)(\d{8})|(FR)([\dA-Z]{2}\d{9})|(HU)(\d{8})|(IE)(\d{7}[A-Z]{2})|(IT)(\d{11})|(LT)(\d{9}|\d{12})|(LU)(\d{8})|(LV)(\d{11})|(MT)(\d{8})|(NL)(\d{9}(B\d{2}|BO2))|(PL)(\d{10})|(PT)(\d{9})|(RO)(\d{2,10})|(SE)(\d{12})|(SI)(\d{8})|(SK)(\d{10}))$
+      example: IT12345678901
+      x-faker: finance.vat
+    Transfer:
+      type: object
+      description: 'Kind of document that allow clients to manage payment requests with low constraints. <br> Clients can use transfers to fast prototyping payment initiation use cases or to avoid specific document''s lifecycle managment. <br><b>Note: </b> In order to use transfers in production, a more in-depth due diligence is required.'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the transfer
+          x-faker: random.uuid
+        fingerprint:
+          $ref: '#/components/schemas/Fingerprint'
+        amount:
+          type: number
+          description: Amount of the transfer
+          example: 100.34
+          x-faker: finance.amount
+        remittance:
+          type: string
+          description: Remittance information of the transfer
+          example: Payment for invoice 123
+          x-faker: lorem.sentence
+        creditor:
+          description: Creditor of this transfer
+          $ref: '#/components/schemas/Contact'
+        debtor:
+          description: Debtor of this transfer
+          $ref: '#/components/schemas/Contact'
+        createdAt:
+          type: string
+          format: iso8601
+          description: Date and time of the transfer creation
+          example: '2020-01-01T00:00:00Z'
+          x-faker: date.past
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
+    Fingerprint:
+      type: string
+      description: Fingerprint of the document
+      example: d41d8cd98f00b204e9800998ecf8427e
   securitySchemes:
     oAuth2:
       type: oauth2

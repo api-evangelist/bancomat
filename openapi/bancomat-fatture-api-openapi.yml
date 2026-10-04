@@ -1108,19 +1108,24 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    NewItem:
+    FrequencyEnum:
+      enum:
+      - monthly
+      type: string
+    Item:
       properties:
         amount:
-          description: Numero di unità dell'oggetto
           example: '123.45'
           format: double
           type: number
         description:
-          description: Descrizione dell'oggetto del documento
           example: string
           type: string
+        id:
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
         quantity:
-          description: Quantità dell'oggetto
           example: '123.45'
           format: double
           type: number
@@ -1129,49 +1134,182 @@ components:
       - quantity
       - amount
       type: object
-    ErrorDTO:
-      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+    PaidOutsideFlowPayTermList:
+      items:
+        $ref: '#/components/schemas/PaidOutsideFlowPayTerm'
+      type: array
+    PaidOutsideFlowPayTerm:
+      items:
+        $ref: '#/components/schemas/PaidOutsideFlowPayTerm'
+      type: array
+    InvoicePreference:
       properties:
-        code:
-          description: Codice errore
-          example: '12345678'
-          format: int64
-          type: integer
-        errorDescription:
-          description: Descrizione errore
+        incomingAccount:
+          description: Account di default sul quale incassare le fatture
+          properties:
+            bankID:
+              example: string
+              type: string
+            currency:
+              example: EUR
+              type: string
+            iban:
+              example: IT59Q0300203280162876621571
+              type: string
+          required:
+          - iban
+          - currency
+          - bankID
+          type: object
+        outgoingAccount:
+          description: Account di default dal quale pagare le fatture
+          properties:
+            bankID:
+              example: string
+              type: string
+            currency:
+              example: EUR
+              type: string
+            iban:
+              example: IT59Q0300203280162876621571
+              type: string
+          required:
+          - iban
+          - currency
+          - bankID
+          type: object
+        warnings:
+          description: Identificativi dei messaggi silenziati
+          items:
+            example: string
+            type: string
+          type: array
+      type: object
+    NewTerm:
+      properties:
+        amount:
+          description: Importo del termine di pagamento viene controllato che il valore abbia al massimo due cifre decimali
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Descrizione del termine di pagamento
           example: string
           type: string
-        errorURI:
-          description: URI dell'errore se presente
+        expire:
+          description: Data di scadenza del termine di pagamento. Indica la data nel quale il termine di pagamento deve essere incassato
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        information:
+          description: Causale del termine di pagamento
           example: string
           type: string
-        expectedType:
-          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+        method:
+          description: Indica la tipologia di pagamento scelta per il termine
           example: string
           type: string
-        field:
-          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
-          example: string
-          type: string
-        requestID:
-          description: ID della richiesta da comunicare per poter fornire un supporto
-          example: string
-          type: string
-        service:
-          description: ID interno del servizio
-          example: '12345678'
-          format: int64
-          type: integer
-        statusCode:
-          description: Codice di stato HTTP
-          example: '12345678'
-          format: int64
-          type: integer
+        recurringInfo:
+          properties:
+            executionRule:
+              $ref: '#/components/schemas/ExecutionRule'
+            frequency:
+              $ref: '#/components/schemas/FrequencyEnum'
+            installments:
+              example: '12345678'
+              format: int64
+              type: integer
+          required:
+          - frequency
+          - installments
+          type: object
       required:
-      - service
-      - code
-      - errorDescription
-      - statusCode
+      - expire
+      - amount
+      - description
+      - information
+      type: object
+    NewInvoice:
+      properties:
+        attachments:
+          description: Allegati al documento
+          items:
+            $ref: '#/components/schemas/Attachment'
+          type: array
+        currency:
+          description: Valuta del documento (e.g. EUR)
+          example: EUR
+          type: string
+        date:
+          description: Data di emissione del documento
+          example: '2020-03-03T17:32:28Z'
+          format: date-time
+          type: string
+        items:
+          description: Lista di oggetti a cui il documento fa riferimento
+          items:
+            $ref: '#/components/schemas/NewItem'
+          type: array
+        number:
+          description: Numero del documento
+          example: string
+          type: string
+        recipientIban:
+          description: IBAN del ricevente documento e quindi del debitore
+          example: string
+          type: string
+        recipientVat:
+          description: Codice fiscale/Partita iva del ricevente compreso il country code (e.g. IT12345678901)
+          example: string
+          type: string
+        senderIban:
+          description: 'IBAN del mittente del documento e quindi creditore,
+
+            tale valore deve essere valorizzato prima di poter generare un link di checkout. Il sistema lo valorizza automaticamente nel caso l''azienda abbia definito una preferenza per l''incasso sulla nostra piattaforma.
+
+            Altrimenti è necessario che tale valore venga aggiunto dal client.'
+          example: string
+          type: string
+        senderVat:
+          description: Codice fiscale/Partita iva del mittente compreso il country code (e.g. IT12345678901)
+          example: string
+          type: string
+        terms:
+          description: Lista di termini di pagamento per il documento
+          items:
+            $ref: '#/components/schemas/NewTerm'
+          type: array
+      required:
+      - senderVat
+      - recipientVat
+      - terms
+      - items
+      - date
+      - number
+      - currency
+      type: object
+    Attachment:
+      properties:
+        file:
+          description: Contenuto dell'allegato codificato in base64
+          example: null
+          format: binary
+          type: string
+        id:
+          description: Identificativo univoco dell'allegato
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        name:
+          description: Nome dell'allegato
+          example: allegato.pdf
+          type: string
+        type:
+          example: pdf
+          type: string
+      required:
+      - name
+      - type
       type: object
     EditTerm:
       properties:
@@ -1220,201 +1358,6 @@ components:
       required:
       - id
       type: object
-    Term:
-      properties:
-        amount:
-          description: Importo del termine di pagamento
-          example: '123.45'
-          format: double
-          type: number
-        description:
-          description: Descrizione del termine di pagamento
-          example: string
-          type: string
-        expire:
-          description: Data di scadenza del termine di pagamento
-          example: '2020-03-03T17:32:28Z'
-          format: date-time
-          type: string
-        fingerprint:
-          description: 'Identificativo univoco di un documento calcolato come `HEX(SHA256([numero][anno][partita_iva_mittente]))`
-
-
-            Come esempio: `[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49`'
-          example: d41d8cd98f00b204e9800998ecf8427e
-          type: string
-        id:
-          description: Identificativo univoco del termine di pagamento
-          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
-          format: uuid
-          type: string
-        information:
-          description: Causale del termine di pagamento
-          example: string
-          type: string
-        method:
-          description: Indica la tipologia di pagamento scelta per il termine
-          example: string
-          type: string
-        recurringInfo:
-          properties:
-            executionRule:
-              $ref: '#/components/schemas/ExecutionRule'
-            frequency:
-              $ref: '#/components/schemas/FrequencyEnum'
-            installments:
-              example: '12345678'
-              format: int64
-              type: integer
-          required:
-          - frequency
-          - installments
-          type: object
-        useFlowpay:
-          example: 'true'
-          type: boolean
-      required:
-      - expire
-      - amount
-      - description
-      - information
-      type: object
-    Attachment:
-      properties:
-        file:
-          description: Contenuto dell'allegato codificato in base64
-          example: null
-          format: binary
-          type: string
-        id:
-          description: Identificativo univoco dell'allegato
-          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
-          format: uuid
-          type: string
-        name:
-          description: Nome dell'allegato
-          example: allegato.pdf
-          type: string
-        type:
-          example: pdf
-          type: string
-      required:
-      - name
-      - type
-      type: object
-    NewTerm:
-      properties:
-        amount:
-          description: Importo del termine di pagamento viene controllato che il valore abbia al massimo due cifre decimali
-          example: '123.45'
-          format: double
-          type: number
-        description:
-          description: Descrizione del termine di pagamento
-          example: string
-          type: string
-        expire:
-          description: Data di scadenza del termine di pagamento. Indica la data nel quale il termine di pagamento deve essere incassato
-          example: '2020-03-03T17:32:28Z'
-          format: date-time
-          type: string
-        information:
-          description: Causale del termine di pagamento
-          example: string
-          type: string
-        method:
-          description: Indica la tipologia di pagamento scelta per il termine
-          example: string
-          type: string
-        recurringInfo:
-          properties:
-            executionRule:
-              $ref: '#/components/schemas/ExecutionRule'
-            frequency:
-              $ref: '#/components/schemas/FrequencyEnum'
-            installments:
-              example: '12345678'
-              format: int64
-              type: integer
-          required:
-          - frequency
-          - installments
-          type: object
-      required:
-      - expire
-      - amount
-      - description
-      - information
-      type: object
-    InvoicePreference:
-      properties:
-        incomingAccount:
-          description: Account di default sul quale incassare le fatture
-          properties:
-            bankID:
-              example: string
-              type: string
-            currency:
-              example: EUR
-              type: string
-            iban:
-              example: IT59Q0300203280162876621571
-              type: string
-          required:
-          - iban
-          - currency
-          - bankID
-          type: object
-        outgoingAccount:
-          description: Account di default dal quale pagare le fatture
-          properties:
-            bankID:
-              example: string
-              type: string
-            currency:
-              example: EUR
-              type: string
-            iban:
-              example: IT59Q0300203280162876621571
-              type: string
-          required:
-          - iban
-          - currency
-          - bankID
-          type: object
-        warnings:
-          description: Identificativi dei messaggi silenziati
-          items:
-            example: string
-            type: string
-          type: array
-      type: object
-    Item:
-      properties:
-        amount:
-          example: '123.45'
-          format: double
-          type: number
-        description:
-          example: string
-          type: string
-        id:
-          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
-          format: uuid
-          type: string
-        quantity:
-          example: '123.45'
-          format: double
-          type: number
-      required:
-      - description
-      - quantity
-      - amount
-      type: object
-    Invoices:
-      items:
-        $ref: '#/components/schemas/Invoice'
-      type: array
     Invoice:
       properties:
         amount:
@@ -1512,25 +1455,76 @@ components:
       - number
       - currency
       type: object
-    XML:
-      description: 'Fattura elettronica in formato standard codificata in base64 oppure direttamente nel formato xml
-
-        La documentazione sul formato della fattura elettronica si puo'' trovare a https://www.fatturapa.gov.it/it/norme-e-regole/documentazione-fattura-elettronica/formato-fatturapa/'
-      properties: {}
-      type: object
-    PaidOutsideFlowPayTerm:
-      items:
-        $ref: '#/components/schemas/PaidOutsideFlowPayTerm'
-      type: array
     ExecutionRule:
       enum:
       - following
       - preceeding
       type: string
-    FrequencyEnum:
-      enum:
-      - monthly
-      type: string
+    NewItem:
+      properties:
+        amount:
+          description: Numero di unità dell'oggetto
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Descrizione dell'oggetto del documento
+          example: string
+          type: string
+        quantity:
+          description: Quantità dell'oggetto
+          example: '123.45'
+          format: double
+          type: number
+      required:
+      - description
+      - quantity
+      - amount
+      type: object
+    ErrorDTO:
+      description: "Formato errore standard\n    \nLista dei possibili codici di errore:\n\n| codice | descrizione |\n| ------ | ----------- |\n| 401 | Errore generale di codifica |\n| 402 | Campo necessario mancante |\n| 403 | Valore di un campo del tipo sbagliato |\n| 404 | Valore di un campo assente |\n| 405 | Errore di codifica sconosciuto |\n| 406 | Null pointer exception |\n| 407 | Campo necessario mancante |\n| 408 | Errore di connessione |\n| 409 | Errore di input output |\n| 410 - 428 | Errore generico con il database |\n| 429, 432, 433 | Errore di logica con il database |\n| 430 | Campo invalido |\n| 431 | Campo assente |\n| 434 | Risultati non trovati |\n| 500 | Errore generico |\n| 2000 | Tenant non specificato |\n| 2001 | Non autorizzato ad operare su questa risorsa |\n| 2002 | Impossibile eliminare il documento poiché sono presente dei pagamenti collegati |\n| 2003 | Non autorizzato a creare la risorsa |\n| 2004 | Non autorizzato ad operare su questa risorsa |\n| 2005 | Si sta provando a modificare un termine non di questo documento |\n| 2006 | Codice istant scaduto |\n| 2007 | Non autorizzato generare un codice instant |\n| 2008 | Codice instant inesistente o non autorizzato a leggerlo |\n| 2012 | Si sta provando a caricare un documento già esistente |\n| 3001 | Tenant non specificato |\n| 4001 | Tenant non specificato |\n| 5001 | Corpo richiesta mancante |\n| 5002 | Corpo richiesta non valido |\n| 5003 | Vatcode del ricevente fattura mancante |\n| 6001 | Tenant non specificato |\n| 6002 | Ricevuta non trovata |\n| 8005 | Non puoi modificare questo conto |\n| 8010 | Troppi risultati ottenuti |\n| 11001 | Non autorizzato ad accedere a questa risorsa |\n| 11002 | Si sta provando a caricare un documento già esistente |\n| 13001 | Azienda non trovata |\n| 13003 | vatcode non è valido |"
+      properties:
+        code:
+          description: Codice errore
+          example: '12345678'
+          format: int64
+          type: integer
+        errorDescription:
+          description: Descrizione errore
+          example: string
+          type: string
+        errorURI:
+          description: URI dell'errore se presente
+          example: string
+          type: string
+        expectedType:
+          description: Nel caso di un errore di codifica indica il tipo di dato che non si è riuscito a decodificare
+          example: string
+          type: string
+        field:
+          description: Nel caso di un errore di codifica indica il campo che non si è riuscito a decodificare
+          example: string
+          type: string
+        requestID:
+          description: ID della richiesta da comunicare per poter fornire un supporto
+          example: string
+          type: string
+        service:
+          description: ID interno del servizio
+          example: '12345678'
+          format: int64
+          type: integer
+        statusCode:
+          description: Codice di stato HTTP
+          example: '12345678'
+          format: int64
+          type: integer
+      required:
+      - service
+      - code
+      - errorDescription
+      - statusCode
+      type: object
     EditInvoiceRequest:
       properties:
         creditorIban:
@@ -1549,68 +1543,74 @@ components:
             $ref: '#/components/schemas/EditTerm'
           type: array
       type: object
-    PaidOutsideFlowPayTermList:
+    XML:
+      description: 'Fattura elettronica in formato standard codificata in base64 oppure direttamente nel formato xml
+
+        La documentazione sul formato della fattura elettronica si puo'' trovare a https://www.fatturapa.gov.it/it/norme-e-regole/documentazione-fattura-elettronica/formato-fatturapa/'
+      properties: {}
+      type: object
+    Invoices:
       items:
-        $ref: '#/components/schemas/PaidOutsideFlowPayTerm'
+        $ref: '#/components/schemas/Invoice'
       type: array
-    NewInvoice:
+    Term:
       properties:
-        attachments:
-          description: Allegati al documento
-          items:
-            $ref: '#/components/schemas/Attachment'
-          type: array
-        currency:
-          description: Valuta del documento (e.g. EUR)
-          example: EUR
+        amount:
+          description: Importo del termine di pagamento
+          example: '123.45'
+          format: double
+          type: number
+        description:
+          description: Descrizione del termine di pagamento
+          example: string
           type: string
-        date:
-          description: Data di emissione del documento
+        expire:
+          description: Data di scadenza del termine di pagamento
           example: '2020-03-03T17:32:28Z'
           format: date-time
           type: string
-        items:
-          description: Lista di oggetti a cui il documento fa riferimento
-          items:
-            $ref: '#/components/schemas/NewItem'
-          type: array
-        number:
-          description: Numero del documento
-          example: string
-          type: string
-        recipientIban:
-          description: IBAN del ricevente documento e quindi del debitore
-          example: string
-          type: string
-        recipientVat:
-          description: Codice fiscale/Partita iva del ricevente compreso il country code (e.g. IT12345678901)
-          example: string
-          type: string
-        senderIban:
-          description: 'IBAN del mittente del documento e quindi creditore,
+        fingerprint:
+          description: 'Identificativo univoco di un documento calcolato come `HEX(SHA256([numero][anno][partita_iva_mittente]))`
 
-            tale valore deve essere valorizzato prima di poter generare un link di checkout. Il sistema lo valorizza automaticamente nel caso l''azienda abbia definito una preferenza per l''incasso sulla nostra piattaforma.
 
-            Altrimenti è necessario che tale valore venga aggiunto dal client.'
+            Come esempio: `[1][2021][06968160488] -> fe92051fc0d735f31f6e85ae8515838e6540ba994ede74c5cb2f19599e723d49`'
+          example: d41d8cd98f00b204e9800998ecf8427e
+          type: string
+        id:
+          description: Identificativo univoco del termine di pagamento
+          example: cb15b52a-91db-41ed-81a0-764a0cc4795d
+          format: uuid
+          type: string
+        information:
+          description: Causale del termine di pagamento
           example: string
           type: string
-        senderVat:
-          description: Codice fiscale/Partita iva del mittente compreso il country code (e.g. IT12345678901)
+        method:
+          description: Indica la tipologia di pagamento scelta per il termine
           example: string
           type: string
-        terms:
-          description: Lista di termini di pagamento per il documento
-          items:
-            $ref: '#/components/schemas/NewTerm'
-          type: array
+        recurringInfo:
+          properties:
+            executionRule:
+              $ref: '#/components/schemas/ExecutionRule'
+            frequency:
+              $ref: '#/components/schemas/FrequencyEnum'
+            installments:
+              example: '12345678'
+              format: int64
+              type: integer
+          required:
+          - frequency
+          - installments
+          type: object
+        useFlowpay:
+          example: 'true'
+          type: boolean
       required:
-      - senderVat
-      - recipientVat
-      - terms
-      - items
-      - date
-      - number
-      - currency
+      - expire
+      - amount
+      - description
+      - information
       type: object
   securitySchemes:
     ThirdPartyAuthorizationCode:
