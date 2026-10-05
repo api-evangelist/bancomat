@@ -1,0 +1,12 @@
+{
+ "url": "https://gist.githubusercontent.com/RaesakAce/be1ea786e0949c700d90099c8504f03a/raw/f4cc83791e32b45957a364b0f2466f8895422d8b/fp-docs.json",
+ "requested_url": "https://gist.githubusercontent.com/RaesakAce/be1ea786e0949c700d90099c8504f03a/raw/f4cc83791e32b45957a364b0f2466f8895422d8b/fp-docs.json",
+ "status": 200,
+ "content_type": "text/plain; charset=utf-8",
+ "bytes": 470586,
+ "sha256": "634e1e0a5b78ad9daf9b5ea8ab7f376445007b18581cb21b05e0bc562daa008a",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
