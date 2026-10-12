@@ -1,0 +1,1939 @@
+generated: '2026-10-12'
+method: generated
+source: openapi/bancomat-accounts-api-openapi.yml, openapi/bancomat-ais-service-api-openapi.yml,
+  openapi/bancomat-authentication-api-openapi.yml, openapi/bancomat-banche-api-openapi.yml,
+  openapi/bancomat-banks-api-openapi.yml, openapi/bancomat-bulk-api-openapi.yml, openapi/bancomat-chain-api-openapi.yml,
+  openapi/bancomat-checkout-api-openapi.yml, openapi/bancomat-consent-api-openapi.yml, openapi/bancomat-construction-api-openapi.yml,
+  openapi/bancomat-constructions-api-openapi.yml, openapi/bancomat-conti-api-openapi.yml, openapi/bancomat-documents-api-openapi.yml,
+  openapi/bancomat-fatture-api-openapi.yml, openapi/bancomat-fee-api-openapi.yml, openapi/bancomat-invoices-api-openapi.yml,
+  openapi/bancomat-kyc-api-openapi.yml, openapi/bancomat-pagamenti-api-openapi.yml, openapi/bancomat-pagopa-api-openapi.yml,
+  openapi/bancomat-payments-api-openapi.yml, openapi/bancomat-saldo-api-openapi.yml, openapi/bancomat-sessioni-di-checkout-api-openapi.yml,
+  openapi/bancomat-stipendi-api-openapi.yml, openapi/bancomat-transactions-api-openapi.yml,
+  openapi/bancomat-transazioni-api-openapi.yml, openapi/bancomat-transfer-api-openapi.yml, openapi/bancomat-transfers-api-openapi.yml,
+  openapi/bancomat-webhook-api-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 131
+  by_action_class:
+    connected: 73
+    acting: 58
+  by_consequence:
+    read: 73
+    write: 27
+    physical: 31
+  human_in_the_loop_required: 0
+operations:
+- path: /accounts
+  method: get
+  operationId: getAccounts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - accounts:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /accounts
+  method: post
+  operationId: createAisConsentSession
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - accounts:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /accounts/{accountID}
+  method: get
+  operationId: getAccount
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - accounts:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /ais
+  method: post
+  operationId: postAis
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - account:read
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /ais/check-iban/{iban}/{vatCode}
+  method: get
+  operationId: getAisCheckIbanByIbanByVatCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /ais/{aisSessionID}
+  method: get
+  operationId: getAisByAisSessionID
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oauth/token
+  method: post
+  operationId: GetAccessToken
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oauth/token/info
+  method: post
+  operationId: GetTokenInfo
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /banks
+  method: get
+  operationId: getBanks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /banks/{flowpayID}
+  method: get
+  operationId: getBanksByFlowpayID
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /banks
+  method: get
+  operationId: getBanks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /banks/{id}
+  method: get
+  operationId: getBank
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/bulk
+  method: get
+  operationId: getByTenantIDBulk
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/bulk
+  method: post
+  operationId: postByTenantIDBulk
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/bulk/{fingerprint}
+  method: delete
+  operationId: deleteByTenantIDBulkByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/bulk/{fingerprint}
+  method: get
+  operationId: getByTenantIDBulkByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /bulk
+  method: post
+  operationId: createBulkPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /bulk
+  method: get
+  operationId: listBulkPayments
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /bulk/{fingerprint}
+  method: get
+  operationId: getBulkPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /bulk/{fingerprint}
+  method: delete
+  operationId: deleteBulkPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/chain
+  method: get
+  operationId: getByTenantIDChain
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/chain
+  method: post
+  operationId: postByTenantIDChain
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/chain/{fingerprint}
+  method: get
+  operationId: getByTenantIDChainByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /chain
+  method: post
+  operationId: createChainPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /chain
+  method: get
+  operationId: listChainPayments
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /chain/{fingerprint}
+  method: get
+  operationId: getChainPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /checkout
+  method: post
+  operationId: createCheckout
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /checkout/{code}
+  method: get
+  operationId: getCheckout
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - checkout:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /checkout/{code}
+  method: delete
+  operationId: deleteCheckout
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/consents
+  method: get
+  operationId: getByTenantIDConsents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/consents
+  method: post
+  operationId: postByTenantIDConsents
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/contracts
+  method: post
+  operationId: addSiteWorker
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - construction:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/contracts
+  method: get
+  operationId: getWorkers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - construction:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /constructions/contracts/{identifier}
+  method: patch
+  operationId: acceptSiteAssignment
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - construction:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/contracts/{identifier}
+  method: delete
+  operationId: withdrawFromSite
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - construction:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/sites
+  method: post
+  operationId: createConstructionSite
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - authorization_code
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/sites
+  method: get
+  operationId: getConstructionSites
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - construction:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /constructions/sites/{identifier}
+  method: get
+  operationId: getConstructionSite
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - construction:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /constructions/sites/{identifier}/quote
+  method: post
+  operationId: createQuote
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - construction:write
+    - wallet:construction
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/sites/{identifier}/quote
+  method: get
+  operationId: getQuotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - construction:read
+    - wallet:construction
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /constructions/progress
+  method: post
+  operationId: registerWorkProgress
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - construction:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /constructions/progress
+  method: get
+  operationId: getWorkProgress
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - construction:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /constructions/progress/{identifier}
+  method: get
+  operationId: getWorkProgressDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - construction:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /constructions/sites/{identifier}/cashout
+  method: post
+  operationId: cashout
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - construction:write
+    - wallet:construction
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/accounts
+  method: get
+  operationId: getByTenantIDAccounts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /creditNotes
+  method: post
+  operationId: createCreditNote
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - invoice:read
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /creditNotes
+  method: get
+  operationId: getCreditNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /creditNotes/{fingerprint}
+  method: get
+  operationId: getCreditNote
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /creditNotes/{fingerprint}
+  method: delete
+  operationId: deleteCreditNote
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices
+  method: post
+  operationId: createInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoices:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices
+  method: get
+  operationId: getInvoices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoices:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{fingerprint}
+  method: get
+  operationId: getInvoice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoices:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa
+  method: post
+  operationId: pagopaPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - pagopa:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /pagopa
+  method: get
+  operationId: getPagopaList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa/{fingerprint}
+  method: get
+  operationId: getPagopaDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa/{fingerprint}/receipt
+  method: get
+  operationId: getPagopaReceipt
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /proforma
+  method: post
+  operationId: createProformaInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /proforma
+  method: get
+  operationId: getProformaInvoices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /proforma/{fingerprint}
+  method: get
+  operationId: getProformaInvoice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /proforma/{fingerprint}
+  method: delete
+  operationId: deleteProformaInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /transfers
+  method: post
+  operationId: createTransfer
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - transfers:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/invoices
+  method: get
+  operationId: getByTenantIDInvoices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/invoices
+  method: post
+  operationId: postByTenantIDInvoices
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/invoices/preferences
+  method: get
+  operationId: getByTenantIDInvoicesPreferences
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/invoices/preferences
+  method: put
+  operationId: putByTenantIDInvoicesPreferences
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/invoices/{fingerprint}
+  method: delete
+  operationId: deleteByTenantIDInvoicesByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/invoices/{fingerprint}
+  method: get
+  operationId: getByTenantIDInvoicesByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/invoices/{fingerprint}
+  method: patch
+  operationId: patchByTenantIDInvoicesByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/invoices/{fingerprint}
+  method: put
+  operationId: putByTenantIDInvoicesByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /fee
+  method: get
+  operationId: getFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - fees:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /fee/rules
+  method: get
+  operationId: list_fee_rules
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /fee/rules/{kind}/{fingerprint}
+  method: get
+  operationId: getFeeRules
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /fee/rules/{kind}/{fingerprint}/{payer}
+  method: get
+  operationId: getFeeRuleForPayer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /creditNotes
+  method: post
+  operationId: createCreditNote
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:read
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /creditNotes
+  method: get
+  operationId: getCreditNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /creditNotes/{fingerprint}
+  method: get
+  operationId: getCreditNote
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /creditNotes/{fingerprint}
+  method: delete
+  operationId: deleteCreditNote
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices
+  method: post
+  operationId: createInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoices:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices
+  method: get
+  operationId: getInvoices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoices:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{fingerprint}
+  method: get
+  operationId: getInvoice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoices:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /proforma
+  method: post
+  operationId: createProformaInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /proforma
+  method: get
+  operationId: getProformaInvoices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /proforma/{fingerprint}
+  method: get
+  operationId: getProformaInvoice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - invoice:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /proforma/{fingerprint}
+  method: delete
+  operationId: deleteProformaInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - invoice:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /kyc
+  method: post
+  operationId: startKyc
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - kyc
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /kyc/{identifier}
+  method: get
+  operationId: getKycStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - kyc
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/payments/{service}/{fingerprint}
+  method: get
+  operationId: getByTenantIDPaymentsByServiceByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - payment:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa
+  method: get
+  operationId: getPagopa
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa
+  method: post
+  operationId: postPagopa
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - pagopa
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /pagopa/{fingerprint}
+  method: get
+  operationId: getPagopaByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa/{fingerprint}
+  method: patch
+  operationId: patchPagopaByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - pagopa
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /pagopa/receipts/:id
+  method: get
+  operationId: getPagopaReceipts:id
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pagopa/{fingerprint}/receipt
+  method: get
+  operationId: getPagopaReceipt
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /payments
+  method: get
+  operationId: getPayments
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - payments:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /payments/{paymentID}
+  method: get
+  operationId: getPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - payments:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/balances
+  method: get
+  operationId: getByTenantIDBalances
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/balances/last
+  method: get
+  operationId: getByTenantIDBalancesLast
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/checkout
+  method: post
+  operationId: postByTenantIDCheckout
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - pagopa
+    - transfer:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/checkout/intents
+  method: post
+  operationId: postByTenantIDCheckoutIntents
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - payment:read
+    - transfer:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/checkout/{code}
+  method: delete
+  operationId: deleteByTenantIDCheckoutByCode
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - pagopa
+    - transfer:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/checkout/{code}/preferences
+  method: put
+  operationId: putByTenantIDCheckoutByCodePreferences
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - pagopa
+    - transfer:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/checkout/{type}/{fingerprint}
+  method: get
+  operationId: getByTenantIDCheckoutByTypeByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - pagopa
+    - transfer:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/salaries
+  method: get
+  operationId: getByTenantIDSalaries
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - salary:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/salaries
+  method: patch
+  operationId: patchByTenantIDSalaries
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - salary:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/salaries
+  method: post
+  operationId: postByTenantIDSalaries
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - salary:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/salaries/{fingerprint}
+  method: delete
+  operationId: deleteByTenantIDSalariesByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - salary:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/salaries/{fingerprint}
+  method: get
+  operationId: getByTenantIDSalariesByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - salary:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/salaries/{fingerprint}
+  method: patch
+  operationId: patchByTenantIDSalariesByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - salary:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /transactions
+  method: get
+  operationId: getTransactions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - transactions:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /transactions/{transactionID}
+  method: get
+  operationId: getTransaction
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - transactions:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/transactions
+  method: get
+  operationId: getByTenantIDTransactions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/transactions/{transactionID}
+  method: get
+  operationId: getByTenantIDTransactionsByTransactionID
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/transfers
+  method: get
+  operationId: getByTenantIDTransfers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - transfers:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/transfers
+  method: post
+  operationId: postByTenantIDTransfers
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - transfers:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/transfers/plan
+  method: post
+  operationId: postByTenantIDTransfersPlan
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - transfers:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/transfers/{fingerprint}
+  method: delete
+  operationId: deleteByTenantIDTransfersByFingerprint
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - transfers:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/transfers/{fingerprint}
+  method: get
+  operationId: getByTenantIDTransfersByFingerprint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - transfers:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /transfers
+  method: get
+  operationId: getTransfers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - transfers:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /transfers
+  method: post
+  operationId: createTransfer
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - transfers:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /transfers/{transferID}
+  method: get
+  operationId: getTransfer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - transfers:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /transfers/{transferID}
+  method: delete
+  operationId: deleteTransfer
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - transfers:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhooks
+  method: get
+  operationId: getWebhooks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhooks/types
+  method: get
+  operationId: getWebhooksTypes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhooks/{id}
+  method: delete
+  operationId: deleteWebhooksById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhooks/{id}
+  method: get
+  operationId: getWebhooksById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhooks/{id}/renew
+  method: put
+  operationId: putWebhooksByIdRenew
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/webhooks
+  method: get
+  operationId: getByTenantIDWebhooks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/webhooks
+  method: post
+  operationId: postByTenantIDWebhooks
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/webhooks/{id}
+  method: delete
+  operationId: deleteByTenantIDWebhooksById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenantID}/webhooks/{id}
+  method: get
+  operationId: getByTenantIDWebhooksById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenantID}/webhooks/{id}
+  method: put
+  operationId: putByTenantIDWebhooksById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-bulk-schema.json",
+  "title": "Bulk",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-bulk-api-openapi.yml#/components/schemas/Bulk",
+  "properties": {
+    "amount": {
+      "description": "Importo totale del bulk",
+      "format": "double",
+      "type": "number"
+    },
+    "documents": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/Fingerprint"
+        },
+        "type": "array"
+      },
+      "description": "Dizionario dei documenti relativi a bulk, con chiave il tipo di documento e con valore le fingerprint dei documenti",
+      "type": "object"
+    },
+    "fingerprint": {
+      "$ref": "#/$defs/Fingerprint"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "Fingerprint": {
+      "description": "Fingerprint del documento",
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-paid-outside-flow-pay-term-list-schema.json",
+  "title": "PaidOutsideFlowPayTermList",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fatture-api-openapi.yml#/components/schemas/PaidOutsideFlowPayTermList",
+  "items": {
+    "$ref": "#/$defs/PaidOutsideFlowPayTerm"
+  },
+  "type": "array",
+  "$defs": {
+    "PaidOutsideFlowPayTerm": {
+      "items": {
+        "$ref": "#/$defs/PaidOutsideFlowPayTerm"
+      },
+      "type": "array"
+    }
+  }
+}

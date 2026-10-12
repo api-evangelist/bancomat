@@ -1,7 +1,8 @@
 ---
 generated: '2026-09-17'
 method: generated
-name: Connect a tenant's bank account (AIS consent) and read balances
+name: bancomat-flowpay-connect-bank-account
+title: Connect a tenant's bank account (AIS consent) and read balances
 description: Start a PSD2 account-information consent session for a tenant, redirect the user to their bank, then read the linked accounts and transactions — and keep the 90-day consent alive.
 api: openapi/bancomat-flowpay-api-v2-openapi.yml
 operations: [getBanks, createAisConsentSession, getAccounts, getAccount, getTransactions]

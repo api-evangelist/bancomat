@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-invoice-schema.json",
+  "title": "Invoice",
+  "description": "Document representing an invoice at any stage.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-documents-api-openapi.yml#/components/schemas/Invoice",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": "string",
+      "description": "Invoice number",
+      "x-faker": "finance.account"
+    },
+    "date": {
+      "type": "string",
+      "format": "iso8601",
+      "description": "Invoice date of issue",
+      "x-faker": "date.past"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Invoice amount",
+      "x-faker": "finance.amount"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Invoice currency",
+      "default": "EUR",
+      "x-faker": "finance.currencyCode"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "proforma",
+        "invoice",
+        "creditNote"
+      ],
+      "default": "invoice",
+      "description": "Invoice stage"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "b2b",
+        "b2c"
+      ],
+      "description": "Invoice relations with the debtor. <br> - `b2b`: invoice issued to a business<br> - `b2c`: invoice issued to a private person. <br> Note:. Invoice relations with Public Administrations are not directly supported by FlowPay. However, you can use the `b2b` type to represent the invoice issued to a Public Administration."
+    },
+    "creditor": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the creditor",
+      "x-faker": "datatype.uuid"
+    },
+    "debtor": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the debtor",
+      "x-faker": "datatype.uuid"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DocumentAttachment"
+      },
+      "description": "Attachments of the invoice"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DocumentItem"
+      },
+      "description": "Items of the invoice"
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DocumentTerm"
+      },
+      "description": "Terms of the invoice"
+    },
+    "invoice": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint of the invoice related to the proforma invoice or credit note, if any"
+    },
+    "proforma": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint of the proforma invoice related to the invoice, if any"
+    },
+    "creditNotes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Fingerprint"
+      },
+      "description": "Fingerprints of the credit notes related to the invoice, if any"
+    }
+  },
+  "required": [
+    "number",
+    "date",
+    "amount",
+    "currency",
+    "stage",
+    "type",
+    "creditor",
+    "debtor",
+    "terms"
+  ],
+  "$defs": {
+    "DocumentAttachment": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the attachment",
+          "x-faker": "system.fileName"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the attachment",
+          "x-faker": "lorem.sentence"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Identifier of the attachment",
+          "x-faker": "datatype.uuid"
+        }
+      },
+      "description": "Attachment of the document.",
+      "required": [
+        "name",
+        "id"
+      ]
+    },
+    "DocumentItem": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the item",
+          "x-faker": "lorem.sentence"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double",
+          "description": "Quantity of the item",
+          "x-faker": "random.number"
+        },
+        "measureUnit": {
+          "type": "string",
+          "description": "Measure unit of the item",
+          "maxLength": 10,
+          "x-faker": "commerce.productAdjective"
+        },
+        "unitPrice": {
+          "type": "number",
+          "format": "double",
+          "description": "Unit price of the item",
+          "x-faker": "finance.amount"
+        },
+        "tax": {
+          "type": "number",
+          "format": "double",
+          "description": "Tax rate of the item",
+          "x-faker": "finance.amount"
+        },
+        "discount": {
+          "type": "number",
+          "format": "double",
+          "description": "Discount rate of the item",
+          "x-faker": "finance.amount"
+        }
+      },
+      "description": "Billing item. This is used only for UX and utility purposes and will not be used for the payment process.",
+      "required": [
+        "description",
+        "quantity",
+        "unitPrice"
+      ]
+    },
+    "DocumentTerm": {
+      "type": "object",
+      "description": "A payment term of the document, it will be used to generate the payment schedule.",
+      "properties": {
+        "dueDate": {
+          "type": "string",
+          "format": "iso8601",
+          "description": "Due date of the payment",
+          "x-faker": "date.future"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "Amount to be paid",
+          "x-faker": "finance.amount"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency of the payment. <br> <b>Note: All payments must be in the same currency.</b>",
+          "default": "EUR",
+          "x-faker": "finance.currencyCode"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the payment. This will be shown to the customer when paying the invoice through the FlowPay checkout page.",
+          "x-faker": "lorem.sentence"
+        },
+        "remittance": {
+          "type": "string",
+          "description": "Remittance information. This will be shown to the customer during the payment process and will be included in the bank statement.<br> <b>Notes:</b> - This field is optional and will be automatically generated if not provided with the format: Invoice #<invoice_number> - <invoiceDate> - Remittance will also contain a FlowPay identifier",
+          "maxLength": 100,
+          "x-faker": "lorem.sentence"
+        }
+      },
+      "required": [
+        "dueDate",
+        "amount",
+        "currency"
+      ]
+    },
+    "Fingerprint": {
+      "type": "string",
+      "description": "Fingerprint of the document"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-web-hook-delete-request-schema.json",
+  "title": "WebHookDeleteRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-webhook-api-openapi.yml#/components/schemas/WebHookDeleteRequest",
+  "properties": {
+    "events": {
+      "description": "Lista di eventi da eliminare per tale webhook. Se non presente vengono eliminati tutti",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

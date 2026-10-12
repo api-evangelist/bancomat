@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-consent-dto-schema.json",
+  "title": "ConsentDTO",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-consent-api-openapi.yml#/components/schemas/ConsentDTO",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Id univoco del consenso"
+    },
+    "bankID": {
+      "type": "string",
+      "description": "Nome univoco della banca per la quale è stato concesso il consenso"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data nella quale il consenso finisce di valere"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data nella quale il consenso è stato creato"
+    },
+    "recurring": {
+      "type": "boolean",
+      "description": "Indica se il consenso è di tipo ricorrente oppure no"
+    },
+    "usableFor": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConsentType"
+      },
+      "description": "Indica per cosa questo consenso può essere usato (e.g. Lettura conti, saldo, transazioni)"
+    },
+    "userID": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "id",
+    "bankID",
+    "expiresAt",
+    "createdAt",
+    "recurring",
+    "usableFor"
+  ],
+  "$defs": {
+    "ConsentType": {
+      "type": "string",
+      "enum": [
+        "account",
+        "balance",
+        "transaction"
+      ],
+      "description": "Tipi di consenso disponibili: account, balance, transaction"
+    }
+  }
+}

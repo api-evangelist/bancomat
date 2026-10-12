@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-checkout-preferences-schema.json",
+  "title": "CheckoutPreferences",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-sessioni-di-checkout-api-openapi.yml#/components/schemas/CheckoutPreferences",
+  "type": "object",
+  "properties": {
+    "strict": {
+      "type": "boolean",
+      "default": false
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "paymentMethodID": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "connectorMethodID": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "allowedMethods": {
+      "description": "Lista di metodi di pagamento che il debitore puó selezionare, in caso non sia stato indicato un metodo di pagamento specifico",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CollectionMethodEnum"
+      },
+      "default": [
+        "sct",
+        "sctInst",
+        "card",
+        "ssd"
+      ]
+    },
+    "canEditRemittance": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "allowedMethods"
+  ],
+  "$defs": {
+    "CollectionMethodEnum": {
+      "type": "string",
+      "enum": [
+        "sct",
+        "sctInst",
+        "card",
+        "ssd"
+      ]
+    }
+  }
+}

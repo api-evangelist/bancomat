@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-construction-site-schema.json",
+  "title": "ConstructionSite",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-construction-api-openapi.yml#/components/schemas/ConstructionSite",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the construction site",
+      "x-faker": "datatype.uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the construction site",
+      "x-faker": "lorem.word"
+    },
+    "address": {
+      "$ref": "#/$defs/Address"
+    },
+    "initialCreditFingerprint": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint of the initial credit document, used to transfer money to the wallet"
+    },
+    "availableBalance": {}
+  },
+  "$defs": {
+    "Address": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "Name of the city where the property is located."
+        },
+        "street": {
+          "type": "string",
+          "description": "This field contains the name of the street where the property is located. It must include the name with a type (e.g., Avenue, Street, Road, etc.) but not the number or any other information."
+        },
+        "number": {
+          "type": "string",
+          "description": "This field refers to the numeric or alphanumeric value assigned to a property on a street."
+        },
+        "unitNumber": {
+          "type": "string",
+          "description": "his field is used when a single property has multiple units, such as apartments or office suites. It differentiates one unit from another within the same property."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Also known as ZIP code (or CAP in Italy)"
+        },
+        "province": {
+          "type": "string",
+          "description": "It refers to the name of the state or province where the property is located."
+        },
+        "country": {
+          "type": "string",
+          "description": "The name of the country where the property is located."
+        }
+      },
+      "required": [
+        "city",
+        "street",
+        "postalCode",
+        "province",
+        "country"
+      ]
+    },
+    "Fingerprint": {
+      "type": "string",
+      "description": "Fingerprint of the document"
+    }
+  }
+}

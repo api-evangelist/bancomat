@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-get-checkout-response-schema.json",
+  "title": "GetCheckoutResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-sessioni-di-checkout-api-openapi.yml#/components/schemas/GetCheckoutResponse",
+  "properties": {
+    "code": {
+      "description": "Codice univoco del checkout",
+      "type": "string"
+    },
+    "expire": {
+      "description": "Data di scadenza del codice di checkout",
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "type": "object"
+}

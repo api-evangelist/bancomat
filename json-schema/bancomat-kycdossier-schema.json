@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-kycdossier-schema.json",
+  "title": "KYCDossier",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-kyc-api-openapi.yml#/components/schemas/KYCDossier",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the KYC session",
+      "x-faker": "datatype.uuid"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of the KYC session creation",
+      "x-faker": "date.past"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of the last KYC session update",
+      "x-faker": "date.past"
+    },
+    "lastAccessAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of the last KYC session access",
+      "x-faker": "date.past"
+    },
+    "kind": {
+      "$ref": "#/$defs/KYCFlow"
+    },
+    "canLogin": {
+      "type": "boolean",
+      "description": "True if the user can login to the KYC session. If true, the user can retrieve data verified in previous sessions and can skip some steps of the KYC flow.",
+      "default": false
+    },
+    "consumer": {
+      "$ref": "#/$defs/KYCConsumerDossier",
+      "description": "Consumer information"
+    },
+    "company": {
+      "$ref": "#/$defs/KYCCompanyDossier",
+      "description": "Company information"
+    }
+  },
+  "$defs": {
+    "Address": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "Name of the city where the property is located."
+        },
+        "street": {
+          "type": "string",
+          "description": "This field contains the name of the street where the property is located. It must include the name with a type (e.g., Avenue, Street, Road, etc.) but not the number or any other information."
+        },
+        "number": {
+          "type": "string",
+          "description": "This field refers to the numeric or alphanumeric value assigned to a property on a street."
+        },
+        "unitNumber": {
+          "type": "string",
+          "description": "his field is used when a single property has multiple units, such as apartments or office suites. It differentiates one unit from another within the same property."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Also known as ZIP code (or CAP in Italy)"
+        },
+        "province": {
+          "type": "string",
+          "description": "It refers to the name of the state or province where the property is located."
+        },
+        "country": {
+          "type": "string",
+          "description": "The name of the country where the property is located."
+        }
+      },
+      "required": [
+        "city",
+        "street",
+        "postalCode",
+        "province",
+        "country"
+      ]
+    },
+    "CompanyVATNumber": {
+      "type": "string",
+      "description": "VAT number of the company, full european format",
+      "pattern": "/^((AT)(U\\d{8})|(BE)(0\\d{9})|(BG)(\\d{9,10})|(CY)(\\d{8}[LX])|(CZ)(\\d{8,10})|(DE)(\\d{9})|(DK)(\\d{8})|(EE)(\\d{9})|(EL|GR)(\\d{9})|(ES)([\\dA-Z]\\d{7}[\\dA-Z])|(FI)(\\d{8})|(FR)([\\dA-Z]{2}\\d{9})|(HU)(\\d{8})|(IE)(\\d{7}[A-Z]{2})|(IT)(\\d{11})|(LT)(\\d{9}|\\d{12})|(LU)(\\d{8})|(LV)(\\d{11})|(MT)(\\d{8})|(NL)(\\d{9}(B\\d{2}|BO2))|(PL)(\\d{10})|(PT)(\\d{9})|(RO)(\\d{2,10})|(SE)(\\d{12})|(SI)(\\d{8})|(SK)(\\d{10}))$",
+      "x-faker": "finance.vat"
+    },
+    "ConsumerNationalID": {
+      "type": "string",
+      "description": "National ID of the consumer, currently only italian format is supported",
+      "pattern": "/^([A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z])$"
+    },
+    "KYCBankAccountDossier": {
+      "type": "object",
+      "properties": {
+        "iban": {
+          "type": "string",
+          "description": "IBAN of the bank account",
+          "x-faker": "finance.iban"
+        },
+        "label": {
+          "type": "string",
+          "description": "Label of the bank account"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "True if the ownership of the bank account has been verified"
+        },
+        "consentExpiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time of the bank account PSD2 consent expiration",
+          "x-faker": "date.future"
+        }
+      }
+    },
+    "KYCCompanyDossier": {
+      "type": "object",
+      "description": "Company information",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the company",
+          "x-faker": "company.companyName"
+        },
+        "vat": {
+          "$ref": "#/$defs/CompanyVATNumber",
+          "description": "VAT number of the company"
+        },
+        "address": {
+          "$ref": "#/$defs/Address",
+          "description": "Address of the company"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email of the company",
+          "x-faker": "internet.email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the company",
+          "x-faker": "phone.phoneNumber"
+        },
+        "sanctioned": {
+          "type": "boolean",
+          "description": "True if the company is present in the list of sanctioned subjects"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "True if the company information has been verified"
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/KYCBankAccountDossier"
+          },
+          "description": "List of bank accounts of the company"
+        }
+      }
+    },
+    "KYCConsumerDossier": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the consumer",
+          "x-faker": "person.firstName"
+        },
+        "surname": {
+          "type": "string",
+          "description": "Surname of the consumer",
+          "x-faker": "person.lastName"
+        },
+        "tin": {
+          "$ref": "#/$defs/ConsumerNationalID",
+          "description": "National ID of the consumer"
+        },
+        "birthDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of birth of the consumer",
+          "x-faker": "date.past"
+        },
+        "birthPlace": {
+          "type": "string",
+          "description": "Place of birth of the consumer",
+          "x-faker": "address.city"
+        },
+        "birthCountry": {
+          "type": "string",
+          "description": "Country of birth of the consumer",
+          "x-faker": "address.countryCode"
+        },
+        "address": {
+          "$ref": "#/$defs/Address",
+          "description": "Address of the consumer"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email of the consumer",
+          "x-faker": "internet.email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the consumer",
+          "x-faker": "phone.phoneNumber"
+        },
+        "sanctioned": {
+          "type": "boolean",
+          "description": "True if the consumer is present in the list of sanctioned subjects"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "True if the consumer information has been verified"
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/KYCBankAccountDossier"
+          },
+          "description": "List of bank accounts of the consumer"
+        }
+      }
+    },
+    "KYCFlow": {
+      "type": "string",
+      "description": "KYC flow",
+      "enum": [
+        "consumer",
+        "company",
+        "business"
+      ]
+    }
+  }
+}

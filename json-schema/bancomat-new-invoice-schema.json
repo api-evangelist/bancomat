@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-new-invoice-schema.json",
+  "title": "NewInvoice",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fatture-api-openapi.yml#/components/schemas/NewInvoice",
+  "properties": {
+    "attachments": {
+      "description": "Allegati al documento",
+      "items": {
+        "$ref": "#/$defs/Attachment"
+      },
+      "type": "array"
+    },
+    "currency": {
+      "description": "Valuta del documento (e.g. EUR)",
+      "type": "string"
+    },
+    "date": {
+      "description": "Data di emissione del documento",
+      "format": "date-time",
+      "type": "string"
+    },
+    "items": {
+      "description": "Lista di oggetti a cui il documento fa riferimento",
+      "items": {
+        "$ref": "#/$defs/NewItem"
+      },
+      "type": "array"
+    },
+    "number": {
+      "description": "Numero del documento",
+      "type": "string"
+    },
+    "recipientIban": {
+      "description": "IBAN del ricevente documento e quindi del debitore",
+      "type": "string"
+    },
+    "recipientVat": {
+      "description": "Codice fiscale/Partita iva del ricevente compreso il country code (e.g. IT12345678901)",
+      "type": "string"
+    },
+    "senderIban": {
+      "description": "IBAN del mittente del documento e quindi creditore,\ntale valore deve essere valorizzato prima di poter generare un link di checkout. Il sistema lo valorizza automaticamente nel caso l'azienda abbia definito una preferenza per l'incasso sulla nostra piattaforma.\nAltrimenti è necessario che tale valore venga aggiunto dal client.",
+      "type": "string"
+    },
+    "senderVat": {
+      "description": "Codice fiscale/Partita iva del mittente compreso il country code (e.g. IT12345678901)",
+      "type": "string"
+    },
+    "terms": {
+      "description": "Lista di termini di pagamento per il documento",
+      "items": {
+        "$ref": "#/$defs/NewTerm"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "senderVat",
+    "recipientVat",
+    "terms",
+    "items",
+    "date",
+    "number",
+    "currency"
+  ],
+  "type": "object",
+  "$defs": {
+    "Attachment": {
+      "properties": {
+        "file": {
+          "description": "Contenuto dell'allegato codificato in base64",
+          "format": "binary",
+          "type": "string"
+        },
+        "id": {
+          "description": "Identificativo univoco dell'allegato",
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "description": "Nome dell'allegato",
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "type": "object"
+    },
+    "ExecutionRule": {
+      "enum": [
+        "following",
+        "preceeding"
+      ],
+      "type": "string"
+    },
+    "FrequencyEnum": {
+      "enum": [
+        "monthly"
+      ],
+      "type": "string"
+    },
+    "NewItem": {
+      "properties": {
+        "amount": {
+          "description": "Numero di unità dell'oggetto",
+          "format": "double",
+          "type": "number"
+        },
+        "description": {
+          "description": "Descrizione dell'oggetto del documento",
+          "type": "string"
+        },
+        "quantity": {
+          "description": "Quantità dell'oggetto",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "description",
+        "quantity",
+        "amount"
+      ],
+      "type": "object"
+    },
+    "NewTerm": {
+      "properties": {
+        "amount": {
+          "description": "Importo del termine di pagamento viene controllato che il valore abbia al massimo due cifre decimali",
+          "format": "double",
+          "type": "number"
+        },
+        "description": {
+          "description": "Descrizione del termine di pagamento",
+          "type": "string"
+        },
+        "expire": {
+          "description": "Data di scadenza del termine di pagamento. Indica la data nel quale il termine di pagamento deve essere incassato",
+          "format": "date-time",
+          "type": "string"
+        },
+        "information": {
+          "description": "Causale del termine di pagamento",
+          "type": "string"
+        },
+        "method": {
+          "description": "Indica la tipologia di pagamento scelta per il termine",
+          "type": "string"
+        },
+        "recurringInfo": {
+          "properties": {
+            "executionRule": {
+              "$ref": "#/$defs/ExecutionRule"
+            },
+            "frequency": {
+              "$ref": "#/$defs/FrequencyEnum"
+            },
+            "installments": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "frequency",
+            "installments"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "expire",
+        "amount",
+        "description",
+        "information"
+      ],
+      "type": "object"
+    }
+  }
+}

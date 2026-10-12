@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-bank-account-schema.json",
+  "title": "BankAccount",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-accounts-api-openapi.yml#/components/schemas/BankAccount",
+  "type": "object",
+  "properties": {
+    "owner": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the owner of the bank account"
+    },
+    "iban": {
+      "type": "string",
+      "description": "International Bank Account Number",
+      "x-faker": "finance.iban"
+    },
+    "currencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Currencies supported by the bank account",
+        "x-faker": "finance.currencyCode"
+      }
+    },
+    "bankName": {
+      "type": "string",
+      "description": "Identifier of the bank"
+    },
+    "owners": {
+      "type": "array",
+      "description": "List of owners of the bank account",
+      "items": {
+        "type": "string",
+        "description": "Name of the owner of the bank account",
+        "x-faker": "person.fullName"
+      }
+    },
+    "consentStatus": {
+      "$ref": "#/$defs/ConsentStatusEnum"
+    }
+  },
+  "$defs": {
+    "ConsentStatusEnum": {
+      "type": "string",
+      "enum": [
+        "not_granted",
+        "granted",
+        "revoked",
+        "expired",
+        "all"
+      ],
+      "default": "all",
+      "description": "Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent"
+    }
+  }
+}

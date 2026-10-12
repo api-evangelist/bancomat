@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-ais-session-schema.json",
+  "title": "AIS-Session",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/AIS-Session",
+  "properties": {
+    "aisSessionID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "url",
+    "aisSessionID"
+  ],
+  "type": "object"
+}

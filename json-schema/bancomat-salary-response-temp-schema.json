@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-salary-response-temp-schema.json",
+  "title": "SalaryResponseTemp",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-stipendi-api-openapi.yml#/components/schemas/SalaryResponseTemp",
+  "properties": {
+    "amount": {
+      "description": "Importo totale della busta paga (o cedolino)",
+      "type": "number"
+    },
+    "batchID": {
+      "description": "",
+      "format": "uuid",
+      "type": "string"
+    },
+    "currency": {
+      "description": "Valuta in cui è espresso l'importo della busta paga (es. EUR)",
+      "type": "string"
+    },
+    "employeeIBAN": {
+      "description": "Codice IBAN del dipendente per l'accredito della busta paga",
+      "type": "string"
+    },
+    "fingerprint": {
+      "description": "Fingerprint del documento salary",
+      "type": "string"
+    },
+    "month": {
+      "description": "Mese di riferimento della busta paga (o cedolino)",
+      "type": "integer"
+    },
+    "paymentDate": {
+      "description": "Data in cui viene effettuato il pagamento della busta paga (o cedolino)",
+      "format": "iso8601",
+      "type": "string"
+    },
+    "payslip": {
+      "description": "Identificativo univoco del cedolino associato alla busta paga",
+      "format": "uuid",
+      "type": "string"
+    },
+    "year": {
+      "description": "Anno di riferimento della busta paga (o cedolino)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "batchID",
+    "month",
+    "year",
+    "amount",
+    "currency",
+    "paymentDate",
+    "fingerprint"
+  ]
+}

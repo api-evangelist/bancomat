@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-post-web-hook-schema.json",
+  "title": "PostWebHook",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-webhook-api-openapi.yml#/components/schemas/PostWebHook",
+  "properties": {
+    "events": {
+      "description": "Lista di eventi da registrare sul webhook",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "expiresAt": {
+      "description": "Data di scadenza del webhook (ISO 8601). Max 1 mese rispetto al momento della chiamata",
+      "format": "date-time",
+      "type": "string"
+    },
+    "url": {
+      "description": "Url alla quale si vuole essere contattati",
+      "type": "string"
+    }
+  },
+  "required": [
+    "events",
+    "url",
+    "expiresAt"
+  ],
+  "type": "object"
+}

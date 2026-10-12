@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-document-kind-enum-schema.json",
+  "title": "DocumentKindEnum",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-chain-api-openapi.yml#/components/schemas/DocumentKindEnum",
+  "enum": [
+    "bill",
+    "bulk",
+    "chain",
+    "construction",
+    "invoice",
+    "pagopa",
+    "transfer"
+  ],
+  "type": "string"
+}

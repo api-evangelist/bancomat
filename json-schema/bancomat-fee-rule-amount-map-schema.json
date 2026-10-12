@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-fee-rule-amount-map-schema.json",
+  "title": "FeeRuleAmountMap",
+  "description": "A dictionary mapping payment methods to payment amounts including fees for a specific document",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRuleAmountMap",
+  "type": "object",
+  "propertyNames": {
+    "$ref": "#/$defs/FeeRuleMethods"
+  },
+  "additionalProperties": {
+    "type": "number",
+    "format": "double"
+  },
+  "$defs": {
+    "FeeRuleMethods": {
+      "type": "string",
+      "enum": [
+        "pis",
+        "card",
+        "sdd"
+      ],
+      "description": "Payment methods applicable for fee rules.\n\n- **pis**: Used for bank transfers, including standard bank transfers and instant transfers (bonifico istantaneo).\n- **card**: Used for card payments, including mobile wallet transactions.\n- **sdd**: Used for direct debit payments."
+    }
+  }
+}

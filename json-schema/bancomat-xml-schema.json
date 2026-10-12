@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-xml-schema.json",
+  "title": "XML",
+  "description": "Fattura elettronica in formato standard codificata in base64 oppure direttamente nel formato xml\nLa documentazione sul formato della fattura elettronica si puo' trovare a https://www.fatturapa.gov.it/it/norme-e-regole/documentazione-fattura-elettronica/formato-fatturapa/",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fatture-api-openapi.yml#/components/schemas/XML",
+  "properties": {},
+  "type": "object"
+}

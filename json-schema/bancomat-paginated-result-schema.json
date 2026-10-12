@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-paginated-result-schema.json",
+  "title": "PaginatedResult",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-accounts-api-openapi.yml#/components/schemas/PaginatedResult",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "integer",
+      "description": "Current page number"
+    },
+    "pageSize": {
+      "type": "integer",
+      "description": "Number of items per page"
+    },
+    "total": {
+      "type": "integer",
+      "description": "Total number of items"
+    },
+    "items": {
+      "type": "array",
+      "description": "List of items",
+      "items": {}
+    }
+  }
+}

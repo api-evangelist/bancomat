@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-payment-schema.json",
+  "title": "Payment",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-payments-api-openapi.yml#/components/schemas/Payment",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the payment assigned by FlowPay.",
+      "x-faker": "random.uuid"
+    },
+    "sessionID": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the checkout session",
+      "x-faker": "random.uuid"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Amount of the payment"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency of the payment"
+    },
+    "remittance": {
+      "type": "string",
+      "description": "Remittance information of the payment"
+    },
+    "status": {
+      "$ref": "#/$defs/PaymentStatusEnum"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "iso8601",
+      "description": "Date and time of the payment creation",
+      "x-faker": "date.past"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "iso8601",
+      "description": "Date and time of the last payment update",
+      "x-faker": "date.past"
+    },
+    "debtorIBAN": {
+      "type": "string",
+      "description": "IBAN of the debtor",
+      "x-faker": "finance.iban"
+    }
+  },
+  "$defs": {
+    "PaymentStatusEnum": {
+      "type": "string",
+      "enum": [
+        "authorized",
+        "arrived_to_technical_account",
+        "outgoing_from_technical_account",
+        "completed",
+        "rejected",
+        "revoked"
+      ],
+      "description": "Status of the payment.<br/> - `authorized`: payment authorized by the user<br> - `arrived_to_technical_account`: payment arrived to the FlowPay technical account. t<br> - `outgoing_from_technical_account`: payment outgoing from the technical account<br> - `completed`: funds has been transferred to the beneficiary<br> - `rejected`: payment rejected by the bank<br> - `revoked`: payment revoked by the user or by the client in case of conditional payment"
+    }
+  }
+}

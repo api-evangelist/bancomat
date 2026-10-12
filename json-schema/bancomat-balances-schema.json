@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-balances-schema.json",
+  "title": "Balances",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-saldo-api-openapi.yml#/components/schemas/Balances",
+  "additionalProperties": {
+    "additionalProperties": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/Balance"
+        },
+        "type": "array"
+      },
+      "type": "object"
+    },
+    "type": "object"
+  },
+  "type": "object",
+  "$defs": {
+    "Balance": {
+      "properties": {
+        "balance": {
+          "format": "double",
+          "type": "number"
+        },
+        "balanceType": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "date": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "iban",
+        "balance",
+        "date",
+        "currency",
+        "balanceType"
+      ],
+      "type": "object"
+    }
+  }
+}

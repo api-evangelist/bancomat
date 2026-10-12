@@ -1,0 +1,101 @@
+generated: '2026-10-12'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 8
+  own: 4
+  other_domain: 2
+  platform: 2
+  roles:
+  - identity
+  - marketing
+  - other
+  - source
+  - support
+  - website
+hosts:
+- host: app.flowpay.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: flowpay.it
+  role: other
+  relation: own
+- host: bancomat.it
+  found_by:
+  - pointer
+  - apis[]
+  - vendor-detect
+  types:
+  - Support
+  - FAQ
+  - PrivacyPolicy
+  - TermsOfService
+  - PressReleases
+  - Website
+  serves:
+  - docs
+  - cdn
+  vendor: cloudflare
+  registrable_domain: bancomat.it
+  role: website
+  relation: other-domain
+- host: blog.flowpay.it
+  found_by:
+  - pointer
+  types:
+  - Blog
+  - BlogRSS
+  serves: []
+  registrable_domain: flowpay.it
+  role: marketing
+  relation: own
+- host: flowpay.it
+  found_by:
+  - pointer
+  types:
+  - Leadership
+  - Website
+  serves: []
+  registrable_domain: flowpay.it
+  role: website
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: insight.bancomat.it
+  found_by:
+  - pointer
+  types:
+  - Login
+  serves: []
+  registrable_domain: bancomat.it
+  role: identity
+  relation: other-domain
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform
+- host: youtrack.flowpay.it
+  found_by:
+  - pointer
+  types:
+  - Support
+  serves: []
+  registrable_domain: flowpay.it
+  role: support
+  relation: own

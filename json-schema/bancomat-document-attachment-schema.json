@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-document-attachment-schema.json",
+  "title": "DocumentAttachment",
+  "description": "Attachment of the document.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-documents-api-openapi.yml#/components/schemas/DocumentAttachment",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the attachment",
+      "x-faker": "system.fileName"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the attachment",
+      "x-faker": "lorem.sentence"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the attachment",
+      "x-faker": "datatype.uuid"
+    }
+  },
+  "required": [
+    "name",
+    "id"
+  ]
+}

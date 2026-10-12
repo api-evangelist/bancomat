@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-site-worker-contract-creation-schema.json",
+  "title": "SiteWorkerContractCreation",
+  "description": "Request to create a new contract between a construction site and a worker",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-construction-api-openapi.yml#/components/schemas/SiteWorkerContractCreation",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the contract ",
+      "x-faker": "datatype.uuid"
+    },
+    "site": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the construction site",
+      "x-faker": "datatype.uuid"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of the contract creation",
+      "x-faker": "date.past"
+    }
+  }
+}

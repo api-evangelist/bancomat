@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-consumer-national-id-schema.json",
+  "title": "ConsumerNationalID",
+  "description": "National ID of the consumer, currently only italian format is supported",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-kyc-api-openapi.yml#/components/schemas/ConsumerNationalID",
+  "type": "string",
+  "pattern": "/^([A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z])$"
+}

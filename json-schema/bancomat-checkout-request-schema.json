@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-checkout-request-schema.json",
+  "title": "CheckoutRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-sessioni-di-checkout-api-openapi.yml#/components/schemas/CheckoutRequest",
+  "properties": {
+    "fingerprint": {
+      "description": "Fingerprint del documento per il quale si sta creando il checkout",
+      "type": "string"
+    },
+    "nokRedirect": {
+      "description": "URL di reindirizzamento in caso di checkout fallito.\nPoiché questa URL deve essere pubblica e raggiungibile dal browser dell'utente si consiglia di inserire al suo interno qualcosa che possa provare la correttezza del redirect.\nAd esempio un jwt firmato dall'integratore con al suo interno un id univoco riconoscibile nel momento del redirect.",
+      "type": "string"
+    },
+    "okRedirect": {
+      "description": "URL di reindirizzamento in caso di checkout andato a buon fine.\nPoiché questa URL deve essere pubblica e raggiungibile dal browser dell'utente si consiglia di inserire al suo interno qualcosa che possa provare la correttezza del redirect.\nAd esempio un jwt firmato dall'integratore con al suo interno un id univoco riconoscibile nel momento del redirect.",
+      "type": "string"
+    },
+    "type": {
+      "$ref": "#/$defs/DocumentType"
+    }
+  },
+  "required": [
+    "type",
+    "fingerprint"
+  ],
+  "type": "object",
+  "$defs": {
+    "DocumentType": {
+      "description": "Tipo di documento del checkout",
+      "enum": [
+        "invoice",
+        "bill"
+      ],
+      "type": "string"
+    }
+  }
+}

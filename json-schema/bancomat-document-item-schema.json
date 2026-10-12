@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-document-item-schema.json",
+  "title": "DocumentItem",
+  "description": "Billing item. This is used only for UX and utility purposes and will not be used for the payment process.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-documents-api-openapi.yml#/components/schemas/DocumentItem",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string",
+      "description": "Description of the item",
+      "x-faker": "lorem.sentence"
+    },
+    "quantity": {
+      "type": "number",
+      "format": "double",
+      "description": "Quantity of the item",
+      "x-faker": "random.number"
+    },
+    "measureUnit": {
+      "type": "string",
+      "description": "Measure unit of the item",
+      "maxLength": 10,
+      "x-faker": "commerce.productAdjective"
+    },
+    "unitPrice": {
+      "type": "number",
+      "format": "double",
+      "description": "Unit price of the item",
+      "x-faker": "finance.amount"
+    },
+    "tax": {
+      "type": "number",
+      "format": "double",
+      "description": "Tax rate of the item",
+      "x-faker": "finance.amount"
+    },
+    "discount": {
+      "type": "number",
+      "format": "double",
+      "description": "Discount rate of the item",
+      "x-faker": "finance.amount"
+    }
+  },
+  "required": [
+    "description",
+    "quantity",
+    "unitPrice"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-fee-schema.json",
+  "title": "Fee",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fee-api-openapi.yml#/components/schemas/Fee",
+  "type": "object",
+  "properties": {
+    "fingerprint": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint of the fee"
+    },
+    "amount": {
+      "type": "number",
+      "format": "double",
+      "minimum": 0,
+      "description": "Amount of the fee"
+    },
+    "targetFingerprint": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint of the document the fee is related to"
+    },
+    "targetType": {
+      "$ref": "#/$defs/DocumentKindEnum",
+      "description": "Type of the document the fee is related to"
+    },
+    "ruleID": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the rule that generated the fee"
+    },
+    "linkedFingerprint": {
+      "$ref": "#/$defs/Fingerprint",
+      "description": "Fingerprint of the document the fee is linked to. Can be related to a `bulk` if the payer is the debtor of the target or to a `chain` if the payer is the creditor of the target."
+    }
+  },
+  "$defs": {
+    "DocumentKindEnum": {
+      "type": "string",
+      "enum": [
+        "bill",
+        "bulk",
+        "chain",
+        "construction",
+        "invoice",
+        "pagopa",
+        "transfer"
+      ],
+      "description": {
+        "$ref": "types/DocumentKind.md"
+      }
+    },
+    "Fingerprint": {
+      "type": "string",
+      "description": "Fingerprint of the document"
+    }
+  }
+}

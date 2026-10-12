@@ -1,7 +1,8 @@
 ---
 generated: '2026-09-17'
 method: generated
-name: Issue an invoice and collect it through a hosted checkout
+name: bancomat-flowpay-invoice-to-checkout
+title: Issue an invoice and collect it through a hosted checkout
 description: Create a FlowPay invoice document for a debtor, open a hosted checkout for it, hand the debtor the payment link, and confirm payment — with the only reversal paths that exist.
 api: openapi/bancomat-flowpay-api-v2-openapi.yml
 operations: [createInvoice, createCheckout, getCheckout, getPayments, deleteCheckout]

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-edit-invoice-request-schema.json",
+  "title": "EditInvoiceRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fatture-api-openapi.yml#/components/schemas/EditInvoiceRequest",
+  "properties": {
+    "creditorIban": {
+      "description": "Iban del creditore, modificabile dal creditore o dal debitore nel caso il creditore non abbia già modificato l'iban.",
+      "type": "string"
+    },
+    "debtorIban": {
+      "description": "Iban del debitore, modificabile dal debitore",
+      "type": "string"
+    },
+    "terms": {
+      "description": "Lista di termini da aggiornare, a seconda della parte che richiede la modifica (creditore o debitore) tale modifica potrebbe essere rifiutata.\nInoltre un termine è modificabile fintanto che non esiste un pagamento relativo a tale termine.",
+      "items": {
+        "$ref": "#/$defs/EditTerm"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "EditTerm": {
+      "properties": {
+        "amount": {
+          "description": "Nuovo importo del termine, modificabile dal creditore",
+          "format": "double",
+          "type": "number"
+        },
+        "description": {
+          "description": "Nuova descrizione del termine, modificabile dal creditore",
+          "type": "string"
+        },
+        "expire": {
+          "description": "Nuova data di scadenza del termine, modificabile dal creditore",
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "description": "Identificativo univoco del termine da modificare",
+          "format": "uuid",
+          "type": "string"
+        },
+        "information": {
+          "description": "Nuova causale del termine, modificabile dal creditore, (max 100 caraterri)",
+          "type": "string"
+        },
+        "method": {
+          "description": "Indica la tipologia di pagamento scelta per il termine, modificabile da creditore",
+          "type": "string"
+        },
+        "recurringinfo": {
+          "description": "Modifica o rende il termine pagabile a rate, modificabile dal creditore",
+          "properties": {
+            "executionRule": {
+              "$ref": "#/$defs/ExecutionRule"
+            },
+            "frequency": {
+              "$ref": "#/$defs/FrequencyEnum"
+            },
+            "installments": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "frequency",
+            "installments"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "ExecutionRule": {
+      "enum": [
+        "following",
+        "preceeding"
+      ],
+      "type": "string"
+    },
+    "FrequencyEnum": {
+      "enum": [
+        "monthly"
+      ],
+      "type": "string"
+    }
+  }
+}

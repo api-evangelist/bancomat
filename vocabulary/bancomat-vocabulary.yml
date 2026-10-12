@@ -1,0 +1,437 @@
+generated: '2026-10-12'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/bancomat-accounts-api-openapi.yml
+- openapi/bancomat-ais-service-api-openapi.yml
+- openapi/bancomat-authentication-api-openapi.yml
+- openapi/bancomat-banche-api-openapi.yml
+- openapi/bancomat-banks-api-openapi.yml
+vocabulary:
+  name: Bancomat Domain Vocabulary
+  description: 'Terms declared by Bancomat''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-12'
+  terms:
+  - term: Accounts
+    definition: Manage accounts
+    tags:
+    - Resource Group
+    source: openapi/bancomat-accounts-api-openapi.yml
+  - term: AIS Service
+    definition: Endpoint per il servizio di AIS in cui è possbile ottenere informazioni di un account o semplicemente un check iban
+    tags:
+    - Resource Group
+    source: openapi/bancomat-ais-service-api-openapi.yml
+  - term: Authentication
+    definition: Manage authentication
+    tags:
+    - Resource Group
+    source: openapi/bancomat-authentication-api-openapi.yml
+  - term: Banche
+    definition: Banche conformi allo standard PSD2
+    tags:
+    - Resource Group
+    source: openapi/bancomat-banche-api-openapi.yml
+  - term: Banks
+    definition: Banks informations
+    tags:
+    - Resource Group
+    source: openapi/bancomat-banks-api-openapi.yml
+  - term: Bulk
+    definition: Questo endpoint consente di effettuare pagamenti bulk di documenti di diversi tipi.
+    tags:
+    - Resource Group
+    source: openapi/bancomat-bulk-api-openapi.yml
+  - term: Chain
+    definition: Questo endpoint consente di concatenare i pagamenti tra diversi documenti, automatizzando il pagamento di una fattura utilizzando
+      l'importo ricevuto da un'altra fattura attiva.
+    tags:
+    - Resource Group
+    source: openapi/bancomat-chain-api-openapi.yml
+  - term: Checkout
+    definition: This endpoint allows managing checkout sessions any document client has access to
+    tags:
+    - Resource Group
+    source: openapi/bancomat-checkout-api-openapi.yml
+  - term: Consent
+    definition: Gestione del consenso per l'accesso ai dati bancari
+    tags:
+    - Resource Group
+    source: openapi/bancomat-consent-api-openapi.yml
+  - term: Construction
+    definition: Manage construction sites and related entities lifecycle
+    tags:
+    - Resource Group
+    source: openapi/bancomat-construction-api-openapi.yml
+  - term: Documents
+    definition: CRUD operations on documents
+    tags:
+    - Resource Group
+    source: openapi/bancomat-documents-api-openapi.yml
+  - term: Fee
+    definition: '{''$ref'': ''docs/fee_description.md''}'
+    tags:
+    - Resource Group
+    source: openapi/bancomat-fee-api-openapi.yml
+  - term: Invoices
+    definition: '{''$ref'': ''docs/invoice_lifecycle.md''}'
+    tags:
+    - Resource Group
+    source: openapi/bancomat-invoices-api-openapi.yml
+  - term: KYC
+    definition: '{''$ref'': ''docs/kyc_description.md''}'
+    tags:
+    - Resource Group
+    source: openapi/bancomat-kyc-api-openapi.yml
+  - term: Pagamenti
+    definition: I pagamenti generati dall'approvazione di uno o più termini di pagamento relativi a una fattura
+    tags:
+    - Resource Group
+    source: openapi/bancomat-pagamenti-api-openapi.yml
+  - term: pagoPA
+    definition: pagoPA è il sistema nazionale italiano che permette ai cittadini di pagare la pubblica amministrazione. FlowPay partecipa a pagoPA
+      e consente agli utenti di pagare con l'open banking.
+    tags:
+    - Resource Group
+    source: openapi/bancomat-pagopa-api-openapi.yml
+  - term: Payments
+    definition: Access to payments initiated by FlowPay
+    tags:
+    - Resource Group
+    source: openapi/bancomat-payments-api-openapi.yml
+  - term: Saldo
+    definition: 'Saldo conto corrente ## Balance Type The balance types given by this endpoint can be any of the following: | name | description
+      | |---|---| | expected | Balance composed of booked entries and pending items known at the time of calculation, which projects the end of
+      day balance if everything is booked on the account and no other entry is posted.'
+    tags:
+    - Resource Group
+    source: openapi/bancomat-saldo-api-openapi.yml
+  - term: Sessioni di checkout
+    definition: Gestione e creazione di un codici di checkout Il codice di checkout permette di far pagare un documento caricato su FlowPay attraverso
+      il nostro flusso di checkout. Il flusso per il checkout passa dall'ottenere il codice di checkout e redirezionare il proprio utente verso
+      la pagina * `https://checkout.flowpay.it/{code}` in produzione * `https://checkout.sandbox-new.flowpay.it/{code}` in sandbox
+    tags:
+    - Resource Group
+    source: openapi/bancomat-sessioni-di-checkout-api-openapi.yml
+  - term: Transactions
+    definition: Endpoint for retrieving transactions collected with AIS consent
+    tags:
+    - Resource Group
+    source: openapi/bancomat-transactions-api-openapi.yml
+  - term: Transazioni
+    definition: 'Transazioni conto corrente Le transazioni possono essere filtrate per data e iban. utilizzando i seguenti parametri: - `dateFrom`:
+      data di inizio del filtro in formato ISO8601 - `dateTo`: data di fine del filtro in formato ISO8601 - `iban`: iban del conto corrente ad
+      esempio: `//transactions?dateFrom=2022-07-19T19:29:48Z&dateTo=2022-10-19T19:29:48Z&iban=IT00A0000000000000000000000`'
+    tags:
+    - Resource Group
+    source: openapi/bancomat-transazioni-api-openapi.yml
+  - term: Transfer
+    definition: Documenti senza Lifecycle
+    tags:
+    - Resource Group
+    source: openapi/bancomat-transfer-api-openapi.yml
+  - term: Transfers
+    definition: Lifecycle-free documents
+    tags:
+    - Resource Group
+    source: openapi/bancomat-transfers-api-openapi.yml
+  - term: Webhook
+    definition: Endpoint di gestione dei webhook
+    tags:
+    - Resource Group
+    source: openapi/bancomat-webhook-api-openapi.yml
+  - term: Webhooks
+    definition: Manage webhooks
+    tags:
+    - Resource Group
+    source: openapi/bancomat-webhooks-api-openapi.yml
+  - term: ConsentStatusEnum
+    definition: 'Status of the account information service (AIS) consent granted by account owner to FlowPay. - `not_granted`: owner has never
+      granted a consent - `granted`: consent granted by account owner - `revoked`: consent revoked by account owner - `expired`: consent expired
+      - `all`: all types of consent'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-accounts-api-openapi.yml#/components/schemas/ConsentStatusEnum
+  - term: BankAccount
+    definition: 'Object declared by the contract with fields: owner, iban, currencies, bankName, owners, consentStatus.'
+    tags:
+    - Object
+    source: openapi/bancomat-accounts-api-openapi.yml#/components/schemas/BankAccount
+  - term: PaginatedResult
+    definition: 'Object declared by the contract with fields: page, pageSize, total, items.'
+    tags:
+    - Object
+    source: openapi/bancomat-accounts-api-openapi.yml#/components/schemas/PaginatedResult
+  - term: RequestID
+    definition: Unique identifier of the request. It is helpful to identify the request in case of errors, providing it to the support team. Please
+      submit it in the support ticket.
+    tags:
+    - Object
+    source: openapi/bancomat-accounts-api-openapi.yml#/components/schemas/RequestID
+  - term: StatusCode
+    definition: HTTP status code
+    tags:
+    - Object
+    source: openapi/bancomat-accounts-api-openapi.yml#/components/schemas/StatusCode
+  - term: CreateAisSessionRequest
+    definition: 'Object declared by the contract with fields: consentType, iban, name, nokRedirect, okRedirect, surname, vatCode.'
+    tags:
+    - Object
+    source: openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/CreateAisSessionRequest
+  - term: check-iban
+    definition: 'Object declared by the contract with fields: result.'
+    tags:
+    - Object
+    source: openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/check-iban
+  - term: AIS-Session
+    definition: 'Object declared by the contract with fields: aisSessionID, url.'
+    tags:
+    - Object
+    source: openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/AIS-Session
+  - term: VerificationResult
+    definition: 'Enumeration declared by the contract with values: valid, invalid, notSupported.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/VerificationResult
+  - term: ErrorDTO
+    definition: 'Formato errore standard Lista dei possibili codici di errore: | codice | descrizione | | ------ | ----------- | | 401 | Errore
+      generale di codifica | | 402 | Campo necessario mancante | | 403 | Valore di un campo del tipo sbagliato | | 404 | Valore di un campo assente
+      | | 405 | Errore di codifica sconosciuto | | 406 | Null pointer exception | | 407 | Campo necessario mancante | | 408 | Errore di c'
+    tags:
+    - Object
+    source: openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/ErrorDTO
+  - term: AisConsentType
+    definition: 'Enumeration declared by the contract with values: transaction, balance.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-ais-service-api-openapi.yml#/components/schemas/AisConsentType
+  - term: Bank
+    definition: 'Object declared by the contract with fields: countryID, details, email, flowpayID, icon, name, nationalCode, nestedIn, phoneNumber.'
+    tags:
+    - Object
+    source: openapi/bancomat-banche-api-openapi.yml#/components/schemas/Bank
+  - term: DocumentKindEnum
+    definition: 'Enumeration declared by the contract with values: bill, bulk, chain, construction, invoice, pagopa, transfer.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-bulk-api-openapi.yml#/components/schemas/DocumentKindEnum
+  - term: Fingerprint
+    definition: Fingerprint del documento
+    tags:
+    - Object
+    source: openapi/bancomat-bulk-api-openapi.yml#/components/schemas/Fingerprint
+  - term: DocumentKindEnum_2
+    definition: '{''$ref'': ''types/DocumentKind.md''}'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-bulk-api-openapi.yml#/components/schemas/DocumentKindEnum_2
+  - term: Bulk_2
+    definition: 'Object declared by the contract with fields: fingerprint, amount, allowWireTranfersAggregation, documents.'
+    tags:
+    - Object
+    source: openapi/bancomat-bulk-api-openapi.yml#/components/schemas/Bulk_2
+  - term: Fingerprint_2
+    definition: Fingerprint of the document
+    tags:
+    - Object
+    source: openapi/bancomat-bulk-api-openapi.yml#/components/schemas/Fingerprint_2
+  - term: CollectionMethodEnum
+    definition: 'Collection method enabled for the payment. - `sct`: SEPA Credit Transfer (SCT) - `sct-inst`: SEPA Credit Transfer Instant (SCT-INST)
+      - `sdd`: SEPA Direct Debit (SDD) - `card`: Credit Card - `custom/label`: Custom collection method, enabled by the client who created the
+      checkout. Please see the `custom` section for more details: https://docs.flowpay.it/docs/custom-collection-method'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-checkout-api-openapi.yml#/components/schemas/CollectionMethodEnum
+  - term: PaymentStatusEnum
+    definition: 'Status of the payment. - `authorized`: payment authorized by the user - `arrived_to_technical_account`: payment arrived to the
+      FlowPay technical account. t - `outgoing_from_technical_account`: payment outgoing from the technical account - `completed`: funds has been
+      transferred to the beneficiary - `rejected`: payment rejected by the bank - `revoked`: payment revoked by the user or by the client i'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-checkout-api-openapi.yml#/components/schemas/PaymentStatusEnum
+  - term: Payment
+    definition: 'Object declared by the contract with fields: id, sessionID, amount, currency, remittance, status, createdAt, updatedAt, debtorIBAN.'
+    tags:
+    - Object
+    source: openapi/bancomat-checkout-api-openapi.yml#/components/schemas/Payment
+  - term: ConsentType
+    definition: 'Tipi di consenso disponibili: account, balance, transaction'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-consent-api-openapi.yml#/components/schemas/ConsentType
+  - term: ConsentDTO
+    definition: 'Object declared by the contract with fields: id, bankID, expiresAt, createdAt, recurring, usableFor, userID.'
+    tags:
+    - Object
+    source: openapi/bancomat-consent-api-openapi.yml#/components/schemas/ConsentDTO
+  - term: Address
+    definition: 'Object declared by the contract with fields: city, street, number, unitNumber, postalCode, province, country.'
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/Address
+  - term: ConstructionProgress
+    definition: 'Object declared by the contract with fields: id, site, createdAt, amount, invoices.'
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/ConstructionProgress
+  - term: Contact
+    definition: 'Object declared by the contract with fields: fullName, fullVat, type.'
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/Contact
+  - term: ConstructionSite
+    definition: 'Object declared by the contract with fields: id, name, address, initialCreditFingerprint, availableBalance.'
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/ConstructionSite
+  - term: CompanyVATNumber
+    definition: VAT number of the company, full european format
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/CompanyVATNumber
+  - term: SiteWorkerContractCreation
+    definition: Request to create a new contract between a construction site and a worker
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/SiteWorkerContractCreation
+  - term: SiteWorkerContract
+    definition: Contract between a company and a worker for a construction site
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/SiteWorkerContract
+  - term: SiteQuote
+    definition: Quote for a construction site
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/SiteQuote
+  - term: ConsumerNationalID
+    definition: National ID of the consumer, currently only italian format is supported
+    tags:
+    - Object
+    source: openapi/bancomat-construction-api-openapi.yml#/components/schemas/ConsumerNationalID
+  - term: Account
+    definition: 'Object declared by the contract with fields: additionalData, bankID, currency, iban, id, label, userIDs, vatCode.'
+    tags:
+    - Object
+    source: openapi/bancomat-conti-api-openapi.yml#/components/schemas/Account
+  - term: DocumentAttachment
+    definition: Attachment of the document.
+    tags:
+    - Object
+    source: openapi/bancomat-documents-api-openapi.yml#/components/schemas/DocumentAttachment
+  - term: Invoice
+    definition: Document representing an invoice at any stage.
+    tags:
+    - Object
+    source: openapi/bancomat-documents-api-openapi.yml#/components/schemas/Invoice
+  - term: DocumentItem
+    definition: Billing item. This is used only for UX and utility purposes and will not be used for the payment process.
+    tags:
+    - Object
+    source: openapi/bancomat-documents-api-openapi.yml#/components/schemas/DocumentItem
+  - term: DocumentTerm
+    definition: A payment term of the document, it will be used to generate the payment schedule.
+    tags:
+    - Object
+    source: openapi/bancomat-documents-api-openapi.yml#/components/schemas/DocumentTerm
+  - term: pagoPAStatus
+    definition: '{''$ref'': ''docs/pagopa_status.md''}'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-documents-api-openapi.yml#/components/schemas/pagoPAStatus
+  - term: FrequencyEnum
+    definition: 'Enumeration declared by the contract with values: monthly.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/FrequencyEnum
+  - term: Item
+    definition: 'Object declared by the contract with fields: amount, description, id, quantity.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/Item
+  - term: InvoicePreference
+    definition: 'Object declared by the contract with fields: incomingAccount, outgoingAccount, warnings.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/InvoicePreference
+  - term: NewTerm
+    definition: 'Object declared by the contract with fields: amount, description, expire, information, method, recurringInfo.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/NewTerm
+  - term: NewInvoice
+    definition: 'Object declared by the contract with fields: attachments, currency, date, items, number, recipientIban, recipientVat, senderIban,
+      senderVat, terms.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/NewInvoice
+  - term: Attachment
+    definition: 'Object declared by the contract with fields: file, id, name, type.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/Attachment
+  - term: EditTerm
+    definition: 'Object declared by the contract with fields: amount, description, expire, id, information, method, recurringinfo.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/EditTerm
+  - term: ExecutionRule
+    definition: 'Enumeration declared by the contract with values: following, preceeding.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/ExecutionRule
+  - term: NewItem
+    definition: 'Object declared by the contract with fields: amount, description, quantity.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/NewItem
+  - term: EditInvoiceRequest
+    definition: 'Object declared by the contract with fields: creditorIban, debtorIban, terms.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/EditInvoiceRequest
+  - term: XML
+    definition: Fattura elettronica in formato standard codificata in base64 oppure direttamente nel formato xml La documentazione sul formato
+      della fattura elettronica si puo' trovare a https://www.fatturapa.gov.it/it/norme-e-regole/documentazione-fattura-elettronica/formato-fatturapa/
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/XML
+  - term: Term
+    definition: 'Object declared by the contract with fields: amount, description, expire, fingerprint, id, information, method, recurringInfo,
+      useFlowpay.'
+    tags:
+    - Object
+    source: openapi/bancomat-fatture-api-openapi.yml#/components/schemas/Term
+  - term: FeeRuleAmountMap
+    definition: A dictionary mapping payment methods to payment amounts including fees for a specific document
+    tags:
+    - Object
+    source: openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRuleAmountMap
+  - term: FeeRule
+    definition: 'Object declared by the contract with fields: id, clientID, useCase, method, lowerBound, kind, numeric, remittance, payer.'
+    tags:
+    - Object
+    source: openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRule
+  - term: FeeRuleMap
+    definition: A dictionary mapping document fingerprints to fee amounts.
+    tags:
+    - Object
+    source: openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRuleMap
+  - term: FeeRuleMethods
+    definition: 'Payment methods applicable for fee rules. - **pis**: Used for bank transfers, including standard bank transfers and instant transfers
+      (bonifico istantaneo). - **card**: Used for card payments, including mobile wallet transactions. - **sdd**: Used for direct debit payments.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRuleMethods
+  - term: FeeRulePayer
+    definition: 'Payer types applicable for fee rules. - **debtor**: The fees are paid by the debtor via a bulk payment. - **creditor**: The fees
+      are paid by the creditor via a split payment.'
+    tags:
+    - Enumeration
+    source: openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRulePayer
+  - term: KYCBankAccountDossier
+    definition: 'Object declared by the contract with fields: iban, label, verified, consentExpiresAt.'
+    tags:
+    - Object
+    source: openapi/bancomat-kyc-api-openapi.yml#/components/schemas/KYCBankAccountDossier

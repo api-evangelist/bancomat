@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-checkout-response-schema.json",
+  "title": "CheckoutResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-sessioni-di-checkout-api-openapi.yml#/components/schemas/CheckoutResponse",
+  "properties": {
+    "code": {
+      "description": "Codice univoco del checkout",
+      "type": "string"
+    },
+    "expire": {
+      "description": "Data di scadenza del codice di checkout",
+      "format": "date-time",
+      "type": "string"
+    },
+    "payments": {
+      "items": {
+        "$ref": "#/$defs/PaymentDTO"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "code",
+    "expire",
+    "payments"
+  ],
+  "type": "object",
+  "$defs": {
+    "PaymentDTO": {
+      "properties": {
+        "createdAt": {
+          "description": "Data di creazione del pagamento, corrisponde al momento in cui il pagamento è stato autorizzato dal debitore",
+          "format": "date-time",
+          "type": "string"
+        },
+        "creditor": {
+          "description": "Codice fiscale del creditore (vat code in caso di azienda, codice fiscale in caso di privato)",
+          "type": "string"
+        },
+        "debtor": {
+          "description": "Codice fiscale del debitore (vat code in caso di azienda, codice fiscale in caso di privato)",
+          "type": "string"
+        },
+        "debtorIban": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "description": "fingerprint del documento per il quale è stato creato il pagamento",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "ID univoco del pagamento",
+          "format": "uuid",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "#/$defs/PaymentMethodInfo"
+        },
+        "status": {
+          "$ref": "#/$defs/PaymentStatusEnum"
+        },
+        "terms": {
+          "items": {
+            "description": "ID univoco del termine di pagamento del documento al quale questo pagamento si riferisce",
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Tipo di documento per il quale è stato creato il pagamento",
+          "type": "string"
+        }
+      },
+      "required": [
+        "identifier",
+        "fingerprint",
+        "terms",
+        "creditor",
+        "debtor",
+        "status",
+        "method"
+      ],
+      "type": "object"
+    },
+    "PaymentMethodInfo": {
+      "enum": [
+        "card"
+      ],
+      "type": "string"
+    },
+    "PaymentStatusEnum": {
+      "description": "Stato di un pagamento:\n * `concluded` - Indica che il pagamento è stato addebitato sul conto del debitore\n * `not_concluded` - Indica che il pagamento è stato autorizzato ma ancora non è stato addebitato (ad esempio per un pagamento a data futura)\n * `rejected` - Indica che il pagamento è stato rifiutato (ad esempio il pagamento è stato annullato dal debitore oppure non erano presenti i fondi nel momento di eseguire il pagamento)\n * `not_available` - Indica che è avvenuto un errore di comunicazione con la banca per controllare lo stato del pagamento, riprovando dovrebbe risolversi\n * `outside_flowpay_creditor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal creditore\n * `outside_flowpay_debtor` - Indica che il pagamento non è avvenuto attraverso il sistema FlowPay, e l'azione di indicare tale pagamento come avvenuto all'esterno di FlowPay è stata fatta dal debitore\n\nGli stati `concluded`, `rejected`, `outside_flowpay_creditor`, `outside_flowpay_debtor` sono stati finali per un pagamento",
+      "enum": [
+        "concluded",
+        "not_concluded",
+        "rejected",
+        "not_available",
+        "outsideFlowPay",
+        "outside_flowpay_creditor",
+        "outside_flowpay_debtor",
+        "forwarded"
+      ],
+      "type": "string"
+    }
+  }
+}

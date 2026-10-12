@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-bulk-2-schema.json",
+  "title": "Bulk_2",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-bulk-api-openapi.yml#/components/schemas/Bulk_2",
+  "type": "object",
+  "properties": {
+    "fingerprint": {
+      "$ref": "#/$defs/Fingerprint_2"
+    },
+    "amount": {
+      "type": "number",
+      "format": "double",
+      "description": "Total amount of the bulk"
+    },
+    "allowWireTranfersAggregation": {
+      "type": "boolean",
+      "description": "Indicate if the wire transfers to the same beneficiary can be aggregated"
+    },
+    "documents": {
+      "type": "object",
+      "description": "Dictionary of documents related to the bulk. Keys are the document type, values are the fingerprints of the documents.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/Fingerprint_2"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Fingerprint_2": {
+      "type": "string",
+      "description": "Fingerprint of the document"
+    }
+  }
+}

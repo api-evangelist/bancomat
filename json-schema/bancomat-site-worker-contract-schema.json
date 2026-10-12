@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-site-worker-contract-schema.json",
+  "title": "SiteWorkerContract",
+  "description": "Contract between a company and a worker for a construction site",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-construction-api-openapi.yml#/components/schemas/SiteWorkerContract",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the contract ",
+      "x-faker": "datatype.uuid"
+    },
+    "site": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the construction site",
+      "x-faker": "datatype.uuid"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of the contract creation",
+      "x-faker": "date.past"
+    },
+    "company": {
+      "$ref": "#/$defs/Contact"
+    }
+  },
+  "$defs": {
+    "CompanyVATNumber": {
+      "type": "string",
+      "description": "VAT number of the company, full european format",
+      "pattern": "/^((AT)(U\\d{8})|(BE)(0\\d{9})|(BG)(\\d{9,10})|(CY)(\\d{8}[LX])|(CZ)(\\d{8,10})|(DE)(\\d{9})|(DK)(\\d{8})|(EE)(\\d{9})|(EL|GR)(\\d{9})|(ES)([\\dA-Z]\\d{7}[\\dA-Z])|(FI)(\\d{8})|(FR)([\\dA-Z]{2}\\d{9})|(HU)(\\d{8})|(IE)(\\d{7}[A-Z]{2})|(IT)(\\d{11})|(LT)(\\d{9}|\\d{12})|(LU)(\\d{8})|(LV)(\\d{11})|(MT)(\\d{8})|(NL)(\\d{9}(B\\d{2}|BO2))|(PL)(\\d{10})|(PT)(\\d{9})|(RO)(\\d{2,10})|(SE)(\\d{12})|(SI)(\\d{8})|(SK)(\\d{10}))$",
+      "x-faker": "finance.vat"
+    },
+    "ConsumerNationalID": {
+      "type": "string",
+      "description": "National ID of the consumer, currently only italian format is supported",
+      "pattern": "/^([A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z])$"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "description": "Full name of the contact, contains the concatenation of the name and surname of a consumer, or the name of a company.",
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Full name of the consumer",
+              "x-faker": "person.fullName"
+            },
+            {
+              "type": "string",
+              "description": "Company name",
+              "x-faker": "company.companyName"
+            }
+          ]
+        },
+        "fullVat": {
+          "type": "string",
+          "description": "VAT number of the company in full european format or national ID of the consumer ",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ConsumerNationalID"
+            },
+            {
+              "$ref": "#/$defs/CompanyVATNumber"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "consumer",
+            "company"
+          ],
+          "description": "Type of the contact"
+        }
+      }
+    }
+  }
+}

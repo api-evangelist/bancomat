@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-transactions-schema.json",
+  "title": "Transactions",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-transazioni-api-openapi.yml#/components/schemas/Transactions",
+  "items": {
+    "$ref": "#/$defs/Transaction"
+  },
+  "type": "array",
+  "$defs": {
+    "Transaction": {
+      "properties": {
+        "amount": {
+          "format": "double",
+          "type": "number"
+        },
+        "bookingDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "creditorIban": {
+          "type": "string"
+        },
+        "creditorName": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "debtorIban": {
+          "type": "string"
+        },
+        "debtorName": {
+          "type": "string"
+        },
+        "documentType": {
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "remittanceInformationUnstructured": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "valueDate": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "amount",
+        "currency"
+      ],
+      "type": "object"
+    }
+  }
+}

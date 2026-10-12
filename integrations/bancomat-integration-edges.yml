@@ -1,0 +1,119 @@
+generated: '2026-10-12'
+method: searched
+source:
+- https://zapier.com/apps/bancomat/integrations
+- https://n8n.io/integrations/bancomat/
+- https://composio.dev/toolkits/bancomat
+- https://monid.ai/tools/bancomat
+checked:
+- https://composio.dev/toolkits/bancomat
+- https://monid.ai/tools/bancomat
+- https://n8n.io/integrations/bancomat/
+- https://www.flowpay.it/
+- https://www.flowpay.it/who-we-are/partners
+- https://zapier.com/apps/bancomat/integrations
+- https://zapier.com/apps/flowpay/integrations
+summary: Logo wall of 14 partner organisations (images served from /assets/partners/) on the homepage of FlowPay,
+  the Bancomat-owned payment institution that publishes the API; no marketplace listings found (zapier flowpay 404,
+  bancomat none).
+marketplace_apps: []
+edges:
+- label: Agos
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Agos") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Agos
+- label: Bimob
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Bimob") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Bimob
+- label: Change Capital
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Change Capital") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Change Capital
+- label: Credit Agricole
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Credit Agricole") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Credit Agricole
+- label: Engie
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Engie") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Engie
+- label: K-linx
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="K-linx") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: K-linx
+- label: Liqex
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Liqex") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Liqex
+- label: Mia Fintech
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Mia Fintech") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Mia Fintech
+- label: Overlend
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Overlend") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Overlend
+- label: Pausepay
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Pausepay") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Pausepay
+- label: Paycloud
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Paycloud") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Paycloud
+- label: Rititalia
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Rititalia") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Rititalia
+- label: Vega
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="Vega") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: Vega
+- label: iPatente
+  partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.flowpay.it/
+  note: logo (alt="iPatente") in the FlowPay partners logo wall under "Gli use cases dei nostri partner"
+  partner_name: iPatente
+templates: []

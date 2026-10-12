@@ -1,16 +1,16 @@
 aid: bancomat
+
 name: Bancomat
-description: >-
-  BANCOMAT S.p.A. is Italy's leading payment network operator managing the PagoBancomat debit
-  card scheme, ATM network, and BANCOMAT Pay mobile payment service. Launched in 1983 for ATM
-  withdrawals and expanded in 1986 with PagoBancomat for PIN-based POS payments, the network
-  underpins Italian electronic payment infrastructure. BANCOMAT Pay, introduced in 2019, enables
-  mobile e-commerce and P2P payments linked to bank accounts via phone number and IBAN.
-  Since the 2025-07-22 acquisition of FlowPay S.r.l., a Bank of Italy-authorised payment institution
-  (AISP/PISP), the group also publishes a public open-banking REST API — account information,
-  payment initiation, invoicing, pagoPA notices and webhooks — with OpenAPI contracts on
-  docs.flowpay.it and GitHub.
+
+description: BANCOMAT S.p.A. is Italy's leading payment network operator managing the PagoBancomat debit card scheme, ATM network, and BANCOMAT
+  Pay mobile payment service. Launched in 1983 for ATM withdrawals and expanded in 1986 with PagoBancomat for PIN-based POS payments, the network
+  underpins Italian electronic payment infrastructure. BANCOMAT Pay, introduced in 2019, enables mobile e-commerce and P2P payments linked to
+  bank accounts via phone number and IBAN. Since the 2025-07-22 acquisition of FlowPay S.r.l., a Bank of Italy-authorised payment institution
+  (AISP/PISP), the group also publishes a public open-banking REST API — account information, payment initiation, invoicing, pagoPA notices and
+  webhooks — with OpenAPI contracts on docs.flowpay.it and GitHub.
+
 type: Index
+
 deliveryModel:
   model: saas
   license_evidence:
@@ -27,6 +27,7 @@ deliveryModel:
   - repository-not-product
   generated: '2026-09-25'
   method: derived
+
 accessModel:
   pricing: freemium
   onboarding: unknown
@@ -39,51 +40,211 @@ accessModel:
   - plans
   generated: '2026-07-22'
   method: derived
+
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
+
 tags:
-  - ATM
-  - Banking
-  - Financial Services
-  - Italy
-  - Mobile Payments
-  - Payments
-  - Debit Cards
-  - Open Banking
-  - PSD2
-  - Account Information
-  - Payment Initiation
-  - Invoicing
-  - pagoPA
+- ATM
+- Banking
+- Financial Services
+- Italy
+- Mobile Payments
+- Payments
+- Debit Cards
+- Open Banking
+- PSD2
+- Account Information
+- Payment Initiation
+- Invoicing
+- pagoPA
+
 tags_raw:
-  - ATM
-  - Banking
-  - Financial Services
-  - Italy
-  - Mobile Payments
-  - Payments
-  - Debit Cards
-  - Open Banking
-  - PSD2
-  - Account Information
-  - Payment Initiation
-  - Invoicing
-  - pagoPA
-  - Financial-Services
+- ATM
+- Banking
+- Financial Services
+- Italy
+- Mobile Payments
+- Payments
+- Debit Cards
+- Open Banking
+- PSD2
+- Account Information
+- Payment Initiation
+- Invoicing
+- pagoPA
+- Financial-Services
+
 url: https://raw.githubusercontent.com/api-evangelist/bancomat/refs/heads/main/apis.yml
+
 created: '2024-01-15'
+
 modified: '2026-09-17'
+
 specificationVersion: '0.23'
+
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+
+common:
+- type: IntegrationEdges
+  url: integrations/bancomat-integration-edges.yml
+- type: AgenticAccess
+  url: agentic-access/bancomat-agentic-access.yml
+- type: Spectral
+  url: rules/bancomat-spectral-rules.yml
+- type: Spectral
+  url: rules/bancomat-rules.yml
+- type: Vocabulary
+  url: vocabulary/bancomat-vocabulary.yml
+- type: Deprecation
+  url: lifecycle/bancomat-lifecycle.yml
+- type: Hosts
+  url: hosts/bancomat-hosts.yml
+- type: Vendors
+  url: vendors/bancomat-vendors.yml
+- type: Leadership
+  url: https://flowpay.it/who-we-are/team
+- type: FinOps
+  url: finops/bancomat-finops.yml
+- type: CapabilityMap
+  url: capabilities/bancomat-capability-edges.yml
+  name: Bancomat Business Capability Map
+- type: Overlay
+  url: overlays/bancomat-flowpay-api-v1-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/bancomat-flowpay-api-v2-overlay.yaml
+- type: MCPServer
+  url: mcp/bancomat-mcp.yml
+- type: Website
+  url: https://flowpay.it/
+  name: FlowPay (a Bancomat company)
+- type: GitHubOrganization
+  url: https://github.com/FlowPay
+- type: Blog
+  url: https://blog.flowpay.it/
+- type: BlogRSS
+  url: https://blog.flowpay.it/feed/
+- type: Support
+  url: https://youtrack.flowpay.it/
+  name: FlowPay API support ticket portal (YouTrack)
+- type: Support
+  url: https://bancomat.it/en/contact-us
+  name: BANCOMAT contact
+- type: FAQ
+  url: https://bancomat.it/en/faq
+- type: PrivacyPolicy
+  url: https://bancomat.it/en/privacy-policy
+- type: TermsOfService
+  url: https://bancomat.it/en/terms-and-conditions
+- type: PressReleases
+  url: https://bancomat.it/en/press-releases
+- type: Login
+  url: https://insight.bancomat.it/
+  name: BANCOMAT Insight (member-only portal, OTP login)
+- type: Packages
+  url: packages/bancomat-packages.yml
+- type: SDKs
+  url: packages/bancomat-packages.yml
+- type: CLI
+  url: cli/bancomat-cli.yml
+- type: WellKnown
+  url: well-known/bancomat-well-known.yml
+- type: Authentication
+  url: authentication/bancomat-authentication.yml
+- type: OAuthScopes
+  url: scopes/bancomat-scopes.yml
+- type: ErrorCatalog
+  url: errors/bancomat-problem-types.yml
+- type: Conventions
+  url: conventions/bancomat-conventions.yml
+- type: Lifecycle
+  url: lifecycle/bancomat-lifecycle.yml
+- type: Conformance
+  url: conformance/bancomat-conformance.yml
+- type: Compliance
+  url: conformance/bancomat-conformance.yml
+- type: DataModel
+  url: data-model/bancomat-data-model.yml
+- type: LLMsTxt
+  url: llms/bancomat-llms.txt
+- type: Plans
+  url: plans/bancomat-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/bancomat-rate-limits.yml
+- type: DomainSecurity
+  url: security/bancomat-domain-security.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/bancomatofficial
+- type: Website
+  url: https://bancomat.it/en
+  name: BANCOMAT S.p.A.
+- type: Website
+  url: https://bancomat.it/en/the-company
+  name: About BANCOMAT S.p.A.
+- type: SpectralRules
+  url: rules/bancomat-spectral-rules.yml
+- type: Vocabulary
+  url: vocabulary/bancomat-vocabulary.yaml
+- type: JSONLD
+  url: json-ld/bancomat-context.jsonld
+- name: Features
+  type: Features
+  data:
+  - name: ATM Network
+    description: Italy's largest ATM cash withdrawal network operational since 1983.
+  - name: PagoBancomat Debit
+    description: PIN-based POS debit card payments accepted at millions of Italian merchants.
+  - name: BANCOMAT Pay Mobile
+    description: Mobile app payment service for e-commerce and P2P transfers linked to bank accounts.
+  - name: QR Code Payments
+    description: QR code-based checkout integration for online and in-store merchants.
+  - name: Bank Integration
+    description: Deep integration with Italian banks enabling account-linked payment authorization.
+  - name: P2P Transfers
+    description: Person-to-person money transfers between Italian bank accounts via mobile app.
+- name: UseCases
+  type: UseCases
+  data:
+  - name: ATM Cash Withdrawals
+    description: Debit card ATM withdrawals across Italy's national banking network.
+  - name: POS Debit Payments
+    description: PIN-based debit card payments at retail point-of-sale terminals.
+  - name: E-Commerce Payments
+    description: Online checkout integration via BANCOMAT Pay mobile app.
+  - name: P2P Money Transfer
+    description: Person-to-person payments between bank accounts via mobile app.
+  - name: Merchant Acceptance
+    description: Enable BANCOMAT Pay as a local Italian payment method for online stores.
+- name: Integrations
+  type: Integrations
+  data:
+  - name: Nexi
+    description: Integration via Nexi XPay Global payment gateway for merchant acceptance.
+  - name: Axerve (Fabrick)
+    description: Integration via Axerve/Fabrick for Italian e-commerce BANCOMAT Pay acceptance.
+  - name: PPRO
+    description: Integration via PPRO for international PSP access to BANCOMAT Pay.
+  - name: HiPay
+    description: Integration via HiPay payment platform.
+  - name: Viva.com
+    description: Integration via Viva.com payment services.
+  - name: PayPal Braintree
+    description: Integration via PayPal Braintree payment gateway.
+  - name: Nuvei
+    description: Integration via Nuvei payment technology platform.
+
 apis:
 - aid: bancomat:bancomat-pay
   name: BANCOMAT Pay
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bancomat.png
-  description: >-
-    BANCOMAT Pay is a mobile payment service enabling Italian consumers to make e-commerce purchases and
-    P2P transfers through a smartphone app linked to their bank account by phone number and IBAN. Merchant
-    integration is typically handled through PSPs such as Nexi, Axerve, PPRO, and HiPay rather than a
-    direct public API. Scheme-level technical documentation and certification material for issuers, acquirers
-    and certified operators is distributed only through BANCOMAT Insight (insight.bancomat.it), an OTP-gated
-    member portal; api.bancomat.it answers every unauthenticated path with a JSON 404.
+  description: BANCOMAT Pay is a mobile payment service enabling Italian consumers to make e-commerce purchases and P2P transfers through a smartphone
+    app linked to their bank account by phone number and IBAN. Merchant integration is typically handled through PSPs such as Nexi, Axerve, PPRO,
+    and HiPay rather than a direct public API. Scheme-level technical documentation and certification material for issuers, acquirers and certified
+    operators is distributed only through BANCOMAT Insight (insight.bancomat.it), an OTP-gated member portal; api.bancomat.it answers every unauthenticated
+    path with a JSON 404.
   humanURL: https://bancomat.it/en/bancomat-pay
   tags:
   - Mobile Payments
@@ -122,11 +283,13 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-bank-account-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
 - aid: bancomat:bancomat-ais-service-api
   name: Bancomat AIS Service API
-  description: >-
-    Endpoint per il servizio di AIS in cui è possbile ottenere informazioni di un account o semplicemente
-    un check iban
+  description: Endpoint per il servizio di AIS in cui è possbile ottenere informazioni di un account o semplicemente un check iban
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -148,6 +311,12 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-create-ais-session-request-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-ais-session-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-check-iban-schema.json
 - aid: bancomat:bancomat-authentication-api
   name: Bancomat Authentication API
   description: Manage authentication
@@ -196,6 +365,10 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-bank-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-banks-schema.json
 - aid: bancomat:bancomat-banks-api
   name: Bancomat Banks API
   description: Banks informations
@@ -220,12 +393,12 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-bank-schema.json
 - aid: bancomat:bancomat-bulk-api
   name: Bancomat Bulk API
-  description: >-
-    Questo endpoint consente di effettuare pagamenti bulk di documenti di diversi tipi. <br> Nota: l'API
-    di questo endpoint non richiede scope specifici, il token di autorizzazione utilizzato deve avere
-    accesso ai documenti che desidera pagare.
+  description: 'Questo endpoint consente di effettuare pagamenti bulk di documenti di diversi tipi. <br> Nota: l''API di questo endpoint non richiede
+    scope specifici, il token di autorizzazione utilizzato deve avere accesso ai documenti che desidera pagare.
 
 
     <p align="center">
@@ -241,35 +414,31 @@ apis:
     Il diagramma sopra mostra come funziona bulk.
 
 
-    Supponiamo il caso in cui un utente abbia due fatture per il beneficiario 1 (Ben1), una fattura per
-    il beneficiario 2 (Ben2) e un pagamento PagoPA
+    Supponiamo il caso in cui un utente abbia due fatture per il beneficiario 1 (Ben1), una fattura per il beneficiario 2 (Ben2) e un pagamento
+    PagoPA
 
 
-    L'utente desidera pagare tutti in un'unica operazione.
+    L''utente desidera pagare tutti in un''unica operazione.
 
 
-    Il client dell'utente, che ha accesso a tutti i documenti, chiama l'endpoint in blocco con l'elenco
-    dei documenti da pagare, l'endpoint restituisce un nuovo documento (Bulk) collegato a tutti i documenti
-    da pagare.
+    Il client dell''utente, che ha accesso a tutti i documenti, chiama l''endpoint in blocco con l''elenco dei documenti da pagare, l''endpoint
+    restituisce un nuovo documento (Bulk) collegato a tutti i documenti da pagare.
 
 
-    Il client fornisce il documento bulk all'utente, che ora può pagarlo con un'unica operazione di Payment
-    Initiation (PIS). Il bonifico bancario consentito con PIS sul documento in blocco è indirizzato al
-    conto tecnico FlowPay (TA). Quando il TA riceve il pagamento, divide l'importo tra i beneficiari e
-    invia loro i pagamenti tramite bonifico bancario.
+    Il client fornisce il documento bulk all''utente, che ora può pagarlo con un''unica operazione di Payment Initiation (PIS). Il bonifico bancario
+    consentito con PIS sul documento in blocco è indirizzato al conto tecnico FlowPay (TA). Quando il TA riceve il pagamento, divide l''importo
+    tra i beneficiari e invia loro i pagamenti tramite bonifico bancario.
 
 
-    In caso di pagamento bulk allo stesso beneficiario, il beneficiario effettivo di avvio del pagamento
-    è il beneficiario stesso, quindi il pagatore può riconoscere facilmente la transazione. In caso contrario,
-    il beneficiario effettivo di avvio del pagamento è FlowPay.
+    In caso di pagamento bulk allo stesso beneficiario, il beneficiario effettivo di avvio del pagamento è il beneficiario stesso, quindi il pagatore
+    può riconoscere facilmente la transazione. In caso contrario, il beneficiario effettivo di avvio del pagamento è FlowPay.
 
 
-    I bonifici bancari ai beneficiari vengono inviati con lo stesso pagatore originale, quindi i beneficiari
-    possono identificare facilmente il pagatore.
+    I bonifici bancari ai beneficiari vengono inviati con lo stesso pagatore originale, quindi i beneficiari possono identificare facilmente il
+    pagatore.
 
 
-    Nota: il destinatario dei pagamenti pagoPA è FlowPay stesso, quindi i pagamenti correlati non vengono
-    conteggiati nelle operazioni di suddivisione.
+    Nota: il destinatario dei pagamenti pagoPA è FlowPay stesso, quindi i pagamenti correlati non vengono conteggiati nelle operazioni di suddivisione.'
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -291,65 +460,65 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-bulk-2-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-bulk-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-kind-enum-2-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fingerprint-2-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fingerprint-schema.json
 - aid: bancomat:bancomat-chain-api
   name: Bancomat Chain API
-  description: >-
-    Questo endpoint consente di concatenare i pagamenti tra diversi documenti, automatizzando il pagamento
-    di una fattura utilizzando l'importo ricevuto da un'altra fattura attiva. <br> Nota: L'API per questo
-    endpoint non richiede scopi specifici; il token di autorizzazione utilizzato deve avere accesso ai
-    documenti da pagare.
+  description: 'Questo endpoint consente di concatenare i pagamenti tra diversi documenti, automatizzando il pagamento di una fattura utilizzando
+    l''importo ricevuto da un''altra fattura attiva. <br> Nota: L''API per questo endpoint non richiede scopi specifici; il token di autorizzazione
+    utilizzato deve avere accesso ai documenti da pagare.
 
 
-    Il processo della catena di pagamento funziona collegando un documento "ring" che collega un documento
-    di attivazione a un documento di destinazione. Una volta creato il documento ring, esso stabilisce
-    una connessione tra il documento di attivazione, che avvia la catena di pagamento, e il documento
-    di destinazione, che riceverà il pagamento una volta che il documento di attivazione è stato pagato
-    tramite FlowPay.
+    Il processo della catena di pagamento funziona collegando un documento "ring" che collega un documento di attivazione a un documento di destinazione.
+    Una volta creato il documento ring, esso stabilisce una connessione tra il documento di attivazione, che avvia la catena di pagamento, e il
+    documento di destinazione, che riceverà il pagamento una volta che il documento di attivazione è stato pagato tramite FlowPay.
 
 
-    Ad esempio, supponiamo che ci siano due documenti. Il primo documento riguarda un pagamento che l'azienda
-    A deve effettuare all'azienda B, mentre il secondo documento riguarda un pagamento che l'azienda B
-    deve effettuare all'azienda C. Per automatizzare questi pagamenti, l'azienda B crea un "anello" utilizzando
-    il suo token di autorizzazione. Questo anello collega il primo documento come "trigger" (documento
+    Ad esempio, supponiamo che ci siano due documenti. Il primo documento riguarda un pagamento che l''azienda A deve effettuare all''azienda
+    B, mentre il secondo documento riguarda un pagamento che l''azienda B deve effettuare all''azienda C. Per automatizzare questi pagamenti,
+    l''azienda B crea un "anello" utilizzando il suo token di autorizzazione. Questo anello collega il primo documento come "trigger" (documento
     di attivazione) e il secondo documento come "target" (documento di destinazione).
 
 
-    Una volta creato l'anello, è possibile generare sessioni di checkout per ciascun documento. Il checkout
-    per il documento di attivazione procede come un processo di pagamento standard, mentre il checkout
-    per il documento di destinazione viene creato con un tipo di catena. Questo tipo di checkout a catena
-    per il documento di destinazione non richiede un pagamento immediato, ma attende il pagamento del
-    documento di attivazione.
+    Una volta creato l''anello, è possibile generare sessioni di checkout per ciascun documento. Il checkout per il documento di attivazione procede
+    come un processo di pagamento standard, mentre il checkout per il documento di destinazione viene creato con un tipo di catena. Questo tipo
+    di checkout a catena per il documento di destinazione non richiede un pagamento immediato, ma attende il pagamento del documento di attivazione.
 
 
-    Quando l'azienda B accede e completa il checkout per il documento di destinazione, non viene effettuato
-    alcun pagamento. Tuttavia, quando il documento di attivazione viene pagato, si attiva automaticamente
-    il pagamento del documento di destinazione. Se c'è un importo residuo dopo il pagamento del documento
-    di destinazione, l'azienda B lo riceverà.
+    Quando l''azienda B accede e completa il checkout per il documento di destinazione, non viene effettuato alcun pagamento. Tuttavia, quando
+    il documento di attivazione viene pagato, si attiva automaticamente il pagamento del documento di destinazione. Se c''è un importo residuo
+    dopo il pagamento del documento di destinazione, l''azienda B lo riceverà.
 
 
-    In questo modo, l'automazione dei pagamenti assicura che tutti i documenti coinvolti siano regolati
-    in modo sequenziale, utilizzando i fondi ricevuti da un documento attivo per pagare un altro documento
-    in sospeso, riducendo al minimo l'intervento manuale e semplificando la gestione dei flussi di cassa
-    tra le aziende coinvolte.
+    In questo modo, l''automazione dei pagamenti assicura che tutti i documenti coinvolti siano regolati in modo sequenziale, utilizzando i fondi
+    ricevuti da un documento attivo per pagare un altro documento in sospeso, riducendo al minimo l''intervento manuale e semplificando la gestione
+    dei flussi di cassa tra le aziende coinvolte.
 
 
     ### Utilizzo della catena di pagamento per il pagamento frazionato
 
 
-    In uno scenario di pagamento frazionato, la catena di pagamento può essere utilizzata per distribuire
-    automaticamente i fondi tra più parti, anche trattenendo una parte del pagamento per il partner prima
-    di inoltrare l'importo rimanente al creditore. Ad esempio, supponiamo che l'azienda A debba pagare
-    l'azienda B, ma che una parte del pagamento sia trattenuta dall'azienda C (che agisce come partner
-    o intermediario). L'azienda A crea un documento di attivazione che rappresenta il pagamento che deve
-    all'azienda B. Viene quindi creato un documento ring che collega questo documento di attivazione a
-    due documenti di destinazione: uno per l'azienda B e uno per l'azienda C.
+    In uno scenario di pagamento frazionato, la catena di pagamento può essere utilizzata per distribuire automaticamente i fondi tra più parti,
+    anche trattenendo una parte del pagamento per il partner prima di inoltrare l''importo rimanente al creditore. Ad esempio, supponiamo che
+    l''azienda A debba pagare l''azienda B, ma che una parte del pagamento sia trattenuta dall''azienda C (che agisce come partner o intermediario).
+    L''azienda A crea un documento di attivazione che rappresenta il pagamento che deve all''azienda B. Viene quindi creato un documento ring
+    che collega questo documento di attivazione a due documenti di destinazione: uno per l''azienda B e uno per l''azienda C.
 
 
-    Quando l'azienda A effettua il pagamento, la catena di pagamento assicura che i fondi vengano prima
-    instradati attraverso l'azienda C. La parte a cui l'azienda C ha diritto (come concordato) viene trattenuta,
-    mentre il resto del pagamento viene automaticamente inoltrato all'azienda B. Questa configurazione
-    assicura che il pagamento frazionato venga gestito senza problemi, con un intervento manuale minimo,
-    e che tutte le parti ricevano gli importi dovuti secondo le regole predefinite della catena di pagamento.
+    Quando l''azienda A effettua il pagamento, la catena di pagamento assicura che i fondi vengano prima instradati attraverso l''azienda C. La
+    parte a cui l''azienda C ha diritto (come concordato) viene trattenuta, mentre il resto del pagamento viene automaticamente inoltrato all''azienda
+    B. Questa configurazione assicura che il pagamento frazionato venga gestito senza problemi, con un intervento manuale minimo, e che tutte
+    le parti ricevano gli importi dovuti secondo le regole predefinite della catena di pagamento.'
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -371,6 +540,18 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-chain-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-kind-enum-2-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fingerprint-2-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fingerprint-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-kind-enum-schema.json
 - aid: bancomat:bancomat-checkout-api
   name: Bancomat Checkout API
   description: This endpoint allows managing checkout sessions any document client has access to
@@ -395,6 +576,12 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-kind-enum-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fingerprint-schema.json
 - aid: bancomat:bancomat-consent-api
   name: Bancomat Consent API
   description: Gestione del consenso per l'accesso ai dati bancari
@@ -419,6 +606,8 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-consent-dto-schema.json
 - aid: bancomat:bancomat-construction-api
   name: Bancomat Construction API
   description: Manage construction sites and related entities lifecycle
@@ -443,6 +632,18 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-site-quote-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-construction-progress-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-site-worker-contract-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-construction-site-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-site-worker-contract-creation-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
 - aid: bancomat:bancomat-constructions-api
   name: Bancomat Constructions API
   description: The Constructions API from Bancomat — 1 operation(s) for constructions.
@@ -467,6 +668,8 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-fingerprint-schema.json
 - aid: bancomat:bancomat-conti-api
   name: Bancomat Conti API
   description: The Conti API from Bancomat — 1 operation(s) for conti.
@@ -491,6 +694,8 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-accounts-schema.json
 - aid: bancomat:bancomat-documents-api
   name: Bancomat Documents API
   description: CRUD operations on documents
@@ -515,6 +720,18 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-term-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-transfer-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-item-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-pago-pa-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-attachment-schema.json
 - aid: bancomat:bancomat-fatture-api
   name: Bancomat Fatture API
   description: The Fatture API from Bancomat — 3 operation(s) for fatture.
@@ -539,6 +756,18 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-new-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-invoice-preference-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-edit-invoice-request-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-xml-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paid-outside-flow-pay-term-list-schema.json
 - aid: bancomat:bancomat-fee-api
   name: Bancomat Fee API
   description: '{''$ref'': ''docs/fee_description.md''}'
@@ -563,6 +792,16 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-fee-rule-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fee-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fee-rule-map-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-fee-rule-amount-map-schema.json
 - aid: bancomat:bancomat-invoices-api
   name: Bancomat Invoices API
   description: '{''$ref'': ''docs/invoice_lifecycle.md''}'
@@ -587,6 +826,18 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-term-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-item-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-document-attachment-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-company-vatnumber-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
 - aid: bancomat:bancomat-kyc-api
   name: Bancomat KYC API
   description: '{''$ref'': ''docs/kyc_description.md''}'
@@ -611,10 +862,15 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-kycdossier-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-company-vatnumber-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-consumer-national-id-schema.json
 - aid: bancomat:bancomat-pagamenti-api
   name: Bancomat Pagamenti API
-  description: >-
-    I pagamenti generati dall'approvazione di uno o più termini di pagamento relativi a una fattura
+  description: I pagamenti generati dall'approvazione di uno o più termini di pagamento relativi a una fattura
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -636,11 +892,12 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-payments-schema.json
 - aid: bancomat:bancomat-pagopa-api
   name: Bancomat Pago PA API
-  description: >-
-    pagoPA è il sistema nazionale italiano che permette ai cittadini di pagare la pubblica amministrazione.
-    FlowPay partecipa a pagoPA e consente agli utenti di pagare con l'open banking.
+  description: pagoPA è il sistema nazionale italiano che permette ai cittadini di pagare la pubblica amministrazione. FlowPay partecipa a pagoPA
+    e consente agli utenti di pagare con l'open banking.
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -662,6 +919,10 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-pago-pa-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-pago-pafield-less-schema.json
 - aid: bancomat:bancomat-payments-api
   name: Bancomat Payments API
   description: Access to payments initiated by FlowPay
@@ -686,10 +947,13 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-payment-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
 - aid: bancomat:bancomat-saldo-api
   name: Bancomat Saldo API
-  description: >-
-    Saldo conto corrente
+  description: 'Saldo conto corrente
 
 
     ## Balance Type
@@ -701,27 +965,23 @@ apis:
 
     |---|---|
 
-    | expected | Balance composed of booked entries and pending items known at the time of calculation,
-    which projects the end of day balance if everything is booked on the account and no other entry is
-    posted. |
+    | expected | Balance composed of booked entries and pending items known at the time of calculation, which projects the end of day balance
+    if everything is booked on the account and no other entry is posted. |
 
-    | authorised | The expected balance together with the value of a pre-approved credit line the ASPSP
-    makes permanently available to the user. |
-
-    | openingBooked | Book balance of the account at the beginning of the account reporting period. It
-    always equals the closing book balance from the previous report. |
-
-    | interimAvailable | Available balance calculated in the course of the account 'servicer's business
-    day, at the time specified, and subject to further changes during the business day. The interim balance
-    is calculated on the basis of booked credit and debit items during the calculation time/period specified.
+    | authorised | The expected balance together with the value of a pre-approved credit line the ASPSP makes permanently available to the user.
     |
 
-    | closingBooked | Balance of the account at the end of the pre-agreed account reporting period. It
-    is the sum of the opening booked balance at the beginning of the period and all entries booked to
-    the account during the pre-agreed account reporting period. |
+    | openingBooked | Book balance of the account at the beginning of the account reporting period. It always equals the closing book balance
+    from the previous report. |
 
-    | forwardAvailable | Forward available balance of money that is at the disposal of the account owner
-    on the date specified. |
+    | interimAvailable | Available balance calculated in the course of the account ''servicer''s business day, at the time specified, and subject
+    to further changes during the business day. The interim balance is calculated on the basis of booked credit and debit items during the calculation
+    time/period specified. |
+
+    | closingBooked | Balance of the account at the end of the pre-agreed account reporting period. It is the sum of the opening booked balance
+    at the beginning of the period and all entries booked to the account during the pre-agreed account reporting period. |
+
+    | forwardAvailable | Forward available balance of money that is at the disposal of the account owner on the date specified. |'
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -743,22 +1003,23 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-balances-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-latest-balances-schema.json
 - aid: bancomat:bancomat-sessioni-di-checkout-api
   name: Bancomat Sessioni di checkout API
-  description: >-
-    Gestione e creazione di un codici di checkout
+  description: 'Gestione e creazione di un codici di checkout
 
 
-    Il codice di checkout permette di far pagare un documento caricato su FlowPay attraverso il nostro
-    flusso di checkout.
+    Il codice di checkout permette di far pagare un documento caricato su FlowPay attraverso il nostro flusso di checkout.
 
 
-    Il flusso per il checkout passa dall'ottenere il codice di checkout e redirezionare il proprio utente
-    verso la pagina
+    Il flusso per il checkout passa dall''ottenere il codice di checkout e redirezionare il proprio utente verso la pagina
 
     * `https://checkout.flowpay.it/{code}` in produzione
 
-    * `https://checkout.sandbox-new.flowpay.it/{code}` in sandbox
+    * `https://checkout.sandbox-new.flowpay.it/{code}` in sandbox'
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -780,6 +1041,16 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-checkout-request-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-checkout-preferences-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-checkout-preferences-response-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-checkout-response-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-get-checkout-response-schema.json
 - aid: bancomat:bancomat-stipendi-api
   name: Bancomat Stipendi API
   description: The Stipendi API from Bancomat — 2 operation(s) for stipendi.
@@ -804,6 +1075,14 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-salary-response-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-salary-response-temp-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-salary-batch-update-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-salary-update-schema.json
 - aid: bancomat:bancomat-transactions-api
   name: Bancomat Transactions API
   description: Endpoint for retrieving transactions collected with AIS consent
@@ -830,10 +1109,15 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-transaction-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-payment-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
 - aid: bancomat:bancomat-transazioni-api
   name: Bancomat Transazioni API
-  description: >-
-    Transazioni conto corrente
+  description: 'Transazioni conto corrente
 
 
     Le transazioni possono essere filtrate per data e iban. utilizzando i seguenti parametri:
@@ -845,7 +1129,7 @@ apis:
     - `iban`: iban del conto corrente
 
 
-    ad esempio: `/<tenant-id>/transactions?dateFrom=2022-07-19T19:29:48Z&dateTo=2022-10-19T19:29:48Z&iban=IT00A0000000000000000000000`
+    ad esempio: `/<tenant-id>/transactions?dateFrom=2022-07-19T19:29:48Z&dateTo=2022-10-19T19:29:48Z&iban=IT00A0000000000000000000000`'
   humanURL: https://bancomat.it/en/bancomat-pay
   baseURL: https://app.flowpay.it/api
   tags:
@@ -867,6 +1151,10 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-transaction-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-transactions-schema.json
 - aid: bancomat:bancomat-transfer-api
   name: Bancomat Transfer API
   description: Documenti senza Lifecycle
@@ -891,6 +1179,8 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-transfer-schema.json
 - aid: bancomat:bancomat-transfers-api
   name: Bancomat Transfers API
   description: Lifecycle-free documents
@@ -915,6 +1205,14 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-transfer-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-company-vatnumber-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-paginated-result-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-consumer-national-id-schema.json
 - aid: bancomat:bancomat-webhook-api
   name: Bancomat Webhook API
   description: Endpoint di gestione dei webhook
@@ -939,6 +1237,14 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
+  - type: JSONSchema
+    url: json-schema/bancomat-web-hook-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-post-web-hook-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-put-web-hook-schema.json
+  - type: JSONSchema
+    url: json-schema/bancomat-web-hook-delete-request-schema.json
 - aid: bancomat:bancomat-webhooks-api
   name: Bancomat Webhooks API
   description: Manage webhooks
@@ -965,142 +1271,8 @@ apis:
     url: https://github.com/FlowPay/client-openapi/tree/main/docs
   - type: SourceCode
     url: https://github.com/FlowPay/client-openapi
-common:
-  - type: FinOps
-    url: finops/bancomat-finops.yml
-  - type: CapabilityMap
-    url: capabilities/bancomat-capability-edges.yml
-    name: Bancomat Business Capability Map
-  - type: Overlay
-    url: overlays/bancomat-flowpay-api-v1-overlay.yaml
-  - type: AgentSkill
-    url: skills/_index.yml
-  - type: Overlay
-    url: overlays/bancomat-flowpay-api-v2-overlay.yaml
-  - type: MCPServer
-    url: mcp/bancomat-mcp.yml
-  - type: Website
-    url: https://flowpay.it/
-    name: FlowPay (a Bancomat company)
-  - type: GitHubOrganization
-    url: https://github.com/FlowPay
-  - type: Blog
-    url: https://blog.flowpay.it/
-  - type: BlogRSS
-    url: https://blog.flowpay.it/feed/
-  - type: Support
-    url: https://youtrack.flowpay.it/
-    name: FlowPay API support ticket portal (YouTrack)
-  - type: Support
-    url: https://bancomat.it/en/contact-us
-    name: BANCOMAT contact
-  - type: FAQ
-    url: https://bancomat.it/en/faq
-  - type: PrivacyPolicy
-    url: https://bancomat.it/en/privacy-policy
-  - type: TermsOfService
-    url: https://bancomat.it/en/terms-and-conditions
-  - type: PressReleases
-    url: https://bancomat.it/en/press-releases
-  - type: Login
-    url: https://insight.bancomat.it/
-    name: BANCOMAT Insight (member-only portal, OTP login)
-  - type: Packages
-    url: packages/bancomat-packages.yml
-  - type: SDKs
-    url: packages/bancomat-packages.yml
-  - type: CLI
-    url: cli/bancomat-cli.yml
-  - type: WellKnown
-    url: well-known/bancomat-well-known.yml
-  - type: Authentication
-    url: authentication/bancomat-authentication.yml
-  - type: OAuthScopes
-    url: scopes/bancomat-scopes.yml
-  - type: ErrorCatalog
-    url: errors/bancomat-problem-types.yml
-  - type: Conventions
-    url: conventions/bancomat-conventions.yml
-  - type: Lifecycle
-    url: lifecycle/bancomat-lifecycle.yml
-  - type: Conformance
-    url: conformance/bancomat-conformance.yml
-  - type: Compliance
-    url: conformance/bancomat-conformance.yml
-  - type: DataModel
-    url: data-model/bancomat-data-model.yml
-  - type: LLMsTxt
-    url: llms/bancomat-llms.txt
-  - type: Plans
-    url: plans/bancomat-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/bancomat-rate-limits.yml
-  - type: DomainSecurity
-    url: security/bancomat-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/bancomatofficial
-  - type: Website
-    url: https://bancomat.it/en
-    name: BANCOMAT S.p.A.
-  - type: Website
-    url: https://bancomat.it/en/the-company
-    name: About BANCOMAT S.p.A.
-  - type: SpectralRules
-    url: rules/bancomat-spectral-rules.yml
-  - type: Vocabulary
-    url: vocabulary/bancomat-vocabulary.yaml
-  - type: JSONLD
-    url: json-ld/bancomat-context.jsonld
-  - name: Features
-    type: Features
-    data:
-      - name: ATM Network
-        description: Italy's largest ATM cash withdrawal network operational since 1983.
-      - name: PagoBancomat Debit
-        description: PIN-based POS debit card payments accepted at millions of Italian merchants.
-      - name: BANCOMAT Pay Mobile
-        description: Mobile app payment service for e-commerce and P2P transfers linked to bank accounts.
-      - name: QR Code Payments
-        description: QR code-based checkout integration for online and in-store merchants.
-      - name: Bank Integration
-        description: Deep integration with Italian banks enabling account-linked payment authorization.
-      - name: P2P Transfers
-        description: Person-to-person money transfers between Italian bank accounts via mobile app.
-  - name: UseCases
-    type: UseCases
-    data:
-      - name: ATM Cash Withdrawals
-        description: Debit card ATM withdrawals across Italy's national banking network.
-      - name: POS Debit Payments
-        description: PIN-based debit card payments at retail point-of-sale terminals.
-      - name: E-Commerce Payments
-        description: Online checkout integration via BANCOMAT Pay mobile app.
-      - name: P2P Money Transfer
-        description: Person-to-person payments between bank accounts via mobile app.
-      - name: Merchant Acceptance
-        description: Enable BANCOMAT Pay as a local Italian payment method for online stores.
-  - name: Integrations
-    type: Integrations
-    data:
-      - name: Nexi
-        description: Integration via Nexi XPay Global payment gateway for merchant acceptance.
-      - name: Axerve (Fabrick)
-        description: Integration via Axerve/Fabrick for Italian e-commerce BANCOMAT Pay acceptance.
-      - name: PPRO
-        description: Integration via PPRO for international PSP access to BANCOMAT Pay.
-      - name: HiPay
-        description: Integration via HiPay payment platform.
-      - name: Viva.com
-        description: Integration via Viva.com payment services.
-      - name: PayPal Braintree
-        description: Integration via PayPal Braintree payment gateway.
-      - name: Nuvei
-        description: Integration via Nuvei payment technology platform.
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
 x-enrichment:
-  date: '2026-09-17'
+  date: '2026-10-12'
   status: enriched
-  artifacts_added: 26
-  pass: local-v3
+  artifacts_added: 1
+  pass: local-v5

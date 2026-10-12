@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-web-hook-detail-schema.json",
+  "title": "WebHookDetail",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-webhook-api-openapi.yml#/components/schemas/WebHookDetail",
+  "properties": {
+    "createdAt": {
+      "description": "Data di creazione del webhook (ISO 8601)",
+      "format": "date-time",
+      "type": "string"
+    },
+    "events": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/Detail"
+        },
+        "type": "array"
+      },
+      "description": "Dizionario,\nle chiavi sono i tenantID,\ni valori sono i dettagli sull'evento",
+      "type": "object"
+    },
+    "expiresAt": {
+      "description": "Data di scadenza del webhook (ISO 8601)",
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "description": "Identificativo univoco del webhook",
+      "format": "uuid",
+      "type": "string"
+    },
+    "url": {
+      "description": "Url del webhook",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "url",
+    "createdAt",
+    "expiresAt",
+    "events"
+  ],
+  "type": "object",
+  "$defs": {
+    "Detail": {
+      "properties": {
+        "eventName": {
+          "description": "Nome dell'evento registrato",
+          "type": "string"
+        },
+        "lastCalledAt": {
+          "description": "Data dell'ultima chiamata (ISO 8601)",
+          "format": "date-time",
+          "type": "string"
+        },
+        "lastError": {
+          "description": "Descrizione sull'ultimo errore",
+          "type": "string"
+        },
+        "lastErroredAt": {
+          "description": "Data dell'ultima chiamata fallita (ISO 8601)",
+          "format": "date-time",
+          "type": "string"
+        },
+        "numberOfErroredCalls": {
+          "description": "Numero di chiamate fallite",
+          "format": "int64",
+          "type": "integer"
+        },
+        "numberOfSuccessfulCalls": {
+          "description": "Numero di chiamate riuscite",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "eventName",
+        "numberOfErroredCalls",
+        "numberOfSuccessfulCalls"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-salary-response-schema.json",
+  "title": "SalaryResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-stipendi-api-openapi.yml#/components/schemas/SalaryResponse",
+  "properties": {
+    "amount": {
+      "description": "Importo totale della busta paga (o cedolino)",
+      "type": "number"
+    },
+    "batchID": {
+      "description": "",
+      "format": "uuid",
+      "type": "string"
+    },
+    "currency": {
+      "description": "Valuta in cui è espresso l'importo della busta paga (es. EUR)",
+      "type": "string"
+    },
+    "employee": {
+      "$ref": "#/$defs/SalaryEmployee",
+      "description": "Informazioni relative al dipendente destinatario della busta paga"
+    },
+    "employeeIBAN": {
+      "description": "Codice IBAN del dipendente per l'accredito della busta paga",
+      "type": "string"
+    },
+    "employeeTIN": {
+      "description": "Codice fiscale del dipendente destinatario",
+      "type": "string"
+    },
+    "employerTIN": {
+      "description": "Codice fiscale o Partita IVA del datore di lavoro",
+      "type": "string"
+    },
+    "fingerprint": {
+      "description": "Fingerprint del documento salary",
+      "type": "string"
+    },
+    "month": {
+      "description": "Mese di riferimento della busta paga (o cedolino)",
+      "type": "integer"
+    },
+    "paymentDate": {
+      "description": "Data in cui viene effettuato il pagamento della busta paga (o cedolino)",
+      "format": "iso8601",
+      "type": "string"
+    },
+    "payslip": {
+      "description": "Identificativo univoco del cedolino associato alla busta paga",
+      "format": "uuid",
+      "type": "string"
+    },
+    "year": {
+      "description": "Anno di riferimento della busta paga (o cedolino)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "batchID",
+    "employee",
+    "employeeTIN",
+    "employerTIN",
+    "month",
+    "year",
+    "amount",
+    "currency",
+    "paymentDate",
+    "fingerprint"
+  ],
+  "$defs": {
+    "SalaryEmployee": {
+      "properties": {
+        "name": {
+          "description": "Nome del dipendente",
+          "type": "string"
+        },
+        "surname": {
+          "description": "Cognome del dipendente",
+          "type": "string"
+        },
+        "tin": {
+          "description": "Codice fiscale del dipendente",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tim",
+        "name",
+        "surname"
+      ],
+      "type": "object"
+    }
+  }
+}

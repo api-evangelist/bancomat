@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-fee-rule-schema.json",
+  "title": "FeeRule",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRule",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the fee rule",
+      "x-faker": "datatype.uuid"
+    },
+    "clientID": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the client that created the rule",
+      "x-faker": "datatype.uuid"
+    },
+    "useCase": {
+      "$ref": "#/$defs/DocumentKindEnum",
+      "description": "Use case of the rule"
+    },
+    "method": {
+      "$ref": "#/$defs/FeeRuleMethods"
+    },
+    "lowerBound": {
+      "type": "number",
+      "format": "double",
+      "description": "Lower bound of the rule. If the amount is lower than this value, the rule does not apply."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "fixed",
+        "percentage"
+      ],
+      "description": "Calculation method of the fee. <br> - `fixed`: the fee is a fixed amount<br> - `percentage`: the fee is a percentage of the target's amount"
+    },
+    "numeric": {
+      "type": "number",
+      "format": "double",
+      "description": "Value of the fee. If the kind is `percentage`, the value is a percentage of the target's amount and can assume values between 0 and 1."
+    },
+    "remittance": {
+      "type": "string",
+      "description": "Remittance information of the fee charged to the payer"
+    },
+    "payer": {
+      "$ref": "#/$defs/FeeRulePayer",
+      "description": "Payer of the fee. <br> - `debtor`: the debtor of the target document pays the fee using a bulk<br> - `creditor`: the creditor of the target document pays the fee using a chain"
+    }
+  },
+  "required": [
+    "id",
+    "clientID",
+    "useCase",
+    "method",
+    "kind",
+    "numeric",
+    "payer",
+    "lowerBound"
+  ],
+  "$defs": {
+    "DocumentKindEnum": {
+      "type": "string",
+      "enum": [
+        "bill",
+        "bulk",
+        "chain",
+        "construction",
+        "invoice",
+        "pagopa",
+        "transfer"
+      ],
+      "description": {
+        "$ref": "types/DocumentKind.md"
+      }
+    },
+    "FeeRuleMethods": {
+      "type": "string",
+      "enum": [
+        "pis",
+        "card",
+        "sdd"
+      ],
+      "description": "Payment methods applicable for fee rules.\n\n- **pis**: Used for bank transfers, including standard bank transfers and instant transfers (bonifico istantaneo).\n- **card**: Used for card payments, including mobile wallet transactions.\n- **sdd**: Used for direct debit payments."
+    },
+    "FeeRulePayer": {
+      "type": "string",
+      "enum": [
+        "debtor",
+        "creditor"
+      ],
+      "description": "Payer types applicable for fee rules.\n\n- **debtor**: The fees are paid by the debtor via a bulk payment.\n- **creditor**: The fees are paid by the creditor via a split payment."
+    }
+  }
+}

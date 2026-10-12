@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-fee-rule-map-schema.json",
+  "title": "FeeRuleMap",
+  "description": "A dictionary mapping document fingerprints to fee amounts.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-fee-api-openapi.yml#/components/schemas/FeeRuleMap",
+  "type": "object",
+  "propertyNames": {
+    "$ref": "#/$defs/Fingerprint"
+  },
+  "additionalProperties": {
+    "type": "number",
+    "format": "double"
+  },
+  "$defs": {
+    "Fingerprint": {
+      "type": "string",
+      "description": "Fingerprint of the document"
+    }
+  }
+}

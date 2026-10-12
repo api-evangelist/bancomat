@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-transaction-schema.json",
+  "title": "Transaction",
+  "description": "Transaction",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-transactions-api-openapi.yml#/components/schemas/Transaction",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the transaction assigned by FlowPay. This is not end to end transaction identifier, which is not provided by banks via Open Banking APIs.",
+      "x-faker": "random.uuid"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Amount of the transaction",
+      "x-faker": "finance.amount"
+    },
+    "bookingDate": {
+      "type": "string",
+      "format": "iso8601",
+      "description": "Booking date of the transaction",
+      "x-faker": "date.past"
+    },
+    "valueDate": {
+      "type": "string",
+      "format": "iso8601",
+      "description": "Value date of the transaction",
+      "x-faker": "date.past"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency of the transaction",
+      "x-faker": "finance.currencyCode"
+    },
+    "remittance": {
+      "type": "string",
+      "description": "Remittance information",
+      "x-faker": "lorem.sentence"
+    },
+    "debtorName": {
+      "type": "string",
+      "description": "Name of the debtor",
+      "x-faker": "name.findName"
+    },
+    "debtorIBAN": {
+      "type": "string",
+      "description": "International Bank Account Number of the debtor",
+      "x-faker": "finance.iban"
+    },
+    "creditorName": {
+      "type": "string",
+      "description": "Name of the creditor",
+      "x-faker": "name.findName"
+    },
+    "creditorIBAN": {
+      "type": "string",
+      "description": "International Bank Account Number of the creditor",
+      "x-faker": "finance.iban"
+    }
+  },
+  "required": [
+    "id",
+    "amount",
+    "currency",
+    "remittance"
+  ]
+}

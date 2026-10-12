@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-checkout-schema.json",
+  "title": "Checkout",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-checkout-api-openapi.yml#/components/schemas/Checkout",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d]{8}$",
+      "description": "Unique identifier of the checkout session. This code is secret and should never be shared with anyone who is not the payer."
+    },
+    "fingerprint": {
+      "$ref": "#/$defs/Fingerprint"
+    },
+    "type": {
+      "$ref": "#/$defs/DocumentKindEnum"
+    },
+    "creditor": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the creditor",
+      "x-faker": "datatype.uuid"
+    },
+    "debtor": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the debtor",
+      "x-faker": "datatype.uuid"
+    },
+    "collectionMethods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CollectionMethodEnum"
+      },
+      "description": "Collection methods enabled for the payment.<br>Note that collection methods are the intersection of the collection methods techologies enabled for the creditor and the collection methods allowed by the client for checkout."
+    },
+    "payments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Payment"
+      },
+      "description": "List of payments related to the checkout"
+    }
+  },
+  "required": [
+    "code",
+    "fingerprint",
+    "type",
+    "creditor",
+    "debtor",
+    "collectionMethods"
+  ],
+  "$defs": {
+    "CollectionMethodEnum": {
+      "type": "string",
+      "enum": [
+        "sct",
+        "sct-inst",
+        "sdd",
+        "card",
+        "custom/<label>"
+      ],
+      "description": "Collection method enabled for the payment. <br> - `sct`: SEPA Credit Transfer (SCT)<br> - `sct-inst`: SEPA Credit Transfer Instant (SCT-INST)<br> - `sdd`: SEPA Direct Debit (SDD)<br> - `card`: Credit Card<br> - `custom/label`: Custom collection method, enabled by the client who created the checkout. Please see the `custom` section for more details: https://docs.flowpay.it/docs/custom-collection-method"
+    },
+    "DocumentKindEnum": {
+      "type": "string",
+      "enum": [
+        "bill",
+        "bulk",
+        "chain",
+        "construction",
+        "invoice",
+        "pagopa",
+        "transfer"
+      ],
+      "description": {
+        "$ref": "types/DocumentKind.md"
+      }
+    },
+    "Fingerprint": {
+      "type": "string",
+      "description": "Fingerprint of the document"
+    },
+    "Payment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier of the payment assigned by FlowPay.",
+          "x-faker": "random.uuid"
+        },
+        "sessionID": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier of the checkout session",
+          "x-faker": "random.uuid"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the payment"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency of the payment"
+        },
+        "remittance": {
+          "type": "string",
+          "description": "Remittance information of the payment"
+        },
+        "status": {
+          "$ref": "#/$defs/PaymentStatusEnum"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "iso8601",
+          "description": "Date and time of the payment creation",
+          "x-faker": "date.past"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "iso8601",
+          "description": "Date and time of the last payment update",
+          "x-faker": "date.past"
+        },
+        "debtorIBAN": {
+          "type": "string",
+          "description": "IBAN of the debtor",
+          "x-faker": "finance.iban"
+        }
+      }
+    },
+    "PaymentStatusEnum": {
+      "type": "string",
+      "enum": [
+        "authorized",
+        "arrived_to_technical_account",
+        "outgoing_from_technical_account",
+        "completed",
+        "rejected",
+        "revoked"
+      ],
+      "description": "Status of the payment.<br/> - `authorized`: payment authorized by the user<br> - `arrived_to_technical_account`: payment arrived to the FlowPay technical account. t<br> - `outgoing_from_technical_account`: payment outgoing from the technical account<br> - `completed`: funds has been transferred to the beneficiary<br> - `rejected`: payment rejected by the bank<br> - `revoked`: payment revoked by the user or by the client in case of conditional payment"
+    }
+  }
+}

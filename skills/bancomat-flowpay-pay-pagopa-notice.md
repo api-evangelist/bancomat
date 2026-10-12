@@ -1,7 +1,8 @@
 ---
 generated: '2026-09-17'
 method: generated
-name: Pay an Italian pagoPA notice
+name: bancomat-flowpay-pay-pagopa-notice
+title: Pay an Italian pagoPA notice
 description: Upload a pagoPA payment notice (Numero Avviso + creditor PA VAT code) as a FlowPay document, open a checkout to pay it, track the pagoPA status machine and fetch the receipt.
 api: openapi/bancomat-flowpay-api-v2-openapi.yml
 operations: [pagopaPayment, getPagopaDetails, createCheckout, getPagopaReceipt]

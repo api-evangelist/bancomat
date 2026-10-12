@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-accounts-schema.json",
+  "title": "Accounts",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-conti-api-openapi.yml#/components/schemas/Accounts",
+  "items": {
+    "$ref": "#/$defs/Account"
+  },
+  "type": "array",
+  "$defs": {
+    "Account": {
+      "properties": {
+        "additionalData": {
+          "description": "Dati aggiuntivi sull'account, in particolare i dati si riferiscono allo stato attuale del consenso che FlowPay ha sull'account",
+          "properties": {
+            "consentActive": {
+              "type": "boolean"
+            },
+            "consentValidUntil": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "hasAccessRight": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "consentActive"
+          ],
+          "type": "object"
+        },
+        "bankID": {
+          "description": "ID FlowPay della banca all'interno del Bank Gateway.\n\nIdentifica l'istituto di pagamento dove è collocato l'account",
+          "type": "string"
+        },
+        "currency": {
+          "description": "Valuta dell'account (e.g. `EUR`, `CHF`).\n\nVerrà probabilmente codificato in futuro con una enum",
+          "type": "string"
+        },
+        "iban": {
+          "description": "IBAN dell'account",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "label": {
+          "description": "Testo libero per identificare meglio l'account",
+          "type": "string"
+        },
+        "userIDs": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "vatCode": {
+          "description": "Partita iva a cui appartiene questo account",
+          "type": "string"
+        }
+      },
+      "required": [
+        "iban",
+        "currency",
+        "vatCode",
+        "bankID",
+        "userIDs"
+      ],
+      "type": "object"
+    }
+  }
+}

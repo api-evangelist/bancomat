@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-salary-batch-update-schema.json",
+  "title": "SalaryBatchUpdate",
+  "description": "Gli attributi dell'oggetto (o chiavi) sono le fingerprint dei documenti di tipo salary. Ciascuna fingerprint è associata a un aggiornamento delle informazioni relative al pagamento o bonifico.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-stipendi-api-openapi.yml#/components/schemas/SalaryBatchUpdate",
+  "additionalProperties": {
+    "$ref": "#/$defs/SalaryUpdate",
+    "description": "Gli attributi dell'oggetto (o chiavi) sono le fingerprint dei documenti di tipo salary. Ciascuna fingerprint è associata a un aggiornamento delle informazioni relative al pagamento o bonifico."
+  },
+  "type": "object",
+  "$defs": {
+    "SalaryUpdate": {
+      "properties": {
+        "iban": {
+          "description": "Codice IBAN aggiornato del dipendente per l'accredito della busta paga",
+          "type": "string"
+        },
+        "paymentDate": {
+          "description": "Data in cui viene effettuato il pagamento della busta paga (o cedolino)",
+          "format": "iso8601",
+          "type": "string"
+        },
+        "remittance": {
+          "description": "Informazioni aggiornate relative al pagamento o al bonifico",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

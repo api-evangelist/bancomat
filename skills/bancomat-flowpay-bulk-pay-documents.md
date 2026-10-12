@@ -1,7 +1,8 @@
 ---
 generated: '2026-09-17'
 method: generated
-name: Settle several documents with one SCA (bulk payment)
+name: bancomat-flowpay-bulk-pay-documents
+title: Settle several documents with one SCA (bulk payment)
 description: Aggregate invoices, bills and pagoPA notices a tenant owes into one FlowPay bulk document, pay it with a single strong-customer-authentication, and let FlowPay's technical account split the funds to each beneficiary.
 api: openapi/bancomat-flowpay-api-v2-openapi.yml
 operations: [getInvoices, createBulkPayment, createCheckout, getBulkPayment, deleteBulkPayment]

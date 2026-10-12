@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bancomat/main/json-schema/bancomat-document-term-schema.json",
+  "title": "DocumentTerm",
+  "description": "A payment term of the document, it will be used to generate the payment schedule.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/bancomat-documents-api-openapi.yml#/components/schemas/DocumentTerm",
+  "type": "object",
+  "properties": {
+    "dueDate": {
+      "type": "string",
+      "format": "iso8601",
+      "description": "Due date of the payment",
+      "x-faker": "date.future"
+    },
+    "amount": {
+      "type": "number",
+      "format": "double",
+      "description": "Amount to be paid",
+      "x-faker": "finance.amount"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency of the payment. <br> <b>Note: All payments must be in the same currency.</b>",
+      "default": "EUR",
+      "x-faker": "finance.currencyCode"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the payment. This will be shown to the customer when paying the invoice through the FlowPay checkout page.",
+      "x-faker": "lorem.sentence"
+    },
+    "remittance": {
+      "type": "string",
+      "description": "Remittance information. This will be shown to the customer during the payment process and will be included in the bank statement.<br> <b>Notes:</b> - This field is optional and will be automatically generated if not provided with the format: Invoice #<invoice_number> - <invoiceDate> - Remittance will also contain a FlowPay identifier",
+      "maxLength": 100,
+      "x-faker": "lorem.sentence"
+    }
+  },
+  "required": [
+    "dueDate",
+    "amount",
+    "currency"
+  ]
+}
