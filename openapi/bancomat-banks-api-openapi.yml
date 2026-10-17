@@ -128,65 +128,11 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: The requested resource was not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Invoice not found
-            required:
-            - statusCode
-            - requestID
-            - message
-    BadRequest:
-      description: Client has provided invalid data
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Proforma invoice can not have a due date later than the invoice date
-              additionalInfo:
-                type: object
-                description: Additional information about the error
-                properties:
-                  path:
-                    type: string
-                    description: JSON path of the field that caused the error
-                    example: .dueDate
-                  key:
-                    type: string
-                    description: JSON key of the field that caused the error
-                    example: dueDate
-                  type:
-                    type: string
-                    description: Expected type of the field that caused the error
-                    example: string
-                required:
-                - path
-            required:
-            - statusCode
-            - requestID
-            - message
-            - additionalInfo
   schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
     Bank:
       type: object
       properties:
@@ -254,10 +200,64 @@ components:
       description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
       format: uuid
       x-faker: random.uuid
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
+  responses:
+    BadRequest:
+      description: Client has provided invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Proforma invoice can not have a due date later than the invoice date
+              additionalInfo:
+                type: object
+                description: Additional information about the error
+                properties:
+                  path:
+                    type: string
+                    description: JSON path of the field that caused the error
+                    example: .dueDate
+                  key:
+                    type: string
+                    description: JSON key of the field that caused the error
+                    example: dueDate
+                  type:
+                    type: string
+                    description: Expected type of the field that caused the error
+                    example: string
+                required:
+                - path
+            required:
+            - statusCode
+            - requestID
+            - message
+            - additionalInfo
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
   securitySchemes:
     oAuth2:
       type: oauth2

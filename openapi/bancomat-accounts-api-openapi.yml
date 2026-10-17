@@ -260,39 +260,6 @@ webhooks:
       - Accounts
 components:
   responses:
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-            required:
-            - statusCode
-            - requestID
-    NotFound:
-      description: The requested resource was not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                $ref: '#/components/schemas/StatusCode'
-              requestID:
-                $ref: '#/components/schemas/RequestID'
-              message:
-                type: string
-                description: Error message
-                example: Invoice not found
-            required:
-            - statusCode
-            - requestID
-            - message
     Unauthorized:
       description: Client has not provided valid credentials to access the requested resource
       content:
@@ -350,6 +317,39 @@ components:
             - requestID
             - message
             - additionalInfo
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+              message:
+                type: string
+                description: Error message
+                example: Invoice not found
+            required:
+            - statusCode
+            - requestID
+            - message
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                $ref: '#/components/schemas/StatusCode'
+              requestID:
+                $ref: '#/components/schemas/RequestID'
+            required:
+            - statusCode
+            - requestID
     Forbidden:
       description: Client is not authorized to access the requested resource
       content:
@@ -370,6 +370,10 @@ components:
             - requestID
             - message
   schemas:
+    StatusCode:
+      type: integer
+      description: HTTP status code
+      example: 404
     ConsentStatusEnum:
       type: string
       enum:
@@ -380,6 +384,22 @@ components:
       - all
       default: all
       description: 'Status of the account information service (AIS) consent granted by account owner to FlowPay.<br/> - `not_granted`: owner has never granted a consent<br> - `granted`: consent granted by account owner<br> - `revoked`: consent revoked by account owner<br> - `expired`: consent expired<br> - `all`: all types of consent'
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        items:
+          type: array
+          description: List of items
+          items: {}
     BankAccount:
       type: object
       properties:
@@ -418,31 +438,11 @@ components:
           - Luigi Verdi
         consentStatus:
           $ref: '#/components/schemas/ConsentStatusEnum'
-    PaginatedResult:
-      type: object
-      properties:
-        page:
-          type: integer
-          description: Current page number
-        pageSize:
-          type: integer
-          description: Number of items per page
-        total:
-          type: integer
-          description: Total number of items
-        items:
-          type: array
-          description: List of items
-          items: {}
     RequestID:
       type: string
       description: Unique identifier of the request.<br> It is helpful to identify the request in case of errors, providing it to the support team. Please submit it in the support ticket.
       format: uuid
       x-faker: random.uuid
-    StatusCode:
-      type: integer
-      description: HTTP status code
-      example: 404
   securitySchemes:
     oAuth2:
       type: oauth2

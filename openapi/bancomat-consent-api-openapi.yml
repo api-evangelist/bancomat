@@ -227,6 +227,44 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ConsentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id univoco del consenso
+        bankID:
+          type: string
+          description: Nome univoco della banca per la quale è stato concesso il consenso
+        expiresAt:
+          type: string
+          format: date-time
+          description: Data nella quale il consenso finisce di valere
+        createdAt:
+          type: string
+          format: date-time
+          description: Data nella quale il consenso è stato creato
+        recurring:
+          type: boolean
+          description: Indica se il consenso è di tipo ricorrente oppure no
+        usableFor:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentType'
+          description: Indica per cosa questo consenso può essere usato (e.g. Lettura conti, saldo, transazioni)
+        userID:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - id
+      - bankID
+      - expiresAt
+      - createdAt
+      - recurring
+      - usableFor
     ConsentType:
       type: string
       enum:
@@ -278,44 +316,6 @@ components:
       - errorDescription
       - statusCode
       type: object
-    ConsentDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Id univoco del consenso
-        bankID:
-          type: string
-          description: Nome univoco della banca per la quale è stato concesso il consenso
-        expiresAt:
-          type: string
-          format: date-time
-          description: Data nella quale il consenso finisce di valere
-        createdAt:
-          type: string
-          format: date-time
-          description: Data nella quale il consenso è stato creato
-        recurring:
-          type: boolean
-          description: Indica se il consenso è di tipo ricorrente oppure no
-        usableFor:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConsentType'
-          description: Indica per cosa questo consenso può essere usato (e.g. Lettura conti, saldo, transazioni)
-        userID:
-          type:
-          - string
-          - 'null'
-          format: uuid
-      required:
-      - id
-      - bankID
-      - expiresAt
-      - createdAt
-      - recurring
-      - usableFor
   securitySchemes:
     ThirdPartyAuthorizationCode:
       description: Autorizzazione oauth ottenuta da terze parti con un authorization flow
