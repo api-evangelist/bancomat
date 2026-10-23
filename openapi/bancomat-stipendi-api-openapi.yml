@@ -1080,3 +1080,9 @@ components:
             transfer:write: ''
           tokenUrl: https://core.flowpay.it/api/oauth/token
       type: oauth2
+x-provenance:
+  method: harvested
+  publisher: Bancomat
+  source: https://gist.githubusercontent.com/RaesakAce/be1ea786e0949c700d90099c8504f03a/raw/f4cc83791e32b45957a364b0f2466f8895422d8b/fp-docs.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
